@@ -13,6 +13,8 @@
 		606076AF1DF2D6DD003B19B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 606076AE1DF2D6DD003B19B7 /* Assets.xcassets */; };
 		606076B21DF2D6DD003B19B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 606076B01DF2D6DD003B19B7 /* LaunchScreen.storyboard */; };
 		606076BD1DF2D6DD003B19B7 /* JsonMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076BC1DF2D6DD003B19B7 /* JsonMapperTests.swift */; };
+		606076CA1DF3065C003B19B7 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
+		606076CC1DF306B7003B19B7 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,9 @@
 		606076B81DF2D6DD003B19B7 /* JsonMapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JsonMapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		606076BC1DF2D6DD003B19B7 /* JsonMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonMapperTests.swift; sourceTree = "<group>"; };
 		606076BE1DF2D6DD003B19B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		606076C81DF2D737003B19B7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		606076C91DF3065C003B19B7 /* MapperProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperProtocols.swift; sourceTree = "<group>"; };
+		606076CB1DF306B7003B19B7 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +82,7 @@
 		606076A61DF2D6DC003B19B7 /* JsonMapper */ = {
 			isa = PBXGroup;
 			children = (
+				606076C71DF2D71D003B19B7 /* Mapper */,
 				606076A71DF2D6DC003B19B7 /* AppDelegate.swift */,
 				606076A91DF2D6DC003B19B7 /* ViewController.swift */,
 				606076AB1DF2D6DD003B19B7 /* Main.storyboard */,
@@ -94,6 +100,16 @@
 				606076BE1DF2D6DD003B19B7 /* Info.plist */,
 			);
 			path = JsonMapperTests;
+			sourceTree = "<group>";
+		};
+		606076C71DF2D71D003B19B7 /* Mapper */ = {
+			isa = PBXGroup;
+			children = (
+				606076C81DF2D737003B19B7 /* MyPlayground.playground */,
+				606076C91DF3065C003B19B7 /* MapperProtocols.swift */,
+				606076CB1DF306B7003B19B7 /* Mapper.swift */,
+			);
+			path = Mapper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +217,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				606076CC1DF306B7003B19B7 /* Mapper.swift in Sources */,
+				606076CA1DF3065C003B19B7 /* MapperProtocols.swift in Sources */,
 				606076AA1DF2D6DC003B19B7 /* ViewController.swift in Sources */,
 				606076A81DF2D6DC003B19B7 /* AppDelegate.swift in Sources */,
 			);
