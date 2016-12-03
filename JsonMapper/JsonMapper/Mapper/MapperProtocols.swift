@@ -25,6 +25,17 @@ public enum MappingType {
     case string
     case bool
     case number
+    
+    var validTypes: [Any.Type] {
+        switch self {
+        case .string:
+            return [String.self]
+        case .number:
+            return [Int.self, Double.self, Float.self]
+        case .bool:
+            return [Bool.self]
+        }
+    }
 }
 // enum for make relations between properties and mapping
 public enum MappingProperty {

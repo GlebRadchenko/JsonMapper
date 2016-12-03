@@ -11,8 +11,6 @@ import Foundation
 public class Mapper {
     private class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
         var object = type.init()
-        
-        var propertyDictionary: [String: AnyObject] = [:]
         if object.helpingPath.isEmpty {
             throw MapperError.wrongSetting
         }
@@ -47,19 +45,21 @@ public class Mapper {
         }
         throw MapperError.wrongFormat
     }
-    private static func process(object: Mapable, with json: AnyObject?) throws -> Mapable {
+    private static func process(object: Mapable, with json: AnyObject?) throws {
         guard let jsonDictionary = json as? [String: AnyObject] else {
             throw MapperError.wrongFormat
         }
         var propertyDictionary = [String: AnyObject]()
         
-        object.relations.forEach() { (propertyName, mappingProperty) in
+        try object.relations.forEach() { (propertyName, mappingProperty) in
             switch mappingProperty {
             case let .property(type, key, optional):
                 if let property = jsonDictionary[key] {
+                    try self.check(property: property, for: type, optional: optional)
                     propertyDictionary[propertyName] = property
+                } else {
+                    try self.handleForNilValue(isOptional: optional)
                 }
-                
                 break
             case let .mappingObject(key, childType, optional):
                 let mirror = Mirror(reflecting: object)
@@ -69,13 +69,13 @@ public class Mapper {
                     var aChild = aValue
                     do {
                         aChild = try self.map(jsonDictionary[key],
-                                              type: childType as! Mapable.Type)
+                                              type: childType)
                         propertyDictionary[propertyName] = aChild as AnyObject?
                     } catch {
                         print(error)
                     }
                 } else {
-                    
+                    try self.handleForNilValue(isOptional: optional)
                 }
                 break
             default:
@@ -83,6 +83,23 @@ public class Mapper {
             }
         }
         object.map(with: propertyDictionary)
-        return object
+    }
+    private static func check(property: Any, for type: MappingType, optional: Bool) throws {
+        let typeOfProperty = type(of: property)
+        let comparingTypes = type.validTypes.map { (type) -> Any.Type in
+            if optional {
+                return Optional.some(type)!
+            } else {
+                return type
+            }
+        }
+        if !comparingTypes.contains() {$0 == typeOfProperty} {
+            throw MapperError.wrongFormat
+        }
+    }
+    private static func handleForNilValue(isOptional: Bool) throws {
+        if !isOptional {
+            throw MapperError.wrongFormat
+        }
     }
 }

@@ -3,7 +3,7 @@
 import UIKit
 
 
-
+/*
 class Chair: Mapable {
     var id: String
     
@@ -75,5 +75,5 @@ do {
     user.chair?.id
 } catch {
     print(error)
-}
+}*/
 
