@@ -76,4 +76,7 @@ do {
 } catch {
     print(error)
 }*/
+//let string = "13135"
+//let mirror = Mirror(reflecting: string)
+//mirror.subjectType
 

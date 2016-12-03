@@ -21,12 +21,12 @@ public class Mapper {
                 break
             case let .destination(property):
                 switch property {
-                case let .dictionary(key, valuesType, optional):
-                    print(4)
-                    guard var jsonDictionary = json as? [String: AnyObject] else {
-                        throw MapperError.wrongFormat
+                case let .dictionary(key, _, optional):
+                    if let jsonDictionary = json as? [String: AnyObject] {
+                        try self.process(object: object, with: jsonDictionary[key])
+                    } else {
+                        try handleForNilValue(isOptional: optional)
                     }
-                    try self.process(object: object, with: jsonDictionary[key])
                     break
                 default:
                     break
@@ -39,6 +39,13 @@ public class Mapper {
         }
         return object
     }
+    /*TODO:
+     - implement processing of all mapping properties
+     - add recursively searching
+     - implement all types of helping path
+     - implement correct error throwing
+     - refactoring and extending functionality
+    */
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
         if let object = try self.map(json, type: T.self) as? T {
             return object
@@ -55,10 +62,10 @@ public class Mapper {
             switch mappingProperty {
             case let .property(type, key, optional):
                 if let property = jsonDictionary[key] {
-                    try self.check(property: property, for: type, optional: optional)
+                    try check(property: property, for: type, optional: optional)
                     propertyDictionary[propertyName] = property
                 } else {
-                    try self.handleForNilValue(isOptional: optional)
+                    try handleForNilValue(isOptional: optional)
                 }
                 break
             case let .mappingObject(key, childType, optional):
@@ -67,15 +74,11 @@ public class Mapper {
                 
                 if let aValue = child?.value {
                     var aChild = aValue
-                    do {
-                        aChild = try self.map(jsonDictionary[key],
-                                              type: childType)
-                        propertyDictionary[propertyName] = aChild as AnyObject?
-                    } catch {
-                        print(error)
-                    }
+                    aChild = try map(jsonDictionary[key],
+                                          type: childType)
+                    propertyDictionary[propertyName] = aChild as AnyObject?
                 } else {
-                    try self.handleForNilValue(isOptional: optional)
+                    try handleForNilValue(isOptional: optional)
                 }
                 break
             default:
@@ -84,16 +87,9 @@ public class Mapper {
         }
         object.map(with: propertyDictionary)
     }
-    private static func check(property: Any, for type: MappingType, optional: Bool) throws {
-        let typeOfProperty = type(of: property)
-        let comparingTypes = type.validTypes.map { (type) -> Any.Type in
-            if optional {
-                return Optional.some(type)!
-            } else {
-                return type
-            }
-        }
-        if !comparingTypes.contains() {$0 == typeOfProperty} {
+    private static func check(property: AnyObject, for type: MappingType, optional: Bool) throws {
+        let mirror = Mirror(reflecting: property)
+        if !type.validTypes.contains() {$0 == mirror.subjectType} {
             throw MapperError.wrongFormat
         }
     }
