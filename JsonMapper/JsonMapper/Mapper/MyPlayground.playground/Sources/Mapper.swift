@@ -11,8 +11,6 @@ import Foundation
 public class Mapper {
     private class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
         var object = type.init()
-        
-        var propertyDictionary: [String: AnyObject] = [:]
         if object.helpingPath.isEmpty {
             throw MapperError.wrongSetting
         }
@@ -47,7 +45,7 @@ public class Mapper {
         }
         throw MapperError.wrongFormat
     }
-    private static func process(object: Mapable, with json: AnyObject?) throws -> Mapable {
+    private static func process(object: Mapable, with json: AnyObject?) throws {
         guard let jsonDictionary = json as? [String: AnyObject] else {
             throw MapperError.wrongFormat
         }
@@ -83,6 +81,5 @@ public class Mapper {
             }
         }
         object.map(with: propertyDictionary)
-        return object
     }
 }

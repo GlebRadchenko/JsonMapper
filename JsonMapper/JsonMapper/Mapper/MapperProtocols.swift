@@ -30,7 +30,7 @@ public enum MappingType {
 public enum MappingProperty {
     case property(type: MappingType, key: String, optional: Bool)
     
-    case mappingObject(key: String, type: Any.Type, optional: Bool)
+    case mappingObject(key: String, type: Mapable.Type, optional: Bool)
     
     case array(key: String, valuesType: MappingType, optional: Bool)
     case dictionary(key: String, valuesType: MappingType, optional: Bool)

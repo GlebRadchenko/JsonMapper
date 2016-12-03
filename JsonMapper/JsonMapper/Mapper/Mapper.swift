@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Mapper {
+public class Mapper {
     private class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
         var object = type.init()
         
