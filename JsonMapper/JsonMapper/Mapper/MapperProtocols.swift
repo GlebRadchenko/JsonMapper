@@ -38,7 +38,7 @@ public enum MappingType {
         case .string:
             return [String.self]
         case .number:
-            return [Int.self, Double.self, Float.self]
+            return [Int.self, Double.self, Float.self, NSNumber.self]
         case .bool:
             return [Bool.self]
         case .anyObject:

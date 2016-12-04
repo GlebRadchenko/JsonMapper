@@ -59,7 +59,7 @@ class User: Mapable {
         }
     }
     
-    var helpingPath: [MapPathable] = [.destination(nodeType: .dictionary(key: "User", index: nil))]
+    var helpingPath: [MapPathable] = [.destination(nodeType: .dictionary(key: "user", index: nil))]
     
     var relations: [String: MappingProperty] {
         return ["name": .property(type: .string, key: "name", optional: false),

@@ -322,9 +322,23 @@ public class Mapper {
     }
     
     internal class func isValid(property: AnyObject, for type: MappingType) -> Bool {
-        let mirror = Mirror(reflecting: property)
-        if !type.validTypes.contains() {$0 == mirror.subjectType} {
-            return false
+        if let string = property as? String {
+            let mirror = Mirror(reflecting: string)
+            if !type.validTypes.contains() {$0 == mirror.subjectType} {
+                return false
+            }
+        }
+        if let double = property as? Double {
+            let mirror = Mirror(reflecting: double)
+            if !type.validTypes.contains() {$0 == mirror.subjectType} {
+                return false
+            }
+        }
+        if let bool = property as? Bool {
+            let mirror = Mirror(reflecting: bool)
+            if !type.validTypes.contains() {$0 == mirror.subjectType} {
+                return false
+            }
         }
         return true
     }

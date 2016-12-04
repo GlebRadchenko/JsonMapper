@@ -32,17 +32,14 @@ class MapperTests: XCTestCase {
     }
     func testRecursiveSearchForProperty() {
         let intValue = Mapper.findRecursively(propertyKey: "age", mappingType: .number, json: json as AnyObject)
-        XCTAssertNil(intValue)
         if let aValue = intValue as? Int {
             XCTAssert(aValue == 21, "Wrong int found")
         }
         let stringValue = Mapper.findRecursively(propertyKey:"name", mappingType: .string, json: json as AnyObject)
-        XCTAssertNil(stringValue)
         if let aValue = stringValue as? String {
             XCTAssert(aValue == "Test", "Wrong string found")
         }
         let boolValue = Mapper.findRecursively(propertyKey: "male", mappingType: .bool, json: json as AnyObject)
-        XCTAssertNil(boolValue)
         if let aValue = boolValue as? Bool {
             XCTAssert(aValue == true, "Wrong bool found")
         }
@@ -50,17 +47,14 @@ class MapperTests: XCTestCase {
     }
     func testRecursiveSearchForArray() {
         let intArray = Mapper.findRecursively(arrayKey: "testIntArray", valuesType: .number, json: json as AnyObject)
-        XCTAssertNil(intArray)
         if let aArray = intArray as? [Int] {
             XCTAssert(aArray.count == 4, "Wrong int array found")
         }
         let stringArray = Mapper.findRecursively(arrayKey: "testStringArray", valuesType: .string, json: json as AnyObject)
-        XCTAssertNil(stringArray)
         if let aArray = stringArray as? [String] {
             XCTAssert(aArray.count == 4, "Wrong string array found")
         }
         let boolArray = Mapper.findRecursively(arrayKey: "testBoolArray", valuesType: .bool, json: json as AnyObject)
-        XCTAssertNil(boolArray)
         if let aArray = boolArray as? [Bool] {
             XCTAssert(aArray.count == 4, "Wrong bool array found")
         }
@@ -71,20 +65,28 @@ class MapperTests: XCTestCase {
             XCTAssert(user.age == 21, "Wrong age")
             XCTAssert(user.isMale == true, "Wrong isMale")
             XCTAssert(user.name == "Test", "Wrong name")
-            XCTAssertNil(user.chair)
-            
+            XCTAssert(user.chair?.id == "123", "Wrong chair")
             let chair: Chair = try Mapper.map(json as AnyObject)
             XCTAssert(chair.id == "123", "Wrong chair id")
-            
         } catch {
-            print(error)
+            XCTFail()
         }
     }
     
     func testPerformanceExample() {
-        // This is an example of a performance test case.
         self.measure {
-            // Put the code you want to measure the time of here.
+            do {
+                let user: User = try Mapper.map(self.json as AnyObject)
+                XCTAssert(user.age == 21, "Wrong age")
+                XCTAssert(user.isMale == true, "Wrong isMale")
+                XCTAssert(user.name == "Test", "Wrong name")
+                
+                let chair: Chair = try Mapper.map(self.json as AnyObject)
+                XCTAssert(chair.id == "123", "Wrong chair id")
+                
+            } catch {
+                XCTFail()
+            }
         }
     }
     

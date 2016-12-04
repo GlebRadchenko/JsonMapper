@@ -15,7 +15,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+//        let json = ["user": ["name" : "Test",
+//                             "age": 21,
+//                             "male": true,
+//                             "chair": ["id": "123",
+//                                       "testIntArray": [1, 2, 3, 4],
+//                                       "testStringArray": ["1", "2", "3", "4"],
+//                                       "testBoolArray": [true, false, true, false]
+//            ]
+//            ]
+//        ]
+//        do {
+//            let user: User = try Mapper.map(json as AnyObject)
+//            let chair: Chair = try Mapper.map(json as AnyObject)
+//            print(chair)
+//            print(user)
+//        } catch {
+//            print(error)
+//        }
         return true
     }
 
