@@ -65,6 +65,21 @@ class MapperTests: XCTestCase {
             XCTAssert(aArray.count == 4, "Wrong bool array found")
         }
     }
+    func testMapping() {
+        do {
+            let user: User = try Mapper.map(json as AnyObject)
+            XCTAssert(user.age == 21, "Wrong age")
+            XCTAssert(user.isMale == true, "Wrong isMale")
+            XCTAssert(user.name == "Test", "Wrong name")
+            XCTAssertNil(user.chair)
+            
+            let chair: Chair = try Mapper.map(json as AnyObject)
+            XCTAssert(chair.id == "123", "Wrong chair id")
+            
+        } catch {
+            print(error)
+        }
+    }
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
