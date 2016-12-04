@@ -10,7 +10,11 @@ import Foundation
 
 public class Mapper {
     private class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
+        guard var json = json else {
+            throw MapperError.wrongFormat
+        }
         var object = type.init()
+        
         if object.helpingPath.isEmpty {
             throw MapperError.wrongSetting
         }
@@ -52,6 +56,8 @@ public class Mapper {
         }
         throw MapperError.wrongFormat
     }
+//    public class func map<T: Mapable>(_ json: AnyObject) throws -> [T] {
+//    }
     private static func process(object: Mapable, with json: AnyObject?) throws {
         guard let jsonDictionary = json as? [String: AnyObject] else {
             throw MapperError.wrongFormat
@@ -62,10 +68,15 @@ public class Mapper {
             switch mappingProperty {
             case let .property(type, key, optional):
                 if let property = jsonDictionary[key] {
-                    try check(property: property, for: type, optional: optional)
-                    propertyDictionary[propertyName] = property
+                    if isValid(property: property, for: type, optional: optional) {
+                        propertyDictionary[propertyName] = property
+                    } else {
+                        try handleForNilValue(isOptional: optional)
+                        propertyDictionary[propertyName] = nil
+                    }
                 } else {
                     try handleForNilValue(isOptional: optional)
+                    propertyDictionary[propertyName] = nil
                 }
                 break
             case let .mappingObject(key, childType, optional):
@@ -79,6 +90,7 @@ public class Mapper {
                     propertyDictionary[propertyName] = aChild as AnyObject?
                 } else {
                     try handleForNilValue(isOptional: optional)
+                    propertyDictionary[propertyName] = nil
                 }
                 break
             default:
@@ -87,15 +99,113 @@ public class Mapper {
         }
         object.map(with: propertyDictionary)
     }
-    private static func check(property: AnyObject, for type: MappingType, optional: Bool) throws {
+    
+    private static func mapRecursively(initialObject: Mapable, json: AnyObject, optional: Bool) throws {
+        var propertyDictionary = [String: AnyObject?]()
+        try initialObject.relations.forEach { (nameOfProperty, mappingProperty) in
+            if let aProperty = try findRecursively(mappingProperty, optional: optional, json: json) {
+                propertyDictionary[nameOfProperty] = aProperty
+            } else {
+                try handleForNilValue(isOptional: optional)
+                propertyDictionary[nameOfProperty] = nil
+            }
+        }
+        initialObject.map(with: propertyDictionary)
+    }
+    
+    private static func findRecursively(_ mappingProperty: MappingProperty, optional: Bool, json: AnyObject) throws -> AnyObject? {
+        switch mappingProperty {
+        case let .property(type, key, optional):
+            return findRecursively(key, mappingType: type, optional: optional, json: json)
+        case let .array(key, valuesType, optional):
+            break
+        case let .dictionary(key, valuesType, optional):
+            break
+        case let .mappingObject(key, type, optional):
+            break
+        }
+        throw MapperError.notFound
+    }
+    
+    //Search for a single property
+    private static func findRecursively(_ propertyKey: String, mappingType: MappingType, optional: Bool, json: AnyObject) -> AnyObject? {
+        //Base of recursion
+        if isContainsOnlyAtomaryValues(json) {
+            //At this point we are reached last level of JSON tree
+            if let jsonDictionary = json as? [String: AnyObject] {
+                for (key, value) in jsonDictionary {
+                    if key == propertyKey {
+                        if isValid(property: value, for: mappingType, optional: optional) {
+                            return value
+                        }
+                    }
+                }
+            }
+            return nil
+        } else {
+            //Our JSON object contains values in wich we can fallthhrought
+            
+            //if JSON object is Dictionary - check it
+            if let jsonDictionary = json as? [String: AnyObject] {
+                for (key, value) in jsonDictionary {
+                    if key == propertyKey {
+                        if isValid(property: value, for: mappingType, optional: optional) {
+                            return value
+                        }
+                    } else {
+                        if let findedValue = findRecursively(propertyKey, mappingType: mappingType, optional: optional, json: value) {
+                            return findedValue
+                        }
+                    }
+                }
+            }
+            //if JSON object is Array - check it
+            if let jsonArray = json as? [AnyObject] {
+                for value in jsonArray {
+                    if let findedValue = findRecursively(propertyKey, mappingType: mappingType, optional: optional, json: value) {
+                        return findedValue
+                    }
+                }
+            }
+            
+            return nil
+        }
+    }
+    private static func isContainsOnlyAtomaryValues(_ json: AnyObject) -> Bool {
+        if let jsonDictionary = json as? [String: AnyObject] {
+            for (_, value) in jsonDictionary {
+                if value is Dictionary<String, Any> {
+                    return false
+                }
+                if value is Array<Any> {
+                    return false
+                }
+            }
+        }
+        if let jsonArray = json as? [AnyObject] {
+            for value in jsonArray {
+                if value is Dictionary<String, Any> {
+                    return false
+                }
+                if value is Array<Any> {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    
+    private static func isValid(property: AnyObject, for type: MappingType, optional: Bool) -> Bool {
         let mirror = Mirror(reflecting: property)
         if !type.validTypes.contains() {$0 == mirror.subjectType} {
-            throw MapperError.wrongFormat
+            return false
         }
+        return true
     }
     private static func handleForNilValue(isOptional: Bool) throws {
         if !isOptional {
-            throw MapperError.wrongFormat
+            throw MapperError.notFound
         }
     }
 }
