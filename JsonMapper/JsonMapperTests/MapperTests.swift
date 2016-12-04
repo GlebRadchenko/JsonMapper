@@ -9,7 +9,16 @@
 import XCTest
 
 class MapperTests: XCTestCase {
-    let json = ["user": ["name" : "Test", "age": 21, "male": true, "chair": ["id": "123"]]]
+    let json = ["user": ["name" : "Test",
+                         "age": 21,
+                         "male": true,
+                         "chair": ["id": "123",
+                                   "testIntArray": [1, 2, 3, 4],
+                                   "testStringArray": ["1", "2", "3", "4"],
+                                   "testBoolArray": [true, false, true, false]
+                                    ]
+                        ]
+                ]
     
     
     override func setUp() {
@@ -21,25 +30,40 @@ class MapperTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    func testRecursiveSearch1() {
-        let intValue = Mapper.findRecursively("age", mappingType: .number, optional: false, json: json as AnyObject)
+    func testRecursiveSearchForProperty() {
+        let intValue = Mapper.findRecursively(propertyKey: "age", mappingType: .number, json: json as AnyObject)
         XCTAssertNil(intValue)
         if let aValue = intValue as? Int {
             XCTAssert(aValue == 21, "Wrong int found")
         }
-        let stringValue = Mapper.findRecursively("name", mappingType: .string, optional: false, json: json as AnyObject)
+        let stringValue = Mapper.findRecursively(propertyKey:"name", mappingType: .string, json: json as AnyObject)
         XCTAssertNil(stringValue)
         if let aValue = stringValue as? String {
             XCTAssert(aValue == "Test", "Wrong string found")
         }
-        let boolValue = Mapper.findRecursively("male", mappingType: .bool, optional: false, json: json as AnyObject)
+        let boolValue = Mapper.findRecursively(propertyKey: "male", mappingType: .bool, json: json as AnyObject)
         XCTAssertNil(boolValue)
         if let aValue = boolValue as? Bool {
             XCTAssert(aValue == true, "Wrong bool found")
         }
-        
-        let optionalValue = Mapper.findRecursively("test", mappingType: .number, optional: true, json: json as AnyObject)
-        XCTAssert(optionalValue == nil, "Optional unexisting value found")
+
+    }
+    func testRecursiveSearchForArray() {
+        let intArray = Mapper.findRecursively(arrayKey: "testIntArray", valuesType: .number, json: json as AnyObject)
+        XCTAssertNil(intArray)
+        if let aArray = intArray as? [Int] {
+            XCTAssert(aArray.count == 4, "Wrong int array found")
+        }
+        let stringArray = Mapper.findRecursively(arrayKey: "testStringArray", valuesType: .string, json: json as AnyObject)
+        XCTAssertNil(stringArray)
+        if let aArray = stringArray as? [String] {
+            XCTAssert(aArray.count == 4, "Wrong string array found")
+        }
+        let boolArray = Mapper.findRecursively(arrayKey: "testBoolArray", valuesType: .bool, json: json as AnyObject)
+        XCTAssertNil(boolArray)
+        if let aArray = boolArray as? [Bool] {
+            XCTAssert(aArray.count == 4, "Wrong bool array found")
+        }
     }
     
     func testPerformanceExample() {

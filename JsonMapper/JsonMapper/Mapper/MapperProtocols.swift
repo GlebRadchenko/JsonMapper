@@ -44,7 +44,7 @@ public enum MappingProperty {
     case mappingObject(key: String, type: Mapable.Type, optional: Bool)
     
     case array(key: String, valuesType: MappingType, optional: Bool)
-    case dictionary(key: String, valuesType: MappingType, optional: Bool)
+    case dictionary(key: String, optional: Bool)
 }
 
 // enum for speeding object Mapping

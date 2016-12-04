@@ -25,7 +25,7 @@ public class Mapper {
                 break
             case let .destination(property):
                 switch property {
-                case let .dictionary(key, _, optional):
+                case let .dictionary(key, optional):
                     if let jsonDictionary = json as? [String: AnyObject] {
                         try self.process(object: object, with: jsonDictionary[key])
                     } else {
@@ -68,7 +68,7 @@ public class Mapper {
             switch mappingProperty {
             case let .property(type, key, optional):
                 if let property = jsonDictionary[key] {
-                    if isValid(property: property, for: type, optional: optional) {
+                    if isValid(property: property, for: type) {
                         propertyDictionary[propertyName] = property
                     } else {
                         try handleForNilValue(isOptional: optional)
@@ -116,28 +116,53 @@ public class Mapper {
     internal static func findRecursively(_ mappingProperty: MappingProperty, optional: Bool, json: AnyObject) throws -> AnyObject? {
         switch mappingProperty {
         case let .property(type, key, optional):
-            return findRecursively(key, mappingType: type, optional: optional, json: json)
+            return findRecursively(propertyKey: key, mappingType: type, json: json)
         case let .array(key, valuesType, optional):
+            return findRecursively(arrayKey: key, valuesType: valuesType, json: json)
             break
-        case let .dictionary(key, valuesType, optional):
+        case let .dictionary(key, optional):
             break
         case let .mappingObject(key, type, optional):
             break
         }
         throw MapperError.notFound
     }
+    internal static func findRecursively(arrayKey: String, valuesType: MappingType, json: AnyObject) -> AnyObject? {
+        if isContainsOnlyAtomaryValues(json) {
+            return nil
+        }
+        if let jsonDictionary = json as? [String: AnyObject] {
+            for (key, childJson) in jsonDictionary {
+                if key == arrayKey {
+                    if let arrayValue = childJson as? [AnyObject], isValid(array: arrayValue, for: valuesType) {
+                        return arrayValue as AnyObject?
+                    }
+                } else {
+                    if let foundedValue = findRecursively(arrayKey: arrayKey, valuesType: valuesType, json: childJson) {
+                        return foundedValue
+                    }
+                }
+            }
+        }
+        if let jsonArray = json as? [AnyObject] {
+            for childJson in jsonArray {
+                if let foundedValue = findRecursively(arrayKey: arrayKey, valuesType: valuesType, json: childJson) {
+                    return foundedValue
+                }
+            }
+        }
+        return nil
+    }
     
     //Search for a single property
-    internal static func findRecursively(_ propertyKey: String, mappingType: MappingType, optional: Bool, json: AnyObject) -> AnyObject? {
+    internal static func findRecursively(propertyKey: String, mappingType: MappingType, json: AnyObject) -> AnyObject? {
         //Base of recursion
         if isContainsOnlyAtomaryValues(json) {
             //At this point we are reached last level of JSON tree
             if let jsonDictionary = json as? [String: AnyObject] {
-                for (key, value) in jsonDictionary {
-                    if key == propertyKey {
-                        if isValid(property: value, for: mappingType, optional: optional) {
-                            return value
-                        }
+                for (key, childJson) in jsonDictionary {
+                    if key == propertyKey, isValid(property: childJson, for: mappingType) {
+                        return childJson
                     }
                 }
             }
@@ -147,13 +172,13 @@ public class Mapper {
             
             //if JSON object is Dictionary - check it
             if let jsonDictionary = json as? [String: AnyObject] {
-                for (key, value) in jsonDictionary {
+                for (key, childJson) in jsonDictionary {
                     if key == propertyKey {
-                        if isValid(property: value, for: mappingType, optional: optional) {
-                            return value
+                        if isValid(property: childJson, for: mappingType) {
+                            return childJson
                         }
                     } else {
-                        if let foundValue = findRecursively(propertyKey, mappingType: mappingType, optional: optional, json: value) {
+                        if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childJson) {
                             return foundValue
                         }
                     }
@@ -161,8 +186,8 @@ public class Mapper {
             }
             //if JSON object is Array - check it
             if let jsonArray = json as? [AnyObject] {
-                for value in jsonArray {
-                    if let foundValue = findRecursively(propertyKey, mappingType: mappingType, optional: optional, json: value) {
+                for childJson in jsonArray {
+                    if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childJson) {
                         return foundValue
                     }
                 }
@@ -196,10 +221,18 @@ public class Mapper {
     }
     
     
-    internal static func isValid(property: AnyObject, for type: MappingType, optional: Bool) -> Bool {
+    internal static func isValid(property: AnyObject, for type: MappingType) -> Bool {
         let mirror = Mirror(reflecting: property)
         if !type.validTypes.contains() {$0 == mirror.subjectType} {
             return false
+        }
+        return true
+    }
+    internal static func isValid(array: [AnyObject], for type: MappingType) -> Bool {
+        for value in array {
+            if !isValid(property: value, for: type) {
+                return false
+            }
         }
         return true
     }
