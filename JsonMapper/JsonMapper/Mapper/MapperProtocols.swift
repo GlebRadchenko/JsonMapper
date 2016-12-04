@@ -8,6 +8,12 @@
 
 import Foundation
 
+enum MapperSearchType {
+    case recursive
+    case recursiveWithDestination
+    case determined
+}
+
 public enum MapperError: Error, CustomStringConvertible {
     case notFound
     case wrongSetting
@@ -25,6 +31,7 @@ public enum MappingType {
     case string
     case bool
     case number
+    case anyObject
     
     var validTypes: [Any.Type] {
         switch self {
@@ -34,6 +41,8 @@ public enum MappingType {
             return [Int.self, Double.self, Float.self]
         case .bool:
             return [Bool.self]
+        case .anyObject:
+            return [AnyObject.self]
         }
     }
 }
@@ -45,13 +54,27 @@ public enum MappingProperty {
     
     case array(key: String, valuesType: MappingType, optional: Bool)
     case dictionary(key: String, optional: Bool)
+    
+    var isOptional: Bool {
+        switch self {
+        case let .property(_, _, optional),
+             let .array(_, _, optional),
+             let .dictionary(_, optional),
+             let .mappingObject(_, _, optional):
+            return optional
+        }
+    }
 }
 
 // enum for speeding object Mapping
 public enum MapPathable {
     case none
-    case target(property: MappingProperty)
-    case destination(property: MappingProperty)
+    case target(nodeType: JsonNodeType)
+    case destination(nodeType: JsonNodeType)
+}
+public enum JsonNodeType {
+    case array(key: String?, index: Int?)
+    case dictionary(key: String?, index: Int?)
 }
 
 public protocol Mapable {
