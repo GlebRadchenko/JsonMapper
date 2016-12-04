@@ -15,6 +15,9 @@
 		606076BD1DF2D6DD003B19B7 /* JsonMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076BC1DF2D6DD003B19B7 /* JsonMapperTests.swift */; };
 		606076CA1DF3065C003B19B7 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
 		606076CC1DF306B7003B19B7 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
+		606076CE1DF49CF0003B19B7 /* MapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CD1DF49CF0003B19B7 /* MapperTests.swift */; };
+		606076CF1DF49D6E003B19B7 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
+		606076D01DF49E09003B19B7 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +44,7 @@
 		606076C81DF2D737003B19B7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		606076C91DF3065C003B19B7 /* MapperProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperProtocols.swift; sourceTree = "<group>"; };
 		606076CB1DF306B7003B19B7 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
+		606076CD1DF49CF0003B19B7 /* MapperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +102,7 @@
 			children = (
 				606076BC1DF2D6DD003B19B7 /* JsonMapperTests.swift */,
 				606076BE1DF2D6DD003B19B7 /* Info.plist */,
+				606076CD1DF49CF0003B19B7 /* MapperTests.swift */,
 			);
 			path = JsonMapperTests;
 			sourceTree = "<group>";
@@ -228,6 +233,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				606076CE1DF49CF0003B19B7 /* MapperTests.swift in Sources */,
+				606076CF1DF49D6E003B19B7 /* Mapper.swift in Sources */,
+				606076D01DF49E09003B19B7 /* MapperProtocols.swift in Sources */,
 				606076BD1DF2D6DD003B19B7 /* JsonMapperTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,6 +436,7 @@
 				606076C31DF2D6DD003B19B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		606076C41DF2D6DD003B19B7 /* Build configuration list for PBXNativeTarget "JsonMapperTests" */ = {
 			isa = XCConfigurationList;
@@ -436,6 +445,7 @@
 				606076C61DF2D6DD003B19B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
