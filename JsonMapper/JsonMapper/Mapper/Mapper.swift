@@ -172,6 +172,7 @@ public class Mapper {
         guard let jsonNode = json as? [String: AnyObject] else {
             throw MapperError.wrongFormat
         }
+        //Try somehow to reduce this
         var processingJson: AnyObject = jsonNode as AnyObject
         for atomaryPath in initialObject.helpingPath {
             var isFallenThrought = false
