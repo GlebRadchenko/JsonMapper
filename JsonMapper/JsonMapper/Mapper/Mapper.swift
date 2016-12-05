@@ -63,6 +63,18 @@ public class Mapper {
         }
         return object
     }
+    internal class func mapRecursively(initialObject: Mapable, json: AnyObject) throws {
+        var propertyDictionary = [String: AnyObject]()
+        try initialObject.relations.forEach { (nameOfProperty, mappingProperty) in
+            guard let aProperty = try findRecursively(mappingProperty, json: json) else {
+                try handleForNilValue(isOptional: mappingProperty.isOptional)
+                propertyDictionary[nameOfProperty] = nil
+                return
+            }
+            propertyDictionary[nameOfProperty] = aProperty
+        }
+        initialObject.map(with: Wrapping(propertyDictionary))
+    }
     internal class func mapRecursively(initialObject: Mapable, destinationKey: String, json: AnyObject) throws {
         if isContainsOnlyAtomaryValues(json) {
             throw MapperError.notFound
@@ -105,6 +117,37 @@ public class Mapper {
         }
         throw MapperError.notFound
     }
+    
+    internal class func map(initialObject: Mapable, json: AnyObject) throws {
+        var paths = initialObject.helpingPath
+        let initialPath = paths.removeFirst()
+        switch initialPath {
+        case let .target(nodeType):
+            try check(json: json, for: nodeType)
+            break
+        default:
+            throw MapperError.wrongSetting
+        }
+        var processingJson = json
+        for atomaryPath in initialObject.helpingPath {
+            switch atomaryPath {
+            case let .target(nodeType), let .destination(nodeType):
+                guard let nextNode = try fall(through: processingJson, nextNode: nodeType) else {
+                    throw MapperError.wrongSetting
+                }
+                processingJson = nextNode
+                break
+            case .none:
+                throw MapperError.wrongSetting
+            }
+        }
+        //At this point we have final object wich we should bind to object
+        if let objectDictionary = processingJson as? [String: AnyObject] {
+            try bind(dictionary: objectDictionary, to: initialObject)
+        } else {
+            throw MapperError.wrongSetting
+        }
+    }
     internal static func fall(through json: AnyObject, nextNode: JsonNodeType) throws -> AnyObject? {
         switch nextNode {
         case let .array(key, index):
@@ -144,6 +187,16 @@ public class Mapper {
         }
         return nil
     }
+    internal class func bind(dictionary: [String: AnyObject], to object: Mapable) throws {
+        var propertyDictionary = [String: AnyObject]()
+        for (propertyName, mappingProperty) in object.relations {
+            propertyDictionary[propertyName] = try validate(property: mappingProperty, dictionary: dictionary)
+        }
+        object.map(with: Wrapping(propertyDictionary))
+    }
+}
+//MARK: - Helpers
+extension Mapper {
     internal class func check(json: AnyObject, for type: JsonNodeType) throws {
         switch type {
         case .array:
@@ -158,59 +211,6 @@ public class Mapper {
             break
         }
     }
-    internal class func map(initialObject: Mapable, json: AnyObject) throws {
-        var paths = initialObject.helpingPath
-        let initialPath = paths.removeFirst()
-        switch initialPath {
-        case let .target(nodeType):
-            try check(json: json, for: nodeType)
-            break
-        default:
-            throw MapperError.wrongSetting
-        }
-        var processingJson: AnyObject = json as AnyObject
-        for atomaryPath in initialObject.helpingPath {
-            switch atomaryPath {
-            case let .target(nodeType), let .destination(nodeType):
-                guard let nextNode = try fall(through: processingJson, nextNode: nodeType) else {
-                    throw MapperError.wrongSetting
-                }
-                processingJson = nextNode
-                break
-            case .none:
-                throw MapperError.wrongSetting
-            }
-        }
-        //at this point we have final object wich we should bind to object
-        if let objectDictionary = processingJson as? [String: AnyObject] {
-            try bind(dictionary: objectDictionary, to: initialObject)
-        } else {
-            throw MapperError.wrongSetting
-        }
-    }
-    internal class func mapRecursively(initialObject: Mapable, json: AnyObject) throws {
-        var propertyDictionary = [String: AnyObject]()
-        try initialObject.relations.forEach { (nameOfProperty, mappingProperty) in
-            guard let aProperty = try findRecursively(mappingProperty, json: json) else {
-                try handleForNilValue(isOptional: mappingProperty.isOptional)
-                propertyDictionary[nameOfProperty] = nil
-                return
-            }
-            propertyDictionary[nameOfProperty] = aProperty
-        }
-        initialObject.map(with: Wrapping(propertyDictionary))
-    }
-    
-    internal class func bind(dictionary: [String: AnyObject], to object: Mapable) throws {
-        var propertyDictionary = [String: AnyObject]()
-        for (propertyName, mappingProperty) in object.relations {
-            propertyDictionary[propertyName] = try validate(property: mappingProperty, dictionary: dictionary)
-        }
-        object.map(with: Wrapping(propertyDictionary))
-    }
-}
-//MARK: - Helpers
-extension Mapper {
     internal class func searchType(for path: [MapPathable]) throws -> MapperSearchType {
         if path.isEmpty {
             return .recursive
