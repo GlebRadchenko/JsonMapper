@@ -507,25 +507,15 @@ extension Mapper {
     }
     //Detecting last level of JSON Tree
     internal class func isContainsOnlyAtomaryValues(_ json: AnyObject) -> Bool {
+        var nodesToCheck = [AnyObject]()
         if let jsonDictionary = json as? [String: AnyObject] {
-            for (_, value) in jsonDictionary {
-                if value is Dictionary<String, Any> {
-                    return false
-                }
-                if value is Array<Any> {
-                    return false
-                }
-            }
+            nodesToCheck = jsonDictionary.values.map {$0 as AnyObject}
         }
         if let jsonArray = json as? [AnyObject] {
-            for value in jsonArray {
-                if value is Dictionary<String, Any> {
-                    return false
-                }
-                if value is Array<Any> {
-                    return false
-                }
-            }
+            nodesToCheck = jsonArray
+        }
+        for node in nodesToCheck {
+            if node is Dictionary<String, Any> || node is Array<Any> { return false }
         }
         return true
     }
