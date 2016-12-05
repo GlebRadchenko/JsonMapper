@@ -17,11 +17,14 @@ public class Mapper {
      - refactoring and extending functionality
      */
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
-        if let object = try self.map(json, type: T.self) as? T {
-            return object
-        }
-        throw MapperError.wrongFormat
+        return try map(json, type: T.self) as! T
     }
+//    public class func map<T>(_ json: AnyObject) throws -> [T] where T: Mapable {
+//        if let objects: [T] = try map(json, type: T.self) {
+//            return objects
+//        }
+//        throw MapperError.wrongFormat
+//    }
     internal class func searchType(for path: [MapPathable]) throws -> MapperSearchType {
         if path.isEmpty {
             return .recursive
@@ -70,6 +73,9 @@ public class Mapper {
         }
         return .determined
     }
+//    internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> [Mapable] {
+//        throw MapperError.wrongFormat
+//    }
     internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
         guard let json = json else {
             throw MapperError.wrongFormat
