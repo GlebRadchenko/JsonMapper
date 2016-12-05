@@ -14,9 +14,13 @@ class Chair: Mapable {
     var helpingPath: [MapPathable] = [.none]
     var relations: [String: MappingProperty] = ["id": .property(type: .string, key: "id", optional: false)]
     
-    func map(with dictionary: [String: AnyObject?]) {
-        if let id = dictionary["id"] as? String {
-            self.id = id
+    func map(with wrapping: Wrapping) {
+        do {
+            if let id: String = try wrapping.get("id") {
+                self.id = id
+            }
+        } catch {
+            print(error)
         }
     }
     
@@ -44,18 +48,14 @@ class User: Mapable {
         isMale = false
     }
     
-    func map(with dictionary: [String: AnyObject?]) {
-        if let name = dictionary["name"] as? String {
-            self.name = name
-        }
-        if let age = dictionary["age"] as? Int {
-            self.age = age
-        }
-        if let isMale = dictionary["isMale"] as? Bool {
-            self.isMale = isMale
-        }
-        if let chair = dictionary["chair"] as? Chair {
-            self.chair = chair
+    func map(with wrapping: Wrapping) {
+        do {
+            name = try wrapping.get("name")!
+            age = try wrapping.get("age")!
+            isMale = try wrapping.get("isMale")!
+            chair = try wrapping.get("chair")
+        } catch {
+            print(error)
         }
     }
     

@@ -269,7 +269,7 @@ public class Mapper {
                 propertyDictionary[nameOfProperty] = nil
             }
         }
-        initialObject.map(with: propertyDictionary)
+        initialObject.map(with: Wrapping(propertyDictionary))
     }
     internal class func bind(dictionary: [String: AnyObject], to object: Mapable) throws {
         var propertyDictionary = [String: AnyObject]()
@@ -325,7 +325,7 @@ public class Mapper {
                 break
             }
         }
-        object.map(with: propertyDictionary)
+        object.map(with: Wrapping(propertyDictionary))
     }
     
     internal class func isValid(property: AnyObject, for type: MappingType) -> Bool {

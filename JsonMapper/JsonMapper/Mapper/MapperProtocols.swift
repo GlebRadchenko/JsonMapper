@@ -80,6 +80,6 @@ public enum JsonNodeType {
 public protocol Mapable {
     var helpingPath: [MapPathable] {get set}
     var relations: [String: MappingProperty] {get}
-    func map(with dictionary: [String: AnyObject?])
+    func map(with wraping: Wrapping)
     init()
 }

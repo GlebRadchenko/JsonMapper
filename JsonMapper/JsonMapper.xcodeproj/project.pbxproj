@@ -19,6 +19,8 @@
 		606076D01DF49E09003B19B7 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
 		606076D21DF4CEE1003B19B7 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
 		606076D31DF4CEE1003B19B7 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
+		606076D51DF53818003B19B7 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
+		606076D61DF53818003B19B7 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +48,7 @@
 		606076CB1DF306B7003B19B7 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
 		606076CD1DF49CF0003B19B7 /* MapperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperTests.swift; sourceTree = "<group>"; };
 		606076D11DF4CEE1003B19B7 /* TestClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestClasses.swift; sourceTree = "<group>"; };
+		606076D41DF53818003B19B7 /* Wrapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapping.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +117,7 @@
 				606076C81DF2D737003B19B7 /* MyPlayground.playground */,
 				606076C91DF3065C003B19B7 /* MapperProtocols.swift */,
 				606076CB1DF306B7003B19B7 /* Mapper.swift */,
+				606076D41DF53818003B19B7 /* Wrapping.swift */,
 			);
 			path = Mapper;
 			sourceTree = "<group>";
@@ -224,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				606076CC1DF306B7003B19B7 /* Mapper.swift in Sources */,
+				606076D51DF53818003B19B7 /* Wrapping.swift in Sources */,
 				606076CA1DF3065C003B19B7 /* MapperProtocols.swift in Sources */,
 				606076D21DF4CEE1003B19B7 /* TestClasses.swift in Sources */,
 				606076AA1DF2D6DC003B19B7 /* ViewController.swift in Sources */,
@@ -239,6 +244,7 @@
 				606076CF1DF49D6E003B19B7 /* Mapper.swift in Sources */,
 				606076D31DF4CEE1003B19B7 /* TestClasses.swift in Sources */,
 				606076D01DF49E09003B19B7 /* MapperProtocols.swift in Sources */,
+				606076D61DF53818003B19B7 /* Wrapping.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
