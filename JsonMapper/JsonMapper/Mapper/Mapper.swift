@@ -25,54 +25,6 @@ public class Mapper {
 //        }
 //        throw MapperError.wrongFormat
 //    }
-    internal class func searchType(for path: [MapPathable]) throws -> MapperSearchType {
-        if path.isEmpty {
-            return .recursive
-        }
-        let isContainsTargetPaths = path.contains { (path) -> Bool in
-            switch path {
-            case .target:
-                return true
-            default:
-                return false
-            }
-        }
-        let isContainsDestination = path.contains { (path) -> Bool in
-            switch path {
-            case .destination:
-                return true
-            default:
-                return false
-            }
-        }
-        let isContainsNone  = path.contains { (path) -> Bool in
-            switch path {
-            case .none:
-                return true
-            default:
-                return false
-            }
-        }
-        if isContainsNone {
-            if isContainsTargetPaths || isContainsDestination {
-                throw MapperError.wrongFormat
-            }
-            return .recursive
-        }
-        if isContainsTargetPaths {
-            if isContainsDestination {
-                return .determined
-            } else {
-                throw MapperError.wrongFormat
-            }
-        }
-        if isContainsDestination {
-            if !isContainsTargetPaths {
-                return .recursiveWithDestination
-            }
-        }
-        return .determined
-    }
 //    internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> [Mapable] {
 //        throw MapperError.wrongFormat
 //    }
@@ -262,12 +214,12 @@ public class Mapper {
     internal class func mapRecursively(initialObject: Mapable, json: AnyObject) throws {
         var propertyDictionary = [String: AnyObject]()
         try initialObject.relations.forEach { (nameOfProperty, mappingProperty) in
-            if let aProperty = try findRecursively(mappingProperty, json: json) {
-                propertyDictionary[nameOfProperty] = aProperty
-            } else {
+            guard let aProperty = try findRecursively(mappingProperty, json: json) else {
                 try handleForNilValue(isOptional: mappingProperty.isOptional)
                 propertyDictionary[nameOfProperty] = nil
+                return
             }
+            propertyDictionary[nameOfProperty] = aProperty
         }
         initialObject.map(with: Wrapping(propertyDictionary))
     }
@@ -279,10 +231,56 @@ public class Mapper {
         }
         object.map(with: Wrapping(propertyDictionary))
     }
-    internal class func handleForNilValue(isOptional: Bool) throws {
-        if !isOptional {
-            throw MapperError.notFound
+}
+//MARK: - Helpers 
+extension Mapper {
+    internal class func searchType(for path: [MapPathable]) throws -> MapperSearchType {
+        if path.isEmpty {
+            return .recursive
         }
+        let isContainsTargetPaths = path.contains { (path) -> Bool in
+            switch path {
+            case .target:
+                return true
+            default:
+                return false
+            }
+        }
+        let isContainsDestination = path.contains { (path) -> Bool in
+            switch path {
+            case .destination:
+                return true
+            default:
+                return false
+            }
+        }
+        let isContainsNone  = path.contains { (path) -> Bool in
+            switch path {
+            case .none:
+                return true
+            default:
+                return false
+            }
+        }
+        if isContainsNone {
+            if isContainsTargetPaths || isContainsDestination {
+                throw MapperError.wrongFormat
+            }
+            return .recursive
+        }
+        if isContainsTargetPaths {
+            if isContainsDestination {
+                return .determined
+            } else {
+                throw MapperError.wrongFormat
+            }
+        }
+        if isContainsDestination {
+            if !isContainsTargetPaths {
+                return .recursiveWithDestination
+            }
+        }
+        return .determined
     }
 }
 
@@ -353,11 +351,12 @@ extension Mapper {
     }
     internal class func isValid(array: [AnyObject], for type: MappingType) -> Bool {
         for value in array {
-            if !isValid(property: value, for: type) {
-                return false
-            }
+            if !isValid(property: value, for: type) { return false }
         }
         return true
+    }
+    internal class func handleForNilValue(isOptional: Bool) throws {
+        if !isOptional { throw MapperError.notFound }
     }
 }
 
@@ -508,12 +507,8 @@ extension Mapper {
     //Detecting last level of JSON Tree
     internal class func isContainsOnlyAtomaryValues(_ json: AnyObject) -> Bool {
         var nodesToCheck = [AnyObject]()
-        if let jsonDictionary = json as? [String: AnyObject] {
-            nodesToCheck = jsonDictionary.values.map {$0 as AnyObject}
-        }
-        if let jsonArray = json as? [AnyObject] {
-            nodesToCheck = jsonArray
-        }
+        if let jsonDictionary = json as? [String: AnyObject] { nodesToCheck = jsonDictionary.values.map {$0 as AnyObject} }
+        if let jsonArray = json as? [AnyObject] { nodesToCheck = jsonArray }
         for node in nodesToCheck {
             if node is Dictionary<String, Any> || node is Array<Any> { return false }
         }
