@@ -19,15 +19,15 @@ public class Mapper {
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
         return try map(json, type: T.self) as! T
     }
-//    public class func map<T>(_ json: AnyObject) throws -> [T] where T: Mapable {
-//        if let objects: [T] = try map(json, type: T.self) {
-//            return objects
-//        }
-//        throw MapperError.wrongFormat
-//    }
-//    internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> [Mapable] {
-//        throw MapperError.wrongFormat
-//    }
+    //    public class func map<T>(_ json: AnyObject) throws -> [T] where T: Mapable {
+    //        if let objects: [T] = try map(json, type: T.self) {
+    //            return objects
+    //        }
+    //        throw MapperError.wrongFormat
+    //    }
+    //    internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> [Mapable] {
+    //        throw MapperError.wrongFormat
+    //    }
     internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
         guard let json = json else {
             throw MapperError.wrongFormat
@@ -103,8 +103,46 @@ public class Mapper {
                 } catch {}
             }
         }
-        
         throw MapperError.notFound
+    }
+    internal static func fall(through json: AnyObject, nextNode: JsonNodeType) throws -> AnyObject? {
+        switch nextNode {
+        case let .array(key, index):
+            if index == nil, key == nil { throw MapperError.wrongSetting }
+            if let key = key {
+                if let dictionaryNode = json as? [String: AnyObject], let arrayNode = dictionaryNode[key] as? [AnyObject] {
+                    return arrayNode as AnyObject
+                } else {
+                    throw MapperError.wrongSetting
+                }
+            }
+            if let index = index {
+                if let arrayNode = json as? [AnyObject], arrayNode.count > index, let desctinationNode = arrayNode[index] as? [AnyObject] {
+                    return desctinationNode as AnyObject
+                } else {
+                    throw MapperError.wrongSetting
+                }
+            }
+            break
+        case let .dictionary(key, index):
+            if index == nil, key == nil { throw MapperError.wrongSetting }
+            if let key = key {
+                if let dictionaryNode = json as? [String: AnyObject], let dictNode = dictionaryNode[key] as? [String: AnyObject] {
+                    return dictNode as AnyObject
+                } else {
+                    throw MapperError.wrongSetting
+                }
+            }
+            if let index = index {
+                if let arrayNode = json as? [AnyObject], arrayNode.count > index, let desctinationNode = arrayNode[index] as? [String: AnyObject] {
+                    return desctinationNode as AnyObject
+                } else {
+                    throw MapperError.wrongSetting
+                }
+            }
+            break
+        }
+        return nil
     }
     internal class func map(initialObject: Mapable, json: AnyObject) throws {
         var paths = initialObject.helpingPath
@@ -130,75 +168,14 @@ public class Mapper {
         guard let jsonNode = json as? [String: AnyObject] else {
             throw MapperError.wrongFormat
         }
-        //Try somehow to reduce this
         var processingJson: AnyObject = jsonNode as AnyObject
         for atomaryPath in initialObject.helpingPath {
-            var isFallenThrought = false
             switch atomaryPath {
             case let .target(nodeType), let .destination(nodeType):
-                switch nodeType {
-                case let .array(key, index):
-                    if let key = key {
-                        if let dictionaryNode = processingJson as? [String: AnyObject], let arrayNode = dictionaryNode[key] as? [AnyObject] {
-                            processingJson = arrayNode as AnyObject
-                            isFallenThrought = true
-                        } else {
-                            throw MapperError.wrongSetting
-                        }
-                    }
-                    if let index = index {
-                        if let arrayNode = processingJson as? [AnyObject] {
-                            if arrayNode.count > index {
-                                if let desctinationNode = arrayNode[index] as? [AnyObject] {
-                                    processingJson = desctinationNode as AnyObject
-                                    isFallenThrought = true
-                                } else {
-                                    throw MapperError.wrongSetting
-                                }
-                            } else {
-                                throw MapperError.wrongSetting
-                            }
-                        } else {
-                            throw MapperError.wrongSetting
-                        }
-                    }
-                    if index == nil, key == nil {
-                        throw MapperError.wrongSetting
-                    }
-                    break
-                case let .dictionary(key, index):
-                    if let key = key {
-                        if let dictionaryNode = processingJson as? [String: AnyObject], let dictNode = dictionaryNode[key] as? [String: AnyObject] {
-                            processingJson = dictNode as AnyObject
-                            isFallenThrought = true
-                        } else {
-                            throw MapperError.wrongSetting
-                        }
-                    }
-                    if let index = index {
-                        if let arrayNode = processingJson as? [AnyObject] {
-                            if arrayNode.count > index {
-                                if let desctinationNode = arrayNode[index] as? [String: AnyObject] {
-                                    processingJson = desctinationNode as AnyObject
-                                    isFallenThrought = true
-                                } else {
-                                    throw MapperError.wrongSetting
-                                }
-                            } else {
-                                throw MapperError.wrongSetting
-                            }
-                        } else {
-                            throw MapperError.wrongSetting
-                        }
-                    }
-                    if index == nil, key == nil {
-                        throw MapperError.wrongSetting
-                    }
-                    break
-                }
-                if !isFallenThrought {
+                guard let nextNode = try fall(through: processingJson, nextNode: nodeType) else {
                     throw MapperError.wrongSetting
                 }
+                processingJson = nextNode
                 break
             case .none:
                 throw MapperError.wrongSetting
@@ -232,7 +209,7 @@ public class Mapper {
         object.map(with: Wrapping(propertyDictionary))
     }
 }
-//MARK: - Helpers 
+//MARK: - Helpers
 extension Mapper {
     internal class func searchType(for path: [MapPathable]) throws -> MapperSearchType {
         if path.isEmpty {
@@ -438,9 +415,7 @@ extension Mapper {
     }
     //Search for an array
     internal class func findRecursively(arrayKey: String, valuesType: MappingType, json: AnyObject) -> AnyObject? {
-        if isContainsOnlyAtomaryValues(json) {
-            return nil
-        }
+        if isContainsOnlyAtomaryValues(json) { return nil }
         if let jsonDictionary = json as? [String: AnyObject] {
             for (key, childNode) in jsonDictionary {
                 if key == arrayKey {
