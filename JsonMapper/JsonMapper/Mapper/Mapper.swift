@@ -260,7 +260,7 @@ public class Mapper {
         }
     }
     internal class func mapRecursively(initialObject: Mapable, json: AnyObject) throws {
-        var propertyDictionary = [String: AnyObject?]()
+        var propertyDictionary = [String: AnyObject]()
         try initialObject.relations.forEach { (nameOfProperty, mappingProperty) in
             if let aProperty = try findRecursively(mappingProperty, json: json) {
                 propertyDictionary[nameOfProperty] = aProperty
@@ -271,59 +271,65 @@ public class Mapper {
         }
         initialObject.map(with: Wrapping(propertyDictionary))
     }
+    
     internal class func bind(dictionary: [String: AnyObject], to object: Mapable) throws {
         var propertyDictionary = [String: AnyObject]()
         for (propertyName, mappingProperty) in object.relations {
-            switch mappingProperty {
-            case let .property(type, key, optional):
-                if let property = dictionary[key] {
-                    if isValid(property: property, for: type) {
-                        propertyDictionary[propertyName] = property
-                    } else {
-                        try handleForNilValue(isOptional: optional)
-                        propertyDictionary[propertyName] = nil
-                    }
-                } else {
-                    try handleForNilValue(isOptional: optional)
-                    propertyDictionary[propertyName] = nil
-                }
-                break
-            case let .array(key, valuesType, optional):
-                if let arrayProperty = dictionary[key] as? [AnyObject] {
-                    if isValid(array: arrayProperty, for: valuesType) {
-                        propertyDictionary[propertyName] = arrayProperty as AnyObject?
-                    } else {
-                        try handleForNilValue(isOptional: optional)
-                        propertyDictionary[propertyName] = nil
-                    }
-                } else {
-                    try handleForNilValue(isOptional: optional)
-                    propertyDictionary[propertyName] = nil
-                }
-                break
-            case let .dictionary(key, optional):
-                if let dictionaryProperty = dictionary[key] as? [String: AnyObject] {
-                    propertyDictionary[propertyName] = dictionaryProperty as AnyObject?
-                } else {
-                    try handleForNilValue(isOptional: optional)
-                    propertyDictionary[propertyName] = nil
-                }
-                break
-            case let .mappingObject(key, childType, optional):
-                do {
-                    let childObject = try map(dictionary[key],
-                                          type: childType)
-                    propertyDictionary[propertyName] = childObject as AnyObject?
-                } catch {
-                    try handleForNilValue(isOptional: optional)
-                    propertyDictionary[propertyName] = nil
-                }
-                break
-            }
+            propertyDictionary[propertyName] = try validate(property: mappingProperty, dictionary: dictionary)
         }
         object.map(with: Wrapping(propertyDictionary))
     }
-    
+    internal class func handleForNilValue(isOptional: Bool) throws {
+        if !isOptional {
+            throw MapperError.notFound
+        }
+    }
+}
+
+//MARK: - Validation methods
+extension Mapper {
+    internal class func validate(property: MappingProperty, dictionary: [String: AnyObject]) throws -> AnyObject? {
+        switch property {
+        case let .property(type, key, optional):
+            return try validate(propertyKey: key, type: type, optional: optional, dictionary: dictionary)
+        case let .array(key, valuesType, optional):
+            return try validate(arrayKey: key, types: valuesType, optional: optional, dictionary: dictionary)
+        case let .dictionary(key, optional):
+            return try validate(dictionaryKey: key, optional: optional, dictionary: dictionary)
+        case let .mappingObject(key, childType, optional):
+            return try validate(objectKey: key, type: childType, optional: optional, dictionary: dictionary)
+        }
+    }
+    internal class func validate(propertyKey: String, type: MappingType, optional: Bool, dictionary: [String: AnyObject]) throws -> AnyObject? {
+        guard let property = dictionary[propertyKey], isValid(property: property, for: type) else {
+            try handleForNilValue(isOptional: optional)
+            return nil
+        }
+        return property
+    }
+    internal class func validate(arrayKey: String, types: MappingType, optional: Bool, dictionary: [String: AnyObject]) throws -> AnyObject? {
+        guard let arrayProperty = dictionary[arrayKey] as? [AnyObject], isValid(array: arrayProperty, for: types) else {
+            try handleForNilValue(isOptional: optional)
+            return nil
+        }
+        return arrayProperty as AnyObject?
+    }
+    internal class func validate(dictionaryKey: String, optional: Bool, dictionary: [String: AnyObject]) throws -> AnyObject? {
+        guard let dictionaryProperty = dictionary[dictionaryKey] as? [String: AnyObject] else {
+            try handleForNilValue(isOptional: optional)
+            return nil
+        }
+        return dictionaryProperty as AnyObject?
+    }
+    internal class func validate(objectKey: String, type: Mapable.Type, optional: Bool, dictionary: [String: AnyObject]) throws -> AnyObject? {
+        do {
+            let childObject = try map(dictionary[objectKey], type: type)
+            return childObject as AnyObject?
+        } catch {
+            try handleForNilValue(isOptional: optional)
+            return nil
+        }
+    }
     internal class func isValid(property: AnyObject, for type: MappingType) -> Bool {
         if let string = property as? String {
             let mirror = Mirror(reflecting: string)
@@ -353,14 +359,9 @@ public class Mapper {
         }
         return true
     }
-    internal class func handleForNilValue(isOptional: Bool) throws {
-        if !isOptional {
-            throw MapperError.notFound
-        }
-    }
 }
 
-//MARK: Search Methods
+//MARK: - Search Methods
 extension Mapper {
     internal class func findRecursively(_ mappingProperty: MappingProperty, json: AnyObject) throws -> AnyObject? {
         switch mappingProperty {

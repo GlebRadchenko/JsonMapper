@@ -9,8 +9,8 @@
 import Foundation
 
 public class Wrapping {
-    var content: [String: AnyObject?]
-    init(_ content: [String: AnyObject?]) {
+    var content: [String: AnyObject]
+    init(_ content: [String: AnyObject]) {
         self.content = content
     }
     func get<T>(_ propertyName: String) throws -> T? {
