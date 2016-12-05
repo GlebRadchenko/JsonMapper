@@ -10,15 +10,16 @@ import Foundation
 
 class Chair: Mapable {
     var id: String
+    var stickCount: Int
     
     var helpingPath: [MapPathable] = [.none]
-    var relations: [String: MappingProperty] = ["id": .property(type: .string, key: "id", optional: false)]
+    var relations: [String: MappingProperty] = ["id": .property(type: .string, key: "id", optional: false),
+                                                "stickCount": .property(type: .number, key: "stickCount", optional: false)]
     
     func map(with wrapping: Wrapping) {
         do {
-            if let id: String = try wrapping.get("id") {
-                self.id = id
-            }
+            id = try wrapping.get("id")!
+            stickCount = try wrapping.get("stickCount")!
         } catch {
             print(error)
         }
@@ -26,6 +27,7 @@ class Chair: Mapable {
     
     required init() {
         self.id = "-1"
+        self.stickCount = 0
     }
 }
 

@@ -310,15 +310,11 @@ public class Mapper {
                 }
                 break
             case let .mappingObject(key, childType, optional):
-                let mirror = Mirror(reflecting: object)
-                let child = mirror.children.filter() {$0.label == propertyName}.first
-                
-                if let aValue = child?.value {
-                    var aChild = aValue
-                    aChild = try map(dictionary[key],
-                                     type: childType)
-                    propertyDictionary[propertyName] = aChild as AnyObject?
-                } else {
+                do {
+                    let childObject = try map(dictionary[key],
+                                          type: childType)
+                    propertyDictionary[propertyName] = childObject as AnyObject?
+                } catch {
                     try handleForNilValue(isOptional: optional)
                     propertyDictionary[propertyName] = nil
                 }

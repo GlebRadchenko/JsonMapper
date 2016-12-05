@@ -13,6 +13,7 @@ class MapperTests: XCTestCase {
                          "age": 21,
                          "male": true,
                          "chair": ["id": "123",
+                                   "stickCount": 4,
                                    "testIntArray": [1, 2, 3, 4],
                                    "testStringArray": ["1", "2", "3", "4"],
                                    "testBoolArray": [true, false, true, false]
@@ -76,6 +77,42 @@ class MapperTests: XCTestCase {
             XCTFail()
         }
     }
+    func testRecursiveSearchForDictionary() {
+        let dictionary = Mapper.findRecursively(dictionaryKey: "chair", json: json as AnyObject)
+        if let aDict = dictionary as? [String: AnyObject] {
+            if let id = aDict["id"] as? String {
+                XCTAssert(id == "123", "Wrong id")
+            } else {
+                XCTFail()
+            }
+        } else {
+            XCTFail()
+        }
+    }
+    func testRecursivelySearchForObject() {
+        let object = Mapper.findRecursively(objectKey: "chair", type: Chair.self, json: json as AnyObject)
+        if let chair = object as? Chair {
+            XCTAssert(chair.id == "123", "Wrong id")
+            XCTAssert(chair.stickCount == 4, "Wrong stickCount")
+        } else {
+            XCTFail()
+        }
+        let userObject = Mapper.findRecursively(objectKey: "user", type: User.self, json: json as AnyObject)
+        if let user = userObject as? User {
+            XCTAssert(user.age == 21, "Wrong Int value")
+            XCTAssert(user.name == "Test", "Wrong String value")
+            XCTAssert(user.isMale == true, "Wrong Bool value")
+            
+            if let chair = user.chair {
+                XCTAssert(chair.id == "123", "Wrong id")
+                XCTAssert(chair.stickCount == 4, "Wrong stickCount")
+            } else {
+                XCTFail()
+            }
+        } else {
+            XCTFail()
+        }
+    }
     func testMapping() {
         do {
             let user: User = try Mapper.map(json as AnyObject)
@@ -89,7 +126,6 @@ class MapperTests: XCTestCase {
             XCTFail()
         }
     }
-    
     func testPerformanceExample() {
         self.measure {
             do {
