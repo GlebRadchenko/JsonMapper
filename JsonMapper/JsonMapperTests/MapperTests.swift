@@ -12,12 +12,16 @@ class MapperTests: XCTestCase {
     let json = ["user": ["name" : "Test",
                          "age": 21,
                          "male": true,
-                         "chair": ["id": "123",
+                         "chairs": [["id": "1",
                                    "stickCount": 4,
                                    "testIntArray": [1, 2, 3, 4],
                                    "testStringArray": ["1", "2", "3", "4"],
                                    "testBoolArray": [true, false, true, false]
-                                    ]
+                            ],
+                                    ["id": "2",
+                                     "stickCount": 4],
+                                    ["id": "3",
+                                    "stickCount": 4], ["fake": false]]
                         ]
                 ]
     
@@ -78,10 +82,32 @@ class MapperTests: XCTestCase {
         }
     }
     func testRecursiveSearchForDictionary() {
-        let dictionary = Mapper.findRecursively(dictionaryKey: "chair", json: json as AnyObject)
-        if let aDict = dictionary as? [String: AnyObject] {
-            if let id = aDict["id"] as? String {
-                XCTAssert(id == "123", "Wrong id")
+//        let dictionary = Mapper.findRecursively(dictionaryKey: "chair", json: json as AnyObject)
+//        if let aDict = dictionary as? [String: AnyObject] {
+//            if let id = aDict["id"] as? String {
+//                XCTAssert(id == "123", "Wrong id")
+//            } else {
+//                XCTFail()
+//            }
+//        } else {
+//            XCTFail()
+//        }
+    }
+    func testRecursiveSearchForArrayOfObjects() {
+        let chairs = Mapper.findRecursively(objectsKey: "chairs", type: Chair.self, json: json as AnyObject)
+        XCTAssert(chairs?.count == 3, "Wrong count")
+        let chairsWitoutKey = Mapper.findRecursively(objectsKey: nil, type: Chair.self, json: json as AnyObject)
+        XCTAssert(chairsWitoutKey?.count == 3, "Wrong count")
+    }
+    func testRecursivelySearchForObject() {
+        let userObject = Mapper.findRecursively(objectKey: "user", type: User.self, json: json as AnyObject)
+        if let user = userObject as? User {
+            XCTAssert(user.age == 21, "Wrong Int value")
+            XCTAssert(user.name == "Test", "Wrong String value")
+            XCTAssert(user.isMale == true, "Wrong Bool value")
+            
+            if let chairs = user.chairs {
+                XCTAssert(chairs.count == 3, "Wrong chairs count")
             } else {
                 XCTFail()
             }
@@ -89,29 +115,7 @@ class MapperTests: XCTestCase {
             XCTFail()
         }
     }
-    func testRecursivelySearchForObject() {
-        let object = Mapper.findRecursively(objectKey: "chair", type: Chair.self, json: json as AnyObject)
-        if let chair = object as? Chair {
-            XCTAssert(chair.id == "123", "Wrong id")
-            XCTAssert(chair.stickCount == 4, "Wrong stickCount")
-        } else {
-            XCTFail()
-        }
-        let userObject = Mapper.findRecursively(objectKey: "user", type: User.self, json: json as AnyObject)
-        if let user = userObject as? User {
-            XCTAssert(user.age == 21, "Wrong Int value")
-            XCTAssert(user.name == "Test", "Wrong String value")
-            XCTAssert(user.isMale == true, "Wrong Bool value")
-            
-            if let chair = user.chair {
-                XCTAssert(chair.id == "123", "Wrong id")
-                XCTAssert(chair.stickCount == 4, "Wrong stickCount")
-            } else {
-                XCTFail()
-            }
-        } else {
-            XCTFail()
-        }
+    func test() {
     }
     func testMapping() {
         do {
@@ -119,9 +123,20 @@ class MapperTests: XCTestCase {
             XCTAssert(user.age == 21, "Wrong age")
             XCTAssert(user.isMale == true, "Wrong isMale")
             XCTAssert(user.name == "Test", "Wrong name")
-            XCTAssert(user.chair?.id == "123", "Wrong chair")
+            XCTAssert(user.chairs?.count == 3, "Wrong array of objects")
             let chair: Chair = try Mapper.map(json as AnyObject)
-            XCTAssert(chair.id == "123", "Wrong chair id")
+            XCTAssert(chair.id == "1" || chair.id == "2" || chair.id == "3", "Wrong chair id")
+        } catch {
+            XCTFail()
+        }
+    }
+    func testArrayMapping() {
+        do {
+            let chairs: [Chair] = try Mapper.map(json as AnyObject)
+            XCTAssert(chairs.count == 3, "Error parsing array")
+            chairs.forEach({ (chair) in
+                print(chair.id)
+            })
         } catch {
             XCTFail()
         }
@@ -134,9 +149,7 @@ class MapperTests: XCTestCase {
                     XCTAssert(user.age == 21, "Wrong age")
                     XCTAssert(user.isMale == true, "Wrong isMale")
                     XCTAssert(user.name == "Test", "Wrong name")
-                    
-                    let chair: Chair = try Mapper.map(self.json as AnyObject)
-                    XCTAssert(chair.id == "123", "Wrong chair id")
+                    XCTAssert(user.chairs?.count == 3, "Wrong array of objects")
                 }
             } catch {
                 XCTFail()

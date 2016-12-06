@@ -51,7 +51,7 @@ public enum MappingProperty {
     case property(type: MappingType, key: String, optional: Bool)
     
     case mappingObject(key: String, type: Mapable.Type, optional: Bool)
-    
+    case mappingObjectsArray(key: String?, types: Mapable.Type, optional: Bool)
     case array(key: String, valuesType: MappingType, optional: Bool)
     case dictionary(key: String, optional: Bool)
     
@@ -60,7 +60,8 @@ public enum MappingProperty {
         case let .property(_, _, optional),
              let .array(_, _, optional),
              let .dictionary(_, optional),
-             let .mappingObject(_, _, optional):
+             let .mappingObject(_, _, optional),
+             let .mappingObjectsArray(_, _, optional):
             return optional
         }
     }

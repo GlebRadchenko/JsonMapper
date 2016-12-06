@@ -35,7 +35,7 @@ class User: Mapable {
     var name: String
     var age: Int
     var isMale: Bool
-    var chair: Chair?
+    var chairs: [Chair]?
     
     init(name: String, age: Int, isMale: Bool) {
         self.name = name
@@ -55,7 +55,7 @@ class User: Mapable {
             name = try wrapping.get("name")!
             age = try wrapping.get("age")!
             isMale = try wrapping.get("isMale")!
-            chair = try wrapping.get("chair")
+            chairs = try wrapping.get("chairs")
         } catch {
             print(error)
         }
@@ -67,6 +67,6 @@ class User: Mapable {
         return ["name": .property(type: .string, key: "name", optional: false),
                 "age": .property(type: .number, key: "age", optional: false),
                 "isMale": .property(type: .bool, key: "male", optional: false),
-                "chair": .mappingObject(key: "chair", type: Chair.self, optional: true)]
+                "chairs": .mappingObjectsArray(key: "chairs", types: Chair.self, optional: true)]
     }
 }
