@@ -366,6 +366,7 @@ extension Mapper {
                 return false
             }
         }
+        //think about anyobject
         return true
     }
     internal class func isValid(array: [AnyObject], for type: MappingType) -> Bool {
@@ -417,7 +418,7 @@ extension Mapper {
         }
         if let jsonArray = json as? [AnyObject] { childNodes = jsonArray }
         for node in childNodes {
-            if let arrayValue = node as? [AnyObject] {
+            if let arrayValue = node as? [AnyObject], arrayValue.count > 0 {
                 do {
                     let objects = try bind(arrayOfNodes: arrayValue, to: type)
                     return objects

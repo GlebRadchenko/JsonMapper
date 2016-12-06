@@ -9,21 +9,21 @@
 import XCTest
 
 class MapperTests: XCTestCase {
-    let json = ["user": ["name" : "Test",
-                         "age": 21,
-                         "male": true,
-                         "chairs": [["id": "1",
-                                   "stickCount": 4,
-                                   "testIntArray": [1, 2, 3, 4],
-                                   "testStringArray": ["1", "2", "3", "4"],
-                                   "testBoolArray": [true, false, true, false]
-                            ],
-                                    ["id": "2",
-                                     "stickCount": 4],
-                                    ["id": "3",
-                                     "stickCount": 4], ["test" : ["fake": false]]]
-                        ]
-                ]
+    let json = ["te" : [[],[],[],["kat" : ["user": ["name" : "Test",
+                                                    "age": 21,
+                                                    "male": true,
+                                                    "chairs": [["id": "1",
+                                                                "stickCount": 4,
+                                                                "testIntArray": [1, 2, 3, 4],
+                                                                "testStringArray": ["1", "2", "3", "4"],
+                                                                "testBoolArray": [true, false, true, false]
+                                                        ],
+                                                               ["id": "2",
+                                                                "stickCount": 4],
+                                                               ["id": "3",
+                                                                "stickCount": 4], ["test" : ["fake": false]]]
+        ]
+        ]]]] as AnyObject
     
     
     override func setUp() {
@@ -94,13 +94,13 @@ class MapperTests: XCTestCase {
         }
     }
     func testRecursiveSearchForArrayOfObjects() {
-        let chairs = Mapper.findRecursively(objectsKey: "chairs", type: Chair.self, json: json as AnyObject)
+        let chairs = Mapper.findRecursively(objectsKey: "chairs", type: Chair.self, json: json)
         XCTAssert(chairs?.count == 3, "Wrong count")
-        let chairsWitoutKey = Mapper.findRecursively(objectsKey: nil, type: Chair.self, json: json as AnyObject)
+        let chairsWitoutKey = Mapper.findRecursively(objectsKey: nil, type: Chair.self, json: json)
         XCTAssert(chairsWitoutKey?.count == 3, "Wrong count")
     }
     func testRecursivelySearchForObject() {
-        let userObject = Mapper.findRecursively(objectKey: "user", type: User.self, json: json as AnyObject)
+        let userObject = Mapper.findRecursively(objectKey: "user", type: User.self, json: json)
         if let user = userObject as? User {
             XCTAssert(user.age == 21, "Wrong Int value")
             XCTAssert(user.name == "Test", "Wrong String value")
@@ -117,12 +117,12 @@ class MapperTests: XCTestCase {
     }
     func testMapping() {
         do {
-            let user: User = try Mapper.map(json as AnyObject)
+            let user: User = try Mapper.map(json)
             XCTAssert(user.age == 21, "Wrong age")
             XCTAssert(user.isMale == true, "Wrong isMale")
             XCTAssert(user.name == "Test", "Wrong name")
             XCTAssert(user.chairs?.count == 3, "Wrong array of objects")
-            let chair: Chair = try Mapper.map(json as AnyObject)
+            let chair: Chair = try Mapper.map(json)
             XCTAssert(chair.id == "1" || chair.id == "2" || chair.id == "3", "Wrong chair id")
         } catch {
             XCTFail()
@@ -130,7 +130,7 @@ class MapperTests: XCTestCase {
     }
     func testArrayMapping() {
         do {
-            let chairs: [Chair] = try Mapper.map(json as AnyObject)
+            let chairs: [Chair] = try Mapper.map(json)
             XCTAssert(chairs.count == 3, "Error parsing array")
             chairs.forEach({ (chair) in
                 print(chair.id)
@@ -143,7 +143,7 @@ class MapperTests: XCTestCase {
         self.measure {
             do {
                 for _ in 0...50 {
-                    let user: User = try Mapper.map(self.json as AnyObject)
+                    let user: User = try Mapper.map(self.json)
                     XCTAssert(user.age == 21, "Wrong age")
                     XCTAssert(user.isMale == true, "Wrong isMale")
                     XCTAssert(user.name == "Test", "Wrong name")
