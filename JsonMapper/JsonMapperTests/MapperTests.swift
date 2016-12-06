@@ -9,21 +9,21 @@
 import XCTest
 
 class MapperTests: XCTestCase {
-    let json = ["te" : [[],[],[],["kat" : ["user": ["name" : "Test",
-                                                    "age": 21,
-                                                    "male": true,
-                                                    "chairs": [["id": "1",
-                                                                "stickCount": 4,
-                                                                "testIntArray": [1, 2, 3, 4],
-                                                                "testStringArray": ["1", "2", "3", "4"],
-                                                                "testBoolArray": [true, false, true, false]
-                                                        ],
-                                                               ["id": "2",
-                                                                "stickCount": 4],
-                                                               ["id": "3",
-                                                                "stickCount": 4], ["test" : ["fake": false]]]
+    let json = [[],[],[],[],[],["te" : [[],[],["kuku": 123, "kek": false],["kat" : ["user": ["name" : "Test",
+                                                                                             "age": 21,
+                                                                                             "male": true,
+                                                                                             "chairs": [["id": "1",
+                                                                                                         "stickCount": 4,
+                                                                                                         "testIntArray": [1, 2, 3, 4],
+                                                                                                         "testStringArray": ["1", "2", "3", "4"],
+                                                                                                         "testBoolArray": [true, false, true, false]
+                                                                                                ],
+                                                                                                        ["id": "2",
+                                                                                                         "stickCount": 4],
+                                                                                                        ["id": "3",
+                                                                                                         "stickCount": 4], ["test" : ["fake": false]]]
         ]
-        ]]]] as AnyObject
+        ]]]]] as AnyObject
     
     
     override func setUp() {
