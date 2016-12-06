@@ -43,7 +43,6 @@
 		606076B31DF2D6DD003B19B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		606076B81DF2D6DD003B19B7 /* JsonMapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JsonMapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		606076BE1DF2D6DD003B19B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		606076C81DF2D737003B19B7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		606076C91DF3065C003B19B7 /* MapperProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperProtocols.swift; sourceTree = "<group>"; };
 		606076CB1DF306B7003B19B7 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
 		606076CD1DF49CF0003B19B7 /* MapperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperTests.swift; sourceTree = "<group>"; };
@@ -114,7 +113,6 @@
 		606076C71DF2D71D003B19B7 /* Mapper */ = {
 			isa = PBXGroup;
 			children = (
-				606076C81DF2D737003B19B7 /* MyPlayground.playground */,
 				606076C91DF3065C003B19B7 /* MapperProtocols.swift */,
 				606076CB1DF306B7003B19B7 /* Mapper.swift */,
 				606076D41DF53818003B19B7 /* Wrapping.swift */,
