@@ -13,7 +13,9 @@ public class Mapper {
      - implement processing of all mapping properties - done
      - add recursively searching - done
      - implement all types of helping path - done
-     - implement mapping of arrays
+     - implement mapping of arrays - done
+     - change logic of binding (without creating object)
+     - added pattern search
      - implement correct error throwing
      - test coverage of all methods
      - refactoring and extending functionality
