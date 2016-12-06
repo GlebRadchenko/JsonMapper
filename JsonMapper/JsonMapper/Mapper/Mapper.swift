@@ -366,6 +366,9 @@ extension Mapper {
                 return false
             }
         }
+        if !type.validTypes.contains() {$0 == AnyObject.self} {
+            return false
+        }
         return true
     }
     internal class func isValid(array: [AnyObject], for type: MappingType) -> Bool {
@@ -553,10 +556,8 @@ extension Mapper {
             //if JSON object is Dictionary - check it
             if let jsonDictionary = json as? [String: AnyObject] {
                 for (key, childNode) in jsonDictionary {
-                    if key == propertyKey {
-                        if isValid(property: childNode, for: mappingType) {
-                            return childNode
-                        }
+                    if key == propertyKey, isValid(property: childNode, for: mappingType) {
+                        return childNode
                     } else {
                         if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childNode) {
                             return foundValue
