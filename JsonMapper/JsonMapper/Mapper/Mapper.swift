@@ -366,9 +366,6 @@ extension Mapper {
                 return false
             }
         }
-        if !type.validTypes.contains() {$0 == AnyObject.self} {
-            return false
-        }
         return true
     }
     internal class func isValid(array: [AnyObject], for type: MappingType) -> Bool {
