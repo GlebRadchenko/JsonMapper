@@ -53,7 +53,7 @@ class MapperTests: XCTestCase {
         } else {
             XCTFail()
         }
-
+        
     }
     func testRecursiveSearchForArray() {
         let anyArray = Mapper.findRecursively(arrayKey: "testIntArray", valuesType: .anyObject, json: json as AnyObject)
@@ -117,6 +117,16 @@ class MapperTests: XCTestCase {
     }
     func testMapping() {
         do {
+            let testJson = ["name" : "Test",
+                                       "age": 21,
+                                       "male": true,
+                                       "chairs": [["id": "1",
+                                                   "stickCount": 4],
+                                                  ["id": "2",
+                                                   "stickCount": 4],
+                                                  ["id": "3",
+                                                   "stickCount": 4]]] as AnyObject
+            let simpleUser: User = try Mapper.map(testJson)
             let user: User = try Mapper.map(json)
             XCTAssert(user.age == 21, "Wrong age")
             XCTAssert(user.isMale == true, "Wrong isMale")
@@ -142,13 +152,17 @@ class MapperTests: XCTestCase {
     func testPerformanceExample() {
         self.measure {
             do {
-                for _ in 0...50 {
-                    let user: User = try Mapper.map(self.json)
-                    XCTAssert(user.age == 21, "Wrong age")
-                    XCTAssert(user.isMale == true, "Wrong isMale")
-                    XCTAssert(user.name == "Test", "Wrong name")
-                    XCTAssert(user.chairs?.count == 3, "Wrong array of objects")
-                }
+                let user: User = try Mapper.map(self.json)
+                XCTAssert(user.age == 21, "Wrong age")
+                XCTAssert(user.isMale == true, "Wrong isMale")
+                XCTAssert(user.name == "Test", "Wrong name")
+                XCTAssert(user.chairs?.count == 3, "Wrong array of objects")
+                
+                let chairs: [Chair] = try Mapper.map(self.json)
+                XCTAssert(chairs.count == 3, "Error parsing array")
+                chairs.forEach({ (chair) in
+                    print(chair.id)
+                })
             } catch {
                 XCTFail()
             }
