@@ -21,7 +21,7 @@ class MapperTests: XCTestCase {
                                     ["id": "2",
                                      "stickCount": 4],
                                     ["id": "3",
-                                    "stickCount": 4], ["fake": false]]
+                                     "stickCount": 4], ["test" : ["fake": false]]]
                         ]
                 ]
     
@@ -82,16 +82,16 @@ class MapperTests: XCTestCase {
         }
     }
     func testRecursiveSearchForDictionary() {
-//        let dictionary = Mapper.findRecursively(dictionaryKey: "chair", json: json as AnyObject)
-//        if let aDict = dictionary as? [String: AnyObject] {
-//            if let id = aDict["id"] as? String {
-//                XCTAssert(id == "123", "Wrong id")
-//            } else {
-//                XCTFail()
-//            }
-//        } else {
-//            XCTFail()
-//        }
+        let dictionary = Mapper.findRecursively(dictionaryKey: "test", json: json as AnyObject)
+        if let aDict = dictionary as? [String: AnyObject] {
+            if let isFake = aDict["fake"] as? Bool {
+                XCTAssert(isFake == false, "Wrong fake dict")
+            } else {
+                XCTFail()
+            }
+        } else {
+            XCTFail()
+        }
     }
     func testRecursiveSearchForArrayOfObjects() {
         let chairs = Mapper.findRecursively(objectsKey: "chairs", type: Chair.self, json: json as AnyObject)
@@ -114,8 +114,6 @@ class MapperTests: XCTestCase {
         } else {
             XCTFail()
         }
-    }
-    func test() {
     }
     func testMapping() {
         do {
