@@ -10,7 +10,7 @@ import Foundation
 
 class Chair: Mapable {
     var id: String
-    var stickCount: Int
+    var stickCount: NSNumber
     
     static var helpingPath: [MapPathable] = [.none]
     static var relations: [String: MappingProperty] = ["id": .property(type: .string, key: "id", optional: false),
