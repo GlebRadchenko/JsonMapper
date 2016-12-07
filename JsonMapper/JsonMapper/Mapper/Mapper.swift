@@ -509,7 +509,6 @@ extension Mapper {
             return fittingNodes.first
         } else {
             //Our JSON object contains values in wich we can fallthhrought
-            
             //if JSON object is Dictionary - check it
             var childNodes = ArrayNode()
             var potentialFittingNodes = ArrayNode()
@@ -535,7 +534,7 @@ extension Mapper {
     //Detecting last level of JSON Tree
     internal class func isContainsOnlyAtomaryValues(_ json: AnyObject) -> Bool {
         var nodesToCheck = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode { nodesToCheck = jsonDictionary.values.map { $0 as AnyObject} }
+        if let jsonDictionary = json as? DictionaryNode { nodesToCheck = jsonDictionary.map { $0.value } }
         if let jsonArray = json as? ArrayNode { nodesToCheck = jsonArray }
         for node in nodesToCheck {
             if node is DictionaryNode || node is ArrayNode { return false }

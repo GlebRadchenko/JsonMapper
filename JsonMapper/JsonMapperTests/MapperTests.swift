@@ -127,6 +127,10 @@ class MapperTests: XCTestCase {
                                                   ["id": "3",
                                                    "stickCount": 4]]] as AnyObject
             let simpleUser: User = try Mapper.map(testJson)
+            XCTAssert(simpleUser.age == 21, "Wrong age")
+            XCTAssert(simpleUser.isMale == true, "Wrong isMale")
+            XCTAssert(simpleUser.name == "Test", "Wrong name")
+            XCTAssert(simpleUser.chairs?.count == 3, "Wrong array of objects")
             let user: User = try Mapper.map(json)
             XCTAssert(user.age == 21, "Wrong age")
             XCTAssert(user.isMale == true, "Wrong isMale")
