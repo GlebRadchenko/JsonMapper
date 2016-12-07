@@ -170,12 +170,12 @@
 				TargetAttributes = {
 					606076A31DF2D6DC003B19B7 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 76RXYZCS9Y;
+						DevelopmentTeam = XN4R59V3UY;
 						ProvisioningStyle = Automatic;
 					};
 					606076B71DF2D6DD003B19B7 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 76RXYZCS9Y;
+						DevelopmentTeam = XN4R59V3UY;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 606076A31DF2D6DC003B19B7;
 					};
@@ -371,10 +371,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				DEVELOPMENT_TEAM = XN4R59V3UY;
 				INFOPLIST_FILE = JsonMapper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.radchencko.JsonMapper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.radchenko.JsonMapper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -384,10 +385,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				DEVELOPMENT_TEAM = XN4R59V3UY;
 				INFOPLIST_FILE = JsonMapper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.radchencko.JsonMapper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.radchenko.JsonMapper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -398,7 +400,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				DEVELOPMENT_TEAM = XN4R59V3UY;
 				INFOPLIST_FILE = JsonMapperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.radchencko.JsonMapperTests;
@@ -413,7 +415,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				DEVELOPMENT_TEAM = XN4R59V3UY;
 				INFOPLIST_FILE = JsonMapperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.radchencko.JsonMapperTests;

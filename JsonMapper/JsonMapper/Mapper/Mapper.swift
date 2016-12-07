@@ -19,6 +19,7 @@ public class Mapper {
      - implement correct error throwing
      - test coverage of all methods
      - refactoring and extending functionality
+     - split empty initializer and map function
      */
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
         return try map(json, type: T.self) as! T
@@ -412,6 +413,7 @@ extension Mapper {
         return findRecursively(objectsKey: key, type: type, json: json)
     }
     internal class func findRecursively(arrayOf type: Mapable.Type, json: AnyObject) -> [Mapable]? {
+        if isContainsOnlyAtomaryValues(json) { return nil }
         var childNodes = [AnyObject]()
         if let jsonDictionary = json as? [String: AnyObject] {
             childNodes = jsonDictionary.map() { return $0.value}
@@ -422,41 +424,34 @@ extension Mapper {
                 do {
                     let objects = try bind(arrayOfNodes: arrayValue, to: type)
                     return objects
-                } catch {
-                    if let foundValues = findRecursively(arrayOf: type, json: arrayValue as AnyObject) {
-                        return foundValues
-                    }
-                }
+                } catch { }
             }
-            if let foundValues = findRecursively(arrayOf: type, json: node) {
-                return foundValues
-            }
+            if let foundValues = findRecursively(arrayOf: type, json: node) { return foundValues }
         }
         return nil
     }
     internal class func findRecursively(objectsKey: String, type: Mapable.Type, json: AnyObject) -> [Mapable]? {
+        if isContainsOnlyAtomaryValues(json) { return nil }
+        var childNodes = [AnyObject]()
+        var potentialFittingNodes = [AnyObject]()
         if let jsonDictionary = json as? [String: AnyObject] {
-            for (key, childNode) in jsonDictionary {
-                if key == objectsKey, let arrayValue = childNode as? [AnyObject] {
-                    do {
-                        let objects = try bind(arrayOfNodes: arrayValue, to: type)
+            potentialFittingNodes = jsonDictionary.filter { $0.key == objectsKey }.map() { $0.value }
+            for potentialNode in potentialFittingNodes {
+                do {
+                    if let arrayNode = potentialNode as? [AnyObject] {
+                        let objects = try bind(arrayOfNodes: arrayNode, to: type)
                         return objects
-                    } catch {
-                        if let foundValues = findRecursively(objectsKey: objectsKey, type: type, json: arrayValue as AnyObject) {
-                            return foundValues
-                        }
                     }
-                }
-                if let foundValues = findRecursively(objectsKey: objectsKey, type: type, json: childNode) {
-                    return foundValues
-                }
+                } catch { }
+                childNodes.append(potentialNode)
             }
+            let otherNodes = jsonDictionary.filter { $0.key != objectsKey }.map() { $0.value }
+            childNodes.append(contentsOf: otherNodes)
         }
-        if let jsonArray = json as? [AnyObject] {
-            for childNode in jsonArray {
-                if let foundValues = findRecursively(objectsKey: objectsKey, type: type, json: childNode) {
-                    return foundValues
-                }
+        if let jsonArray = json as? [AnyObject] { childNodes.append(contentsOf: jsonArray) }
+        for childNode in childNodes {
+            if let foundValues = findRecursively(objectsKey: objectsKey, type: type, json: childNode) {
+                return foundValues
             }
         }
         return nil
@@ -577,10 +572,10 @@ extension Mapper {
     //Detecting last level of JSON Tree
     internal class func isContainsOnlyAtomaryValues(_ json: AnyObject) -> Bool {
         var nodesToCheck = [AnyObject]()
-        if let jsonDictionary = json as? [String: AnyObject] { nodesToCheck = jsonDictionary.values.map {$0 as AnyObject} }
+        if let jsonDictionary = json as? [String: AnyObject] { nodesToCheck = jsonDictionary.values.map { $0 as AnyObject} }
         if let jsonArray = json as? [AnyObject] { nodesToCheck = jsonArray }
         for node in nodesToCheck {
-            if node is Dictionary<String, Any> || node is Array<Any> { return false }
+            if node is Dictionary<String, AnyObject> || node is Array<AnyObject> { return false }
         }
         return true
     }
