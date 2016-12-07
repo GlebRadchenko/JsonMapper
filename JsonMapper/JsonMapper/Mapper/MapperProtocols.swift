@@ -8,12 +8,11 @@
 
 import Foundation
 
-enum MapperSearchType {
-    case recursive
-    case recursiveWithDestination
-    case determined
+public protocol Mapable {
+    static var helpingPath: [MapPathable] {get set}
+    static var relations: [String: MappingProperty] {get}
+    init?(_ wrapping: Wrapping)
 }
-
 public enum MapperError: Error, CustomStringConvertible {
     case notFound
     case wrongSetting
@@ -26,7 +25,6 @@ public enum MapperError: Error, CustomStringConvertible {
         }
     }
 }
-
 public enum MappingType {
     case string
     case bool
@@ -77,9 +75,10 @@ public enum JsonNodeType {
     case array(key: String?, index: Int?)
     case dictionary(key: String?, index: Int?)
 }
-
-public protocol Mapable {
-    static var helpingPath: [MapPathable] {get set}
-    static var relations: [String: MappingProperty] {get}
-    init?(_ wrapping: Wrapping)
+enum MapperSearchType {
+    case recursive
+    case recursiveWithDestination
+    case determined
 }
+
+

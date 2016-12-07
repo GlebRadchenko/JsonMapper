@@ -9,19 +9,47 @@
 import Foundation
 
 public class Wrapping {
-    var content: [String: Any]
-    init(_ content: [String: Any]) {
+    var content: [String: AnyObject]
+    init(_ content: [String: AnyObject]) {
         self.content = content
     }
     func get<T>(_ propertyName: String) throws -> T? {
         if content.keys.contains(propertyName) {
             if let aValue = content[propertyName] as? T {
                 return aValue
-            } else {
+            }
+            guard let value = content[propertyName] else {
                 return nil
             }
+            do {
+                return try convert(value)
+            } catch { debugPrint(error) }
         }
-        throw WrappingError.wrongProperty(name: propertyName)
+        return nil
+    }
+    private func convert<T>(_ value: AnyObject) throws -> T? {
+        if MappingType.number.validTypes.contains(where: {$0 == T.self}) {
+            if T.self == Double.self {
+                return value.doubleValue as? T
+            }
+            if T.self == Float.self {
+                return value.floatValue as? T
+            }
+            if T.self == Int.self {
+                return Int(value.int64Value) as? T
+            }
+        }
+        if MappingType.string.validTypes.contains(where: {$0 == T.self}) {
+            if T.self == String.self {
+                return value.stringValue as? T
+            }
+        }
+        if MappingType.bool.validTypes.contains(where: {$0 == T.self}) {
+            if T.self == Bool.self {
+                return value.boolValue as? T
+            }
+        }
+        throw WrappingError.wrongProperty(name: "\(value)")
     }
 }
 public enum WrappingError: Error, CustomStringConvertible {

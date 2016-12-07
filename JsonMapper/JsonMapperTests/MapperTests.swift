@@ -13,7 +13,8 @@ class MapperTests: XCTestCase {
                                                                                              "age": 21,
                                                                                              "male": true,
                                                                                              "chairs": [["id": "1",
-                                                                                                         "stickCount": 4,
+                                                                                                         "stickCount": "4",
+                                                                                                         "value" : 1234,
                                                                                                          "testIntArray": [1, 2, 3, 4],
                                                                                                          "testStringArray": ["1", "2", "3", "4"],
                                                                                                          "testBoolArray": [true, false, true, false]
@@ -137,7 +138,7 @@ class MapperTests: XCTestCase {
             XCTAssert(user.name == "Test", "Wrong name")
             XCTAssert(user.chairs?.count == 3, "Wrong array of objects")
             let chair: Chair = try Mapper.map(json)
-            XCTAssert(chair.id == "1" || chair.id == "2" || chair.id == "3", "Wrong chair id")
+            XCTAssert(chair.id == 1 || chair.id == 2 || chair.id == 3, "Wrong chair id")
         } catch {
             XCTFail()
         }
