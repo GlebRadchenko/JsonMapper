@@ -16,12 +16,13 @@ public class Mapper {
      - add recursively searching - done
      - implement all types of helping path - done
      - implement mapping of arrays - done
-     - change logic of binding (without creating object)
+     - change logic of binding (without creating object) - done
      - added pattern search
      - implement correct error throwing
      - test coverage of all methods
-     - refactoring and extending functionality
-     - split empty initializer and map function
+     - refactoring and extending functionality - done
+     - split empty initializer and map function - done
+     - add filter block for recursive searches
      */
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
         return try map(json, type: T.self) as! T
@@ -204,17 +205,15 @@ public class Mapper {
                 }
             }
         }
-        if objects.count == 0 {
-            if arrayOfNodes.count != 0 {
-                throw MapperError.notFound
-            }
+        if objects.count == 0 && arrayOfNodes.count != 0 {
+            throw MapperError.notFound
         }
         return objects
     }
     internal class func bind(_ dictionary: DictionaryNode, to objectType: Mapable.Type) throws -> Mapable {
         var propertyDictionary = DictionaryNode()
         for (propertyName, mappingProperty) in objectType.relations {
-            propertyDictionary[propertyName] = try validate(property: mappingProperty, dictionary: dictionary)
+            propertyDictionary[propertyName] = try validate(mappingProperty, dictionary: dictionary)
         }
         guard let object = objectType.init(Wrapping(propertyDictionary)) else {
             throw MapperError.wrongFormat
@@ -227,7 +226,7 @@ extension Mapper {
     internal class func check(_ json: AnyObject, for type: JsonNodeType) throws {
         switch type {
         case .array:
-            if !(json is Array<AnyObject>) {
+            if !(json is ArrayNode) {
                 throw MapperError.wrongSetting
             }
             break
@@ -288,7 +287,7 @@ extension Mapper {
 
 //MARK: - Validation methods
 extension Mapper {
-    internal class func validate(property: MappingProperty, dictionary: DictionaryNode) throws -> AnyObject? {
+    internal class func validate(_ property: MappingProperty, dictionary: DictionaryNode) throws -> AnyObject? {
         switch property {
         case let .property(type, key, optional):
             return try validate(key, type: type, optional: optional, dictionary: dictionary)
@@ -485,7 +484,7 @@ extension Mapper {
         var childNodes = ArrayNode()
         var potentialFittingNodes = ArrayNode()
         if let jsonDictionary = json as? DictionaryNode {
-            potentialFittingNodes = jsonDictionary.filter() { $0.key == arrayKey && $0.value is Array<AnyObject> }.map() { $0.value }
+            potentialFittingNodes = jsonDictionary.filter() { $0.key == arrayKey && $0.value is ArrayNode }.map() { $0.value }
             if let fittingNode = potentialFittingNodes.first { return fittingNode }
             childNodes = jsonDictionary.map() { $0.value }
         }
@@ -504,33 +503,30 @@ extension Mapper {
         //Base of recursion
         if isContainsOnlyAtomaryValues(json), let jsonDictionary = json as? DictionaryNode {
             //At this point we are reached last level of JSON tree
-            for (key, childJson) in jsonDictionary {
-                if key == propertyKey, isValid(childJson, for: mappingType) {
-                    return childJson
-                }
-            }
-            return nil
+            let fittingNodes = jsonDictionary
+                .filter() { $0.key == propertyKey && isValid($0.value, for: mappingType) }
+                .map{$0.value}
+            return fittingNodes.first
         } else {
             //Our JSON object contains values in wich we can fallthhrought
             
             //if JSON object is Dictionary - check it
+            var childNodes = ArrayNode()
+            var potentialFittingNodes = ArrayNode()
             if let jsonDictionary = json as? DictionaryNode {
-                for (key, childNode) in jsonDictionary {
-                    if key == propertyKey, isValid(childNode, for: mappingType) {
-                        return childNode
-                    } else {
-                        if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childNode) {
-                            return foundValue
-                        }
-                    }
-                }
+                potentialFittingNodes = jsonDictionary
+                    .filter() {$0.key == propertyKey && isValid($0.value, for: mappingType)}
+                    .map() {$0.value}
+                if let fittingNode = potentialFittingNodes.first { return fittingNode }
+                childNodes = jsonDictionary.map() { $0.value }
             }
             //if JSON object is Array - check it
             if let jsonArray = json as? ArrayNode {
-                for childNode in jsonArray {
-                    if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childNode) {
-                        return foundValue
-                    }
+                childNodes = jsonArray
+            }
+            for childNode in childNodes {
+                if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childNode) {
+                    return foundValue
                 }
             }
             return nil
