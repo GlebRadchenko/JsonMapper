@@ -12,10 +12,19 @@ class Chair: Mapable {
     var id: String
     var stickCount: Int
     
-    var helpingPath: [MapPathable] = [.none]
-    var relations: [String: MappingProperty] = ["id": .property(type: .string, key: "id", optional: false),
+    static var helpingPath: [MapPathable] = [.none]
+    static var relations: [String: MappingProperty] = ["id": .property(type: .string, key: "id", optional: false),
                                                 "stickCount": .property(type: .number, key: "stickCount", optional: false)]
     
+    //Mapable protocol implementation
+    public required init?(_ wrapping: Wrapping) {
+        do {
+            id = try wrapping.get("id")!
+            stickCount = try wrapping.get("stickCount")!
+        } catch {
+            return nil
+        }
+    }
     func map(with wrapping: Wrapping) {
         do {
             id = try wrapping.get("id")!
@@ -23,11 +32,6 @@ class Chair: Mapable {
         } catch {
             print(error)
         }
-    }
-    
-    required init() {
-        self.id = "-1"
-        self.stickCount = 0
     }
 }
 
@@ -37,33 +41,21 @@ class User: Mapable {
     var isMale: Bool
     var chairs: [Chair]?
     
-    init(name: String, age: Int, isMale: Bool) {
-        self.name = name
-        self.age = age
-        self.isMale = isMale
-    }
-    
     //Mapable protocol implementation
-    required init() {
-        name = ""
-        age = 1
-        isMale = false
-    }
-    
-    func map(with wrapping: Wrapping) {
+    public required init?(_ wrapping: Wrapping) {
         do {
-            name = try wrapping.get("name")!
-            age = try wrapping.get("age")!
-            isMale = try wrapping.get("isMale")!
-            chairs = try wrapping.get("chairs")
+            self.name = try wrapping.get("name")!
+            self.age = try wrapping.get("age")!
+            self.isMale = try wrapping.get("isMale")!
+            self.chairs = try wrapping.get("chairs")
         } catch {
-            print(error)
+            return nil
         }
     }
     
-    var helpingPath: [MapPathable] = [.none]//[.destination(nodeType: .dictionary(key: "user", index: nil))]
+    static var helpingPath: [MapPathable] = [.none]//[.destination(nodeType: .dictionary(key: "user", index: nil))]
     
-    var relations: [String: MappingProperty] {
+    static var relations: [String: MappingProperty] {
         return ["name": .property(type: .string, key: "name", optional: false),
                 "age": .property(type: .number, key: "age", optional: false),
                 "isMale": .property(type: .bool, key: "male", optional: false),
