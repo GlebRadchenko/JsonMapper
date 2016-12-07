@@ -89,7 +89,7 @@ public class Mapper {
         }
         if let jsonDictionary = json as? [String: AnyObject] {
             do {
-                try bind(dictionary: jsonDictionary, to: initialObject)
+                try bind(jsonDictionary, to: initialObject)
                 return
             } catch { }
         }
@@ -104,7 +104,7 @@ public class Mapper {
                 if nodeKey == key {
                     if let dict = childNode as? [String: AnyObject] {
                         do {
-                            try bind(dictionary: dict, to: object)
+                            try bind(dict, to: object)
                             return
                         } catch {}
                     }
@@ -151,7 +151,7 @@ public class Mapper {
         }
         //At this point we have final object wich we should bind to object
         if let objectDictionary = processingJson as? [String: AnyObject] {
-            try bind(dictionary: objectDictionary, to: initialObject)
+            try bind(objectDictionary, to: initialObject)
         } else {
             throw MapperError.wrongSetting
         }
@@ -195,13 +195,13 @@ public class Mapper {
         }
         return nil
     }
-    internal class func bind(arrayOfNodes: [AnyObject], to objectType: Mapable.Type) throws -> [Mapable] {
+    internal class func bind(_ arrayOfNodes: [AnyObject], to objectType: Mapable.Type) throws -> [Mapable] {
         var objects = [Mapable]()
         for node in arrayOfNodes {
             if let dictNode = node as? Dictionary<String, AnyObject> {
                 let object = objectType.init()
                 do {
-                    try bind(dictionary: dictNode, to: object)
+                    try bind(dictNode, to: object)
                     objects.append(object)
                 } catch {
                     debugPrint("Cannot bind ", dictNode, " to ", object)
@@ -215,7 +215,7 @@ public class Mapper {
         }
         return objects
     }
-    internal class func bind(dictionary: [String: AnyObject], to object: Mapable) throws {
+    internal class func bind(_ dictionary: [String: AnyObject], to object: Mapable) throws {
         var propertyDictionary = [String: AnyObject]()
         for (propertyName, mappingProperty) in object.relations {
             propertyDictionary[propertyName] = try validate(property: mappingProperty, dictionary: dictionary)
@@ -402,7 +402,7 @@ extension Mapper {
     internal class func findRecursively(objectsKey: String?, type: Mapable.Type, json: AnyObject) -> [Mapable]? {
         if let jsonArray = json as? [AnyObject] {
             do {
-                let objects = try bind(arrayOfNodes: jsonArray, to: type)
+                let objects = try bind(jsonArray, to: type)
                 return objects
             } catch {}
         }
@@ -416,13 +416,13 @@ extension Mapper {
         if isContainsOnlyAtomaryValues(json) { return nil }
         var childNodes = [AnyObject]()
         if let jsonDictionary = json as? [String: AnyObject] {
-            childNodes = jsonDictionary.map() { return $0.value}
+            childNodes = jsonDictionary.map() { return $0.value }
         }
         if let jsonArray = json as? [AnyObject] { childNodes = jsonArray }
         for node in childNodes {
             if let arrayValue = node as? [AnyObject], arrayValue.count > 0 {
                 do {
-                    let objects = try bind(arrayOfNodes: arrayValue, to: type)
+                    let objects = try bind(arrayValue, to: type)
                     return objects
                 } catch { }
             }
@@ -439,7 +439,7 @@ extension Mapper {
             for potentialNode in potentialFittingNodes {
                 do {
                     if let arrayNode = potentialNode as? [AnyObject] {
-                        let objects = try bind(arrayOfNodes: arrayNode, to: type)
+                        let objects = try bind(arrayNode, to: type)
                         return objects
                     }
                 } catch { }
@@ -459,29 +459,27 @@ extension Mapper {
     //Search for an object
     internal class func findRecursively(objectKey: String, type: Mapable.Type, json: AnyObject) -> Mapable? {
         if isContainsOnlyAtomaryValues(json) { return nil }
+        var childNodes = [AnyObject]()
+        var potentialFittingNodes = [AnyObject]()
         if let jsonDictionary = json as? [String: AnyObject] {
-            for (key, childNode) in jsonDictionary {
-                if key == objectKey, let dictionaryValue = childNode as? [String: AnyObject] {
+            potentialFittingNodes = jsonDictionary.filter { $0.key == objectKey }.map() { $0.value }
+            for potentialNode in potentialFittingNodes {
+                if let dictionaryNode = potentialNode as? [String: AnyObject] {
                     do {
                         let object = type.init()
-                        try bind(dictionary: dictionaryValue, to: object)
+                        try bind(dictionaryNode, to: object)
                         return object
-                    } catch {
-                        if let foundValue = findRecursively(objectKey: objectKey, type: type, json: childNode) {
-                            return foundValue
-                        }
-                    }
+                    } catch {}
                 }
-                if let foundValue = findRecursively(objectKey: objectKey, type: type, json: childNode) {
-                    return foundValue
-                }
+                childNodes.append(potentialNode)
             }
+            let otherNodes = jsonDictionary.filter { $0.key != objectKey }.map() { $0.value }
+            childNodes.append(contentsOf: otherNodes)
         }
-        if let jsonArray = json as? [AnyObject] {
-            for childNode in jsonArray {
-                if let foundedValue = findRecursively(objectKey: objectKey, type: type, json: childNode) {
-                    return foundedValue
-                }
+        if let jsonArray = json as? [AnyObject] { childNodes.append(contentsOf: jsonArray) }
+        for childNode in childNodes {
+            if let foundValue = findRecursively(objectKey: objectKey, type: type, json: childNode) {
+                return foundValue
             }
         }
         return nil
@@ -489,22 +487,19 @@ extension Mapper {
     //Search for a dictionary
     internal class func findRecursively(dictionaryKey: String, json: AnyObject) -> AnyObject? {
         if isContainsOnlyAtomaryValues(json) { return nil }
+        var childNodes = [AnyObject]()
+        var potentialFittingNodes = [AnyObject]()
         if let jsonDictionary = json as? [String: AnyObject] {
-            for (key, childNode) in jsonDictionary {
-                if key == dictionaryKey, let dictionaryValue = childNode as? [String: AnyObject] {
-                    return dictionaryValue as AnyObject?
-                } else {
-                    if let foundedValue = findRecursively(dictionaryKey: dictionaryKey, json: childNode) {
-                        return foundedValue
-                    }
-                }
-            }
+            potentialFittingNodes = jsonDictionary.filter() { $0.key == dictionaryKey && $0.value is Dictionary<String, AnyObject> }.map() { $0.value }
+            if let fittingNode = potentialFittingNodes.first { return fittingNode }
+            childNodes = jsonDictionary.map() { $0.value }
         }
         if let jsonArray = json as? [AnyObject] {
-            for childNode in jsonArray {
-                if let foundedValue = findRecursively(dictionaryKey: dictionaryKey, json: childNode) {
-                    return foundedValue
-                }
+            childNodes = jsonArray
+        }
+        for childNode in childNodes {
+            if let foundedValue = findRecursively(dictionaryKey: dictionaryKey, json: childNode) {
+                return foundedValue
             }
         }
         return nil
