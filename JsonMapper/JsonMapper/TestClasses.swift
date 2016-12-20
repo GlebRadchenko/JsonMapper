@@ -13,7 +13,6 @@ class Chair: Mapable {
     var stickCount: String
     var someOptionalValue: Int?
     
-    static var helpingPath: [MapPathable] = [.none]
     static var relations: [String: MappingProperty] = ["id": .property(type: .number,
                                                                        key: "id",
                                                                        optional: false),

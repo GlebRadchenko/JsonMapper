@@ -9,10 +9,16 @@
 import Foundation
 
 public protocol Mapable {
-    static var helpingPath: [MapPathable] {get set}
+    static var helpingPath: [MapPathable] {get}
     static var relations: [String: MappingProperty] {get}
     init(_ wrapping: Wrapping) throws
 }
+extension Mapable {
+    static var helpingPath: [MapPathable] {
+        return [.none]
+    }
+}
+
 public enum MapperError: Error, CustomStringConvertible {
     case notFound
     case wrongSetting
