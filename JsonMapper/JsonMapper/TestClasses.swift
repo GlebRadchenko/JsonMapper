@@ -25,15 +25,10 @@ class Chair: Mapable {
                                                                                       optional: true)]
     
     //Mapable protocol implementation
-    public required init?(_ wrapping: Wrapping) {
-        do {
-            id = try wrapping.get("id")!
-            stickCount = try wrapping.get("stickCount")!
-            someOptionalValue = try wrapping.get("someOptionalValue")
-        } catch {
-            print(error)
-            return nil
-        }
+    public required init(_ wrapping: Wrapping) throws {
+        id = try wrapping.get("id")!
+        stickCount = try wrapping.get("stickCount")!
+        someOptionalValue = try wrapping.get("someOptionalValue")
     }
 }
 
@@ -44,15 +39,11 @@ class User: Mapable {
     var chairs: [Chair]?
     
     //Mapable protocol implementation
-    public required init?(_ wrapping: Wrapping) {
-        do {
-            name = try wrapping.get("name")!
-            age = try wrapping.get("age")!
-            isMale = try wrapping.get("isMale")!
-            chairs = try wrapping.get("chairs")
-        } catch {
-            return nil
-        }
+    public required init(_ wrapping: Wrapping) throws {
+        name = try wrapping.get("name")!
+        age = try wrapping.get("age")!
+        isMale = try wrapping.get("isMale")!
+        chairs = try wrapping.get("chairs")
     }
     
     static var helpingPath: [MapPathable] = [.none]//[.destination(nodeType: .dictionary(key: "user", index: nil))]

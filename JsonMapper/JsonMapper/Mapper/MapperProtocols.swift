@@ -11,7 +11,7 @@ import Foundation
 public protocol Mapable {
     static var helpingPath: [MapPathable] {get set}
     static var relations: [String: MappingProperty] {get}
-    init?(_ wrapping: Wrapping)
+    init(_ wrapping: Wrapping) throws
 }
 public enum MapperError: Error, CustomStringConvertible {
     case notFound

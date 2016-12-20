@@ -112,10 +112,7 @@ extension Mapper {
             }
             propertyDictionary[nameOfProperty] = aProperty
         }
-        guard let object = objectType.init(Wrapping(propertyDictionary)) else {
-            throw MapperError.notFound
-        }
-        return object
+        return try objectType.init(Wrapping(propertyDictionary))
     }
     internal class func mapRecursively(_ objectType: Mapable.Type, destinationKey: String, json: AnyObject) throws -> Mapable {
         if isContainsOnlyAtomaryValues(json) {
@@ -180,10 +177,7 @@ extension Mapper {
         for (propertyName, mappingProperty) in objectType.relations {
             propertyDictionary[propertyName] = try validate(mappingProperty, dictionary: dictionary)
         }
-        guard let object = objectType.init(Wrapping(propertyDictionary)) else {
-            throw MapperError.wrongFormat
-        }
-        return object
+        return try objectType.init(Wrapping(propertyDictionary))
     }
 }
 //MARK: - Helpers
