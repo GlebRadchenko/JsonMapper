@@ -32,7 +32,7 @@ class Chair: Mapable {
 }
 
 class User: Mapable {
-    var name: String
+    var name: Date
     var age: Int
     var isMale: Bool
     var chairs: [Chair]?

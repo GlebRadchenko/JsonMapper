@@ -364,7 +364,7 @@ extension Mapper {
     
     internal class func isValid(_ property: AnyObject, for type: MappingType) -> Bool {
         switch type {
-        case .string:
+        case .string, .date:
             if let _ = property as? String {
                 return true
             }

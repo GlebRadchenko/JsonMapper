@@ -22,6 +22,17 @@ extension String: AtomaryMapable {
     }
 }
 
+extension Date: AtomaryMapable {
+    public typealias ConcreteType = String
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+        if value is ConcreteType {
+            //convert to date
+            return Date() as! T
+        }
+        throw MapperError.wrongFormat
+    }
+}
+
 extension Double: AtomaryMapable {
     public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
         if let concrete = value as? T.ConcreteType {
@@ -85,9 +96,7 @@ public protocol Mapable {
     init(_ wrapping: Wrapping) throws
 }
 extension Mapable {
-    static var helpingPath: [MapPathable] {
-        return [.none]
-    }
+    static var helpingPath: [MapPathable] { return [.none] }
 }
 
 public enum MapperError: Error, CustomStringConvertible {
@@ -105,13 +114,14 @@ public enum MapperError: Error, CustomStringConvertible {
 
 public enum MappingType {
     case string
+    case date
     case bool
     case number
     case anyObject
     
     var validTypes: [Any.Type] {
         switch self {
-        case .string:
+        case .string, .date:
             return [String.self]
         case .number:
             return [Int.self, Double.self, Float.self, NSNumber.self]
