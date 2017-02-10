@@ -36,6 +36,17 @@ public class Wrapping {
         return try convert(value)
     }
     
+    func get<T: AtomaryMapable>(_ propertyName: String) throws -> [T] {
+        guard let value = content[propertyName] else {
+            throw WrappingError.wrongProperty(name: propertyName)
+        }
+        
+        guard let arrayOfValues = value as? [AnyObject] else {
+            throw WrappingError.wrongProperty(name: propertyName)
+        }
+        return try arrayOfValues.map { try convert($0) }
+    }
+    
     private func convert<T: AtomaryMapable>(_ value: AnyObject) throws -> T {
         return try T.concrete(from: value) as! T
     }

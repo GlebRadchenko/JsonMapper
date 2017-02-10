@@ -9,77 +9,71 @@
 import Foundation
 
 public protocol AtomaryMapable {
-    associatedtype ConcreteType
-    static func concrete(from value: AnyObject) throws -> ConcreteType
+    associatedtype ConcreteType = Self
+    static func concrete<T: AtomaryMapable>(from value: AnyObject) throws -> T
 }
 
-
 extension String: AtomaryMapable {
-    public typealias ConcreteType = String
-    public static func concrete(from value: AnyObject) throws -> String {
-        if let concrete = value as? ConcreteType {
-            return concrete
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+        if let concrete = value as? T.ConcreteType {
+            return concrete as! T
         }
         throw MapperError.wrongFormat
     }
 }
 
 extension Double: AtomaryMapable {
-    public typealias ConcreteType = Double
-    public static func concrete(from value: AnyObject) throws -> Double {
-        if let concrete = value as? ConcreteType {
-            return concrete
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+        if let concrete = value as? T.ConcreteType {
+            return concrete as! T
         }
         if let concrete = value.doubleValue {
-            return concrete
+            return concrete as! T
         }
-        if let stringValue = try? String.concrete(from: value), let concrete = Double(stringValue) {
-            return concrete
+        if let stringValue: String = try? String.concrete(from: value), let concrete = Double(stringValue) {
+            return concrete as! T
         }
         throw MapperError.wrongFormat
     }
 }
 
 extension Float: AtomaryMapable {
-    public typealias ConcreteType = Float
-    public static func concrete(from value: AnyObject) throws -> Float {
-        if let concrete = value as? ConcreteType {
-            return concrete
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+        if let concrete = value as? T.ConcreteType {
+            return concrete as! T
         }
-        if let concrete = value.floatValue {
-            return concrete
+        if let concrete = value.doubleValue {
+            return concrete as! T
         }
-        if let stringValue = try? String.concrete(from: value), let concrete = Float(stringValue) {
-            return concrete
+        if let stringValue: String = try? String.concrete(from: value), let concrete = Float(stringValue) {
+            return concrete as! T
         }
         throw MapperError.wrongFormat
     }
 }
 
 extension Bool: AtomaryMapable {
-    public typealias ConcreteType = Bool
-    public static func concrete(from value: AnyObject) throws -> Bool {
-        if let concrete = value as? ConcreteType {
-            return concrete
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+        if let concrete = value as? T.ConcreteType {
+            return concrete as! T
         }
-        if let concrete = value.boolValue {
-            return concrete
+        if let concrete = value.doubleValue {
+            return concrete as! T
         }
-        if let stringValue = try? String.concrete(from: value), let concrete = Bool(stringValue) {
-            return concrete
+        if let stringValue: String = try? String.concrete(from: value), let concrete = Bool(stringValue) {
+            return concrete as! T
         }
         throw MapperError.wrongFormat
     }
 }
 
 extension Int: AtomaryMapable {
-    public typealias ConcreteType = Int
-    public static func concrete(from value: AnyObject) throws -> Int {
-        if let concrete = value as? ConcreteType {
-            return concrete
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+        if let concrete = value as? T.ConcreteType {
+            return concrete as! T
         }
-        if let stringValue = try? String.concrete(from: value), let concrete = Int(stringValue) {
-            return concrete
+        if let stringValue: String = try? String.concrete(from: value), let concrete = Int(stringValue) {
+            return concrete as! T
         }
         throw MapperError.wrongFormat
     }

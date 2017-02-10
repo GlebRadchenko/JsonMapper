@@ -15,7 +15,7 @@ class MapperTests: XCTestCase {
                                                                                              "chairs": [["id": "1",
                                                                                                          "stickCount": "4",
                                                                                                          "value" : 1234,
-                                                                                                         "testIntArray": [1, 2, 3, 4],
+                                                                                                         "testIntArray": [1, "2", 3, 4],
                                                                                                          "testStringArray": ["1", "2", "3", "4"],
                                                                                                          "testBoolArray": [true, false, true, false]
                                                                                                 ],
@@ -58,25 +58,25 @@ class MapperTests: XCTestCase {
     }
     func testRecursiveSearchForArray() {
         let anyArray = Mapper.findRecursively(arrayKey: "testIntArray", valuesType: .anyObject, json: json as AnyObject)
-        if let aArray = anyArray as? [Int] {
+        if let aArray = anyArray as? [AnyObject] {
             XCTAssert(aArray.count == 4, "Wrong any array found")
         } else {
             XCTFail()
         }
         let intArray = Mapper.findRecursively(arrayKey: "testIntArray", valuesType: .number, json: json as AnyObject)
-        if let aArray = intArray as? [Int] {
+        if let aArray = intArray as? [AnyObject] {
             XCTAssert(aArray.count == 4, "Wrong int array found")
         } else {
             XCTFail()
         }
         let stringArray = Mapper.findRecursively(arrayKey: "testStringArray", valuesType: .string, json: json as AnyObject)
-        if let aArray = stringArray as? [String] {
+        if let aArray = stringArray as? [AnyObject] {
             XCTAssert(aArray.count == 4, "Wrong string array found")
         } else {
             XCTFail()
         }
         let boolArray = Mapper.findRecursively(arrayKey: "testBoolArray", valuesType: .bool, json: json as AnyObject)
-        if let aArray = boolArray as? [Bool] {
+        if let aArray = boolArray as? [AnyObject] {
             XCTAssert(aArray.count == 4, "Wrong bool array found")
         } else {
             XCTFail()

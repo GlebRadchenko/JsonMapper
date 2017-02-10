@@ -20,11 +20,24 @@ public class Mapper {
         return try map(json, types: T.self) as! [T]
     }
     
-    public class func map<T: AtomaryMapable>(_ json: AnyObject) throws -> T {
+    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String) throws -> T {
         if let json = json as? T.ConcreteType {
             return json as! T
         }
-        throw MapperError.wrongFormat
+        guard let rawData = findRecursively(propertyKey: key, mappingType: .anyObject, json: json) else {
+            throw MapperError.notFound
+        }
+        return try T.concrete(from: rawData)
+    }
+    
+    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String) throws -> [T] {
+        if let json = json as? [T.ConcreteType] {
+            return json.map { $0 as! T }
+        }
+        guard let rawData = findRecursively(arrayKey: key, valuesType: .anyObject, json: json) as? [AnyObject] else {
+            throw MapperError.notFound
+        }
+        return try rawData.map { try T.concrete(from: $0) }
     }
 }
 
@@ -68,6 +81,7 @@ extension Mapper {
             }
         }
     }
+    
     internal class func map(_ objectType: Mapable.Type, json: AnyObject) throws -> Mapable {
         var paths = objectType.helpingPath
         let initialPath = paths.removeFirst()
@@ -98,6 +112,7 @@ extension Mapper {
             throw MapperError.wrongSetting
         }
     }
+    
     internal class func mapRecursively(_ objectType: Mapable.Type, json: AnyObject) throws -> Mapable {
         var propertyDictionary = DictionaryNode()
         try objectType.relations.forEach { (nameOfProperty, mappingProperty) in
@@ -110,6 +125,7 @@ extension Mapper {
         }
         return try objectType.init(Wrapping(propertyDictionary))
     }
+    
     internal class func mapRecursively(_ objectType: Mapable.Type, destinationKey: String, json: AnyObject) throws -> Mapable {
         if isContainsOnlyAtomaryValues(json) {
             throw MapperError.notFound
@@ -121,6 +137,7 @@ extension Mapper {
         }
         return try mapRecursively(objectType, key: destinationKey, json: json)
     }
+    
     internal class func mapRecursively(_ objectType: Mapable.Type, key: String, json: AnyObject) throws -> Mapable {
         if isContainsOnlyAtomaryValues(json) {
             throw MapperError.notFound
