@@ -15,44 +15,29 @@ public class Wrapping {
         self.content = content
     }
     
-    func get<T>(_ propertyName: String) throws -> T? {
-        if content.keys.contains(propertyName) {
-            if let aValue = content[propertyName] as? T {
-                return aValue
-            }
-            guard let value = content[propertyName] else {
-                return nil
-            }
-            do {
-                return try convert(value)
-            } catch { debugPrint(error) }
+    func get<T: Mapable>(_ propertyName: String) throws -> [T] {
+        guard let value = content[propertyName] as? [T] else {
+            throw WrappingError.wrongProperty(name: propertyName)
         }
-        return nil
+        return value
     }
     
-    private func convert<T>(_ value: AnyObject) throws -> T? {
-        if MappingType.number.validTypes.contains(where: {$0 == T.self}) {
-            if T.self == Double.self {
-                return value.doubleValue as? T
-            }
-            if T.self == Float.self {
-                return value.floatValue as? T
-            }
-            if T.self == Int.self {
-                return Int(value.int64Value) as? T
-            }
+    func get<T: Mapable>(_ propertyName: String) throws -> T {
+        guard let value = content[propertyName] as? T else {
+            throw WrappingError.wrongProperty(name: propertyName)
         }
-        if MappingType.string.validTypes.contains(where: {$0 == T.self}) {
-            if T.self == String.self {
-                return value.stringValue as? T
-            }
+        return value
+    }
+    
+    func get<T: AtomaryMapable>(_ propertyName: String) throws -> T {
+        guard let value = content[propertyName] else {
+            throw WrappingError.wrongProperty(name: propertyName)
         }
-        if MappingType.bool.validTypes.contains(where: {$0 == T.self}) {
-            if T.self == Bool.self {
-                return value.boolValue as? T
-            }
-        }
-        throw WrappingError.wrongProperty(name: "\(value)")
+        return try convert(value)
+    }
+    
+    private func convert<T: AtomaryMapable>(_ value: AnyObject) throws -> T {
+        return try T.concrete(from: value) as! T
     }
 }
 public enum WrappingError: Error, CustomStringConvertible {

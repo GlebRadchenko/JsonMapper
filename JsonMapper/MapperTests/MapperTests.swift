@@ -19,7 +19,7 @@ class MapperTests: XCTestCase {
                                                                                                          "testStringArray": ["1", "2", "3", "4"],
                                                                                                          "testBoolArray": [true, false, true, false]
                                                                                                 ],
-                                                                                                        ["id": "2",
+                                                                                                        ["id": 2,
                                                                                                          "stickCount": 4],
                                                                                                         ["id": "3",
                                                                                                          "stickCount": 4], ["test" : ["fake": false]]]
@@ -119,14 +119,14 @@ class MapperTests: XCTestCase {
     func testMapping() {
         do {
             let testJson = ["name" : "Test",
-                                       "age": 21,
-                                       "male": true,
-                                       "chairs": [["id": "1",
-                                                   "stickCount": 4],
-                                                  ["id": "2",
-                                                   "stickCount": 4],
-                                                  ["id": "3",
-                                                   "stickCount": 4]]] as AnyObject
+                            "age": 21,
+                            "male": true,
+                            "chairs": [["id": "1",
+                                        "stickCount": 4],
+                                       ["id": "2",
+                                        "stickCount": 4],
+                                       ["id": "3",
+                                        "stickCount": 4]]] as AnyObject
             let simpleUser: User = try Mapper.map(testJson)
             XCTAssert(simpleUser.age == 21, "Wrong age")
             XCTAssert(simpleUser.isMale == true, "Wrong isMale")

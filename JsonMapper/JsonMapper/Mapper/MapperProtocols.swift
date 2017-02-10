@@ -8,6 +8,83 @@
 
 import Foundation
 
+public protocol AtomaryMapable {
+    associatedtype ConcreteType
+    static func concrete(from value: AnyObject) throws -> ConcreteType
+}
+
+
+extension String: AtomaryMapable {
+    public typealias ConcreteType = String
+    public static func concrete(from value: AnyObject) throws -> String {
+        if let concrete = value as? ConcreteType {
+            return concrete
+        }
+        throw MapperError.wrongFormat
+    }
+}
+
+extension Double: AtomaryMapable {
+    public typealias ConcreteType = Double
+    public static func concrete(from value: AnyObject) throws -> Double {
+        if let concrete = value as? ConcreteType {
+            return concrete
+        }
+        if let concrete = value.doubleValue {
+            return concrete
+        }
+        if let stringValue = try? String.concrete(from: value), let concrete = Double(stringValue) {
+            return concrete
+        }
+        throw MapperError.wrongFormat
+    }
+}
+
+extension Float: AtomaryMapable {
+    public typealias ConcreteType = Float
+    public static func concrete(from value: AnyObject) throws -> Float {
+        if let concrete = value as? ConcreteType {
+            return concrete
+        }
+        if let concrete = value.floatValue {
+            return concrete
+        }
+        if let stringValue = try? String.concrete(from: value), let concrete = Float(stringValue) {
+            return concrete
+        }
+        throw MapperError.wrongFormat
+    }
+}
+
+extension Bool: AtomaryMapable {
+    public typealias ConcreteType = Bool
+    public static func concrete(from value: AnyObject) throws -> Bool {
+        if let concrete = value as? ConcreteType {
+            return concrete
+        }
+        if let concrete = value.boolValue {
+            return concrete
+        }
+        if let stringValue = try? String.concrete(from: value), let concrete = Bool(stringValue) {
+            return concrete
+        }
+        throw MapperError.wrongFormat
+    }
+}
+
+extension Int: AtomaryMapable {
+    public typealias ConcreteType = Int
+    public static func concrete(from value: AnyObject) throws -> Int {
+        if let concrete = value as? ConcreteType {
+            return concrete
+        }
+        if let stringValue = try? String.concrete(from: value), let concrete = Int(stringValue) {
+            return concrete
+        }
+        throw MapperError.wrongFormat
+    }
+}
+
 public protocol Mapable {
     static var helpingPath: [MapPathable] {get}
     static var relations: [String: MappingProperty] {get}
@@ -31,6 +108,7 @@ public enum MapperError: Error, CustomStringConvertible {
         }
     }
 }
+
 public enum MappingType {
     case string
     case bool
@@ -50,6 +128,7 @@ public enum MappingType {
         }
     }
 }
+
 // enum for make relations between properties and mapping
 public enum MappingProperty {
     case property(type: MappingType, key: String, optional: Bool)

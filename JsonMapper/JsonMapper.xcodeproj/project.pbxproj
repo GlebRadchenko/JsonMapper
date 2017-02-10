@@ -7,58 +7,51 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		606076A81DF2D6DC003B19B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076A71DF2D6DC003B19B7 /* AppDelegate.swift */; };
-		606076AA1DF2D6DC003B19B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076A91DF2D6DC003B19B7 /* ViewController.swift */; };
-		606076AD1DF2D6DD003B19B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 606076AB1DF2D6DD003B19B7 /* Main.storyboard */; };
-		606076AF1DF2D6DD003B19B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 606076AE1DF2D6DD003B19B7 /* Assets.xcassets */; };
-		606076B21DF2D6DD003B19B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 606076B01DF2D6DD003B19B7 /* LaunchScreen.storyboard */; };
-		606076CA1DF3065C003B19B7 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
-		606076CC1DF306B7003B19B7 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
-		606076CE1DF49CF0003B19B7 /* MapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CD1DF49CF0003B19B7 /* MapperTests.swift */; };
-		606076CF1DF49D6E003B19B7 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
-		606076D01DF49E09003B19B7 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
-		606076D21DF4CEE1003B19B7 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
-		606076D31DF4CEE1003B19B7 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
-		606076D51DF53818003B19B7 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
-		606076D61DF53818003B19B7 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
+		6008C3691E4DB3C700B5C2D8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6008C3681E4DB3C700B5C2D8 /* main.swift */; };
+		6008C36D1E4DB3D000B5C2D8 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
+		6008C36E1E4DB3D200B5C2D8 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
+		6008C36F1E4DB3D400B5C2D8 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
+		6008C3721E4DB43100B5C2D8 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
+		6008C37C1E4DB56600B5C2D8 /* MapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6008C37B1E4DB56600B5C2D8 /* MapperTests.swift */; };
+		6008C3811E4DB59600B5C2D8 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
+		6008C3821E4DB59800B5C2D8 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
+		6008C3831E4DB59A00B5C2D8 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
+		6008C3841E4DB59D00B5C2D8 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		606076B91DF2D6DD003B19B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6060769C1DF2D6DB003B19B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 606076A31DF2D6DC003B19B7;
-			remoteInfo = JsonMapper;
+/* Begin PBXCopyFilesBuildPhase section */
+		6008C3641E4DB3C700B5C2D8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
 		};
-/* End PBXContainerItemProxy section */
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		606076A41DF2D6DC003B19B7 /* JsonMapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JsonMapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		606076A71DF2D6DC003B19B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		606076A91DF2D6DC003B19B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		606076AC1DF2D6DD003B19B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		606076AE1DF2D6DD003B19B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		606076B11DF2D6DD003B19B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		606076B31DF2D6DD003B19B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		606076B81DF2D6DD003B19B7 /* JsonMapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JsonMapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		606076BE1DF2D6DD003B19B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6008C3661E4DB3C700B5C2D8 /* Mapper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Mapper; sourceTree = BUILT_PRODUCTS_DIR; };
+		6008C3681E4DB3C700B5C2D8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		6008C3791E4DB56600B5C2D8 /* MapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6008C37B1E4DB56600B5C2D8 /* MapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapperTests.swift; sourceTree = "<group>"; };
+		6008C37D1E4DB56600B5C2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		606076C91DF3065C003B19B7 /* MapperProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperProtocols.swift; sourceTree = "<group>"; };
 		606076CB1DF306B7003B19B7 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
-		606076CD1DF49CF0003B19B7 /* MapperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperTests.swift; sourceTree = "<group>"; };
 		606076D11DF4CEE1003B19B7 /* TestClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestClasses.swift; sourceTree = "<group>"; };
 		606076D41DF53818003B19B7 /* Wrapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapping.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		606076A11DF2D6DC003B19B7 /* Frameworks */ = {
+		6008C3631E4DB3C700B5C2D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		606076B51DF2D6DD003B19B7 /* Frameworks */ = {
+		6008C3761E4DB56600B5C2D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -68,11 +61,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6008C3671E4DB3C700B5C2D8 /* Mapper */ = {
+			isa = PBXGroup;
+			children = (
+				6008C3681E4DB3C700B5C2D8 /* main.swift */,
+			);
+			path = Mapper;
+			sourceTree = "<group>";
+		};
+		6008C37A1E4DB56600B5C2D8 /* MapperTests */ = {
+			isa = PBXGroup;
+			children = (
+				6008C37B1E4DB56600B5C2D8 /* MapperTests.swift */,
+				6008C37D1E4DB56600B5C2D8 /* Info.plist */,
+			);
+			path = MapperTests;
+			sourceTree = "<group>";
+		};
 		6060769B1DF2D6DB003B19B7 = {
 			isa = PBXGroup;
 			children = (
 				606076A61DF2D6DC003B19B7 /* JsonMapper */,
-				606076BB1DF2D6DD003B19B7 /* JsonMapperTests */,
+				6008C3671E4DB3C700B5C2D8 /* Mapper */,
+				6008C37A1E4DB56600B5C2D8 /* MapperTests */,
 				606076A51DF2D6DC003B19B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -80,8 +91,8 @@
 		606076A51DF2D6DC003B19B7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				606076A41DF2D6DC003B19B7 /* JsonMapper.app */,
-				606076B81DF2D6DD003B19B7 /* JsonMapperTests.xctest */,
+				6008C3661E4DB3C700B5C2D8 /* Mapper */,
+				6008C3791E4DB56600B5C2D8 /* MapperTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,24 +101,9 @@
 			isa = PBXGroup;
 			children = (
 				606076C71DF2D71D003B19B7 /* Mapper */,
-				606076A71DF2D6DC003B19B7 /* AppDelegate.swift */,
-				606076A91DF2D6DC003B19B7 /* ViewController.swift */,
-				606076AB1DF2D6DD003B19B7 /* Main.storyboard */,
-				606076AE1DF2D6DD003B19B7 /* Assets.xcassets */,
-				606076B01DF2D6DD003B19B7 /* LaunchScreen.storyboard */,
-				606076B31DF2D6DD003B19B7 /* Info.plist */,
 				606076D11DF4CEE1003B19B7 /* TestClasses.swift */,
 			);
 			path = JsonMapper;
-			sourceTree = "<group>";
-		};
-		606076BB1DF2D6DD003B19B7 /* JsonMapperTests */ = {
-			isa = PBXGroup;
-			children = (
-				606076BE1DF2D6DD003B19B7 /* Info.plist */,
-				606076CD1DF49CF0003B19B7 /* MapperTests.swift */,
-			);
-			path = JsonMapperTests;
 			sourceTree = "<group>";
 		};
 		606076C71DF2D71D003B19B7 /* Mapper */ = {
@@ -123,39 +119,38 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		606076A31DF2D6DC003B19B7 /* JsonMapper */ = {
+		6008C3651E4DB3C700B5C2D8 /* Mapper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 606076C11DF2D6DD003B19B7 /* Build configuration list for PBXNativeTarget "JsonMapper" */;
+			buildConfigurationList = 6008C36C1E4DB3C700B5C2D8 /* Build configuration list for PBXNativeTarget "Mapper" */;
 			buildPhases = (
-				606076A01DF2D6DC003B19B7 /* Sources */,
-				606076A11DF2D6DC003B19B7 /* Frameworks */,
-				606076A21DF2D6DC003B19B7 /* Resources */,
+				6008C3621E4DB3C700B5C2D8 /* Sources */,
+				6008C3631E4DB3C700B5C2D8 /* Frameworks */,
+				6008C3641E4DB3C700B5C2D8 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = JsonMapper;
-			productName = JsonMapper;
-			productReference = 606076A41DF2D6DC003B19B7 /* JsonMapper.app */;
-			productType = "com.apple.product-type.application";
+			name = Mapper;
+			productName = Mapper;
+			productReference = 6008C3661E4DB3C700B5C2D8 /* Mapper */;
+			productType = "com.apple.product-type.tool";
 		};
-		606076B71DF2D6DD003B19B7 /* JsonMapperTests */ = {
+		6008C3781E4DB56600B5C2D8 /* MapperTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 606076C41DF2D6DD003B19B7 /* Build configuration list for PBXNativeTarget "JsonMapperTests" */;
+			buildConfigurationList = 6008C37E1E4DB56600B5C2D8 /* Build configuration list for PBXNativeTarget "MapperTests" */;
 			buildPhases = (
-				606076B41DF2D6DD003B19B7 /* Sources */,
-				606076B51DF2D6DD003B19B7 /* Frameworks */,
-				606076B61DF2D6DD003B19B7 /* Resources */,
+				6008C3751E4DB56600B5C2D8 /* Sources */,
+				6008C3761E4DB56600B5C2D8 /* Frameworks */,
+				6008C3771E4DB56600B5C2D8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				606076BA1DF2D6DD003B19B7 /* PBXTargetDependency */,
 			);
-			name = JsonMapperTests;
-			productName = JsonMapperTests;
-			productReference = 606076B81DF2D6DD003B19B7 /* JsonMapperTests.xctest */;
+			name = MapperTests;
+			productName = MapperTests;
+			productReference = 6008C3791E4DB56600B5C2D8 /* MapperTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -164,20 +159,19 @@
 		6060769C1DF2D6DB003B19B7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0810;
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Gleb Radchenko";
 				TargetAttributes = {
-					606076A31DF2D6DC003B19B7 = {
-						CreatedOnToolsVersion = 8.1;
+					6008C3651E4DB3C700B5C2D8 = {
+						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = XN4R59V3UY;
 						ProvisioningStyle = Automatic;
 					};
-					606076B71DF2D6DD003B19B7 = {
-						CreatedOnToolsVersion = 8.1;
+					6008C3781E4DB56600B5C2D8 = {
+						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = XN4R59V3UY;
 						ProvisioningStyle = Automatic;
-						TestTargetID = 606076A31DF2D6DC003B19B7;
 					};
 				};
 			};
@@ -194,24 +188,14 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				606076A31DF2D6DC003B19B7 /* JsonMapper */,
-				606076B71DF2D6DD003B19B7 /* JsonMapperTests */,
+				6008C3651E4DB3C700B5C2D8 /* Mapper */,
+				6008C3781E4DB56600B5C2D8 /* MapperTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		606076A21DF2D6DC003B19B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				606076B21DF2D6DD003B19B7 /* LaunchScreen.storyboard in Resources */,
-				606076AF1DF2D6DD003B19B7 /* Assets.xcassets in Resources */,
-				606076AD1DF2D6DD003B19B7 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		606076B61DF2D6DD003B19B7 /* Resources */ = {
+		6008C3771E4DB56600B5C2D8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -221,61 +205,93 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		606076A01DF2D6DC003B19B7 /* Sources */ = {
+		6008C3621E4DB3C700B5C2D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				606076CC1DF306B7003B19B7 /* Mapper.swift in Sources */,
-				606076D51DF53818003B19B7 /* Wrapping.swift in Sources */,
-				606076CA1DF3065C003B19B7 /* MapperProtocols.swift in Sources */,
-				606076D21DF4CEE1003B19B7 /* TestClasses.swift in Sources */,
-				606076AA1DF2D6DC003B19B7 /* ViewController.swift in Sources */,
-				606076A81DF2D6DC003B19B7 /* AppDelegate.swift in Sources */,
+				6008C36D1E4DB3D000B5C2D8 /* MapperProtocols.swift in Sources */,
+				6008C36F1E4DB3D400B5C2D8 /* Wrapping.swift in Sources */,
+				6008C3721E4DB43100B5C2D8 /* TestClasses.swift in Sources */,
+				6008C36E1E4DB3D200B5C2D8 /* Mapper.swift in Sources */,
+				6008C3691E4DB3C700B5C2D8 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		606076B41DF2D6DD003B19B7 /* Sources */ = {
+		6008C3751E4DB56600B5C2D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				606076CE1DF49CF0003B19B7 /* MapperTests.swift in Sources */,
-				606076CF1DF49D6E003B19B7 /* Mapper.swift in Sources */,
-				606076D31DF4CEE1003B19B7 /* TestClasses.swift in Sources */,
-				606076D01DF49E09003B19B7 /* MapperProtocols.swift in Sources */,
-				606076D61DF53818003B19B7 /* Wrapping.swift in Sources */,
+				6008C3811E4DB59600B5C2D8 /* MapperProtocols.swift in Sources */,
+				6008C3831E4DB59A00B5C2D8 /* Wrapping.swift in Sources */,
+				6008C3841E4DB59D00B5C2D8 /* TestClasses.swift in Sources */,
+				6008C3821E4DB59800B5C2D8 /* Mapper.swift in Sources */,
+				6008C37C1E4DB56600B5C2D8 /* MapperTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		606076BA1DF2D6DD003B19B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 606076A31DF2D6DC003B19B7 /* JsonMapper */;
-			targetProxy = 606076B91DF2D6DD003B19B7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		606076AB1DF2D6DD003B19B7 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				606076AC1DF2D6DD003B19B7 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		606076B01DF2D6DD003B19B7 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				606076B11DF2D6DD003B19B7 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
+		6008C36A1E4DB3C700B5C2D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEVELOPMENT_TEAM = XN4R59V3UY;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		6008C36B1E4DB3C700B5C2D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEVELOPMENT_TEAM = XN4R59V3UY;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		6008C37F1E4DB56600B5C2D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XN4R59V3UY;
+				INFOPLIST_FILE = MapperTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Applikator.MapperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		6008C3801E4DB56600B5C2D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = XN4R59V3UY;
+				INFOPLIST_FILE = MapperTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Applikator.MapperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		606076BF1DF2D6DD003B19B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -367,90 +383,30 @@
 			};
 			name = Release;
 		};
-		606076C21DF2D6DD003B19B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				INFOPLIST_FILE = JsonMapper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.radchenko.JsonMapper;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		606076C31DF2D6DD003B19B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				INFOPLIST_FILE = JsonMapper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.radchenko.JsonMapper;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
-		606076C51DF2D6DD003B19B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				INFOPLIST_FILE = JsonMapperTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.radchencko.JsonMapperTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JsonMapper.app/JsonMapper";
-			};
-			name = Debug;
-		};
-		606076C61DF2D6DD003B19B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				INFOPLIST_FILE = JsonMapperTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.radchencko.JsonMapperTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JsonMapper.app/JsonMapper";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6008C36C1E4DB3C700B5C2D8 /* Build configuration list for PBXNativeTarget "Mapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6008C36A1E4DB3C700B5C2D8 /* Debug */,
+				6008C36B1E4DB3C700B5C2D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6008C37E1E4DB56600B5C2D8 /* Build configuration list for PBXNativeTarget "MapperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6008C37F1E4DB56600B5C2D8 /* Debug */,
+				6008C3801E4DB56600B5C2D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		6060769F1DF2D6DC003B19B7 /* Build configuration list for PBXProject "JsonMapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				606076BF1DF2D6DD003B19B7 /* Debug */,
 				606076C01DF2D6DD003B19B7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		606076C11DF2D6DD003B19B7 /* Build configuration list for PBXNativeTarget "JsonMapper" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				606076C21DF2D6DD003B19B7 /* Debug */,
-				606076C31DF2D6DD003B19B7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		606076C41DF2D6DD003B19B7 /* Build configuration list for PBXNativeTarget "JsonMapperTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				606076C51DF2D6DD003B19B7 /* Debug */,
-				606076C61DF2D6DD003B19B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
