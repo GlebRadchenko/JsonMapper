@@ -46,6 +46,7 @@ class User: Mapable {
     }
     
     static var helpingPath: [MapPathable] = [.none]//[.destination(nodeType: .dictionary(key: "user", index: nil))]
+    
     static var relations: [String: MappingProperty] {
         return ["name": .property(type: .string, key: "name", optional: false),
                 "age": .property(type: .number, key: "age", optional: false),

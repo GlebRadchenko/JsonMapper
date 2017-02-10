@@ -10,9 +10,11 @@ import Foundation
 
 public class Wrapping {
     var content: [String: AnyObject]
+    
     init(_ content: [String: AnyObject]) {
         self.content = content
     }
+    
     func get<T>(_ propertyName: String) throws -> T? {
         if content.keys.contains(propertyName) {
             if let aValue = content[propertyName] as? T {
@@ -27,6 +29,7 @@ public class Wrapping {
         }
         return nil
     }
+    
     private func convert<T>(_ value: AnyObject) throws -> T? {
         if MappingType.number.validTypes.contains(where: {$0 == T.self}) {
             if T.self == Double.self {
