@@ -7,20 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6008C3691E4DB3C700B5C2D8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6008C3681E4DB3C700B5C2D8 /* main.swift */; };
-		6008C36D1E4DB3D000B5C2D8 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
-		6008C36E1E4DB3D200B5C2D8 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
-		6008C36F1E4DB3D400B5C2D8 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
-		6008C3721E4DB43100B5C2D8 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
-		6008C37C1E4DB56600B5C2D8 /* MapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6008C37B1E4DB56600B5C2D8 /* MapperTests.swift */; };
-		6008C3811E4DB59600B5C2D8 /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076C91DF3065C003B19B7 /* MapperProtocols.swift */; };
-		6008C3821E4DB59800B5C2D8 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076CB1DF306B7003B19B7 /* Mapper.swift */; };
-		6008C3831E4DB59A00B5C2D8 /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D41DF53818003B19B7 /* Wrapping.swift */; };
-		6008C3841E4DB59D00B5C2D8 /* TestClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606076D11DF4CEE1003B19B7 /* TestClasses.swift */; };
+		F7AA56421E86DC9E00709C4C /* JsonMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AA56381E86DC9D00709C4C /* JsonMapper.framework */; };
+		F7AA56471E86DC9E00709C4C /* JsonMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56461E86DC9E00709C4C /* JsonMapperTests.swift */; };
+		F7AA56491E86DC9E00709C4C /* JsonMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F7AA563B1E86DC9D00709C4C /* JsonMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F7AA56561E86DCCE00709C4C /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56531E86DCCE00709C4C /* Mapper.swift */; };
+		F7AA56571E86DCCE00709C4C /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56541E86DCCE00709C4C /* MapperProtocols.swift */; };
+		F7AA56581E86DCCE00709C4C /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56551E86DCCE00709C4C /* Wrapping.swift */; };
+		F7AA56601E86DCFE00709C4C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA565F1E86DCFE00709C4C /* main.swift */; };
+		F7AA56641E86DD8000709C4C /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56531E86DCCE00709C4C /* Mapper.swift */; };
+		F7AA56651E86DD8000709C4C /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56541E86DCCE00709C4C /* MapperProtocols.swift */; };
+		F7AA56661E86DD8000709C4C /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56551E86DCCE00709C4C /* Wrapping.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F7AA56431E86DC9E00709C4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F7AA562F1E86DC9D00709C4C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F7AA56371E86DC9D00709C4C;
+			remoteInfo = JsonMapper;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		6008C3641E4DB3C700B5C2D8 /* CopyFiles */ = {
+		F7AA565B1E86DCFE00709C4C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -32,26 +42,36 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6008C3661E4DB3C700B5C2D8 /* Mapper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Mapper; sourceTree = BUILT_PRODUCTS_DIR; };
-		6008C3681E4DB3C700B5C2D8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		6008C3791E4DB56600B5C2D8 /* MapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6008C37B1E4DB56600B5C2D8 /* MapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapperTests.swift; sourceTree = "<group>"; };
-		6008C37D1E4DB56600B5C2D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		606076C91DF3065C003B19B7 /* MapperProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperProtocols.swift; sourceTree = "<group>"; };
-		606076CB1DF306B7003B19B7 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
-		606076D11DF4CEE1003B19B7 /* TestClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestClasses.swift; sourceTree = "<group>"; };
-		606076D41DF53818003B19B7 /* Wrapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapping.swift; sourceTree = "<group>"; };
+		F7AA56381E86DC9D00709C4C /* JsonMapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JsonMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7AA563B1E86DC9D00709C4C /* JsonMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JsonMapper.h; sourceTree = "<group>"; };
+		F7AA563C1E86DC9D00709C4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F7AA56411E86DC9D00709C4C /* JsonMapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JsonMapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7AA56461E86DC9E00709C4C /* JsonMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonMapperTests.swift; sourceTree = "<group>"; };
+		F7AA56481E86DC9E00709C4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F7AA56531E86DCCE00709C4C /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
+		F7AA56541E86DCCE00709C4C /* MapperProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapperProtocols.swift; sourceTree = "<group>"; };
+		F7AA56551E86DCCE00709C4C /* Wrapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapping.swift; sourceTree = "<group>"; };
+		F7AA565D1E86DCFE00709C4C /* MapperBuildable */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MapperBuildable; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7AA565F1E86DCFE00709C4C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6008C3631E4DB3C700B5C2D8 /* Frameworks */ = {
+		F7AA56341E86DC9D00709C4C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6008C3761E4DB56600B5C2D8 /* Frameworks */ = {
+		F7AA563E1E86DC9D00709C4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7AA56421E86DC9E00709C4C /* JsonMapper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7AA565A1E86DCFE00709C4C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -61,141 +81,186 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6008C3671E4DB3C700B5C2D8 /* Mapper */ = {
+		F7AA562E1E86DC9D00709C4C = {
 			isa = PBXGroup;
 			children = (
-				6008C3681E4DB3C700B5C2D8 /* main.swift */,
-			);
-			path = Mapper;
-			sourceTree = "<group>";
-		};
-		6008C37A1E4DB56600B5C2D8 /* MapperTests */ = {
-			isa = PBXGroup;
-			children = (
-				6008C37B1E4DB56600B5C2D8 /* MapperTests.swift */,
-				6008C37D1E4DB56600B5C2D8 /* Info.plist */,
-			);
-			path = MapperTests;
-			sourceTree = "<group>";
-		};
-		6060769B1DF2D6DB003B19B7 = {
-			isa = PBXGroup;
-			children = (
-				606076A61DF2D6DC003B19B7 /* JsonMapper */,
-				6008C3671E4DB3C700B5C2D8 /* Mapper */,
-				6008C37A1E4DB56600B5C2D8 /* MapperTests */,
-				606076A51DF2D6DC003B19B7 /* Products */,
+				F7AA563A1E86DC9D00709C4C /* JsonMapper */,
+				F7AA56451E86DC9E00709C4C /* JsonMapperTests */,
+				F7AA565E1E86DCFE00709C4C /* MapperBuildable */,
+				F7AA56391E86DC9D00709C4C /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		606076A51DF2D6DC003B19B7 /* Products */ = {
+		F7AA56391E86DC9D00709C4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6008C3661E4DB3C700B5C2D8 /* Mapper */,
-				6008C3791E4DB56600B5C2D8 /* MapperTests.xctest */,
+				F7AA56381E86DC9D00709C4C /* JsonMapper.framework */,
+				F7AA56411E86DC9D00709C4C /* JsonMapperTests.xctest */,
+				F7AA565D1E86DCFE00709C4C /* MapperBuildable */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		606076A61DF2D6DC003B19B7 /* JsonMapper */ = {
+		F7AA563A1E86DC9D00709C4C /* JsonMapper */ = {
 			isa = PBXGroup;
 			children = (
-				606076C71DF2D71D003B19B7 /* Mapper */,
-				606076D11DF4CEE1003B19B7 /* TestClasses.swift */,
+				F7AA56521E86DCAE00709C4C /* Sources */,
+				F7AA563B1E86DC9D00709C4C /* JsonMapper.h */,
+				F7AA563C1E86DC9D00709C4C /* Info.plist */,
 			);
 			path = JsonMapper;
 			sourceTree = "<group>";
 		};
-		606076C71DF2D71D003B19B7 /* Mapper */ = {
+		F7AA56451E86DC9E00709C4C /* JsonMapperTests */ = {
 			isa = PBXGroup;
 			children = (
-				606076C91DF3065C003B19B7 /* MapperProtocols.swift */,
-				606076CB1DF306B7003B19B7 /* Mapper.swift */,
-				606076D41DF53818003B19B7 /* Wrapping.swift */,
+				F7AA56461E86DC9E00709C4C /* JsonMapperTests.swift */,
+				F7AA56481E86DC9E00709C4C /* Info.plist */,
 			);
-			path = Mapper;
+			path = JsonMapperTests;
+			sourceTree = "<group>";
+		};
+		F7AA56521E86DCAE00709C4C /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F7AA56531E86DCCE00709C4C /* Mapper.swift */,
+				F7AA56541E86DCCE00709C4C /* MapperProtocols.swift */,
+				F7AA56551E86DCCE00709C4C /* Wrapping.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		F7AA565E1E86DCFE00709C4C /* MapperBuildable */ = {
+			isa = PBXGroup;
+			children = (
+				F7AA565F1E86DCFE00709C4C /* main.swift */,
+			);
+			path = MapperBuildable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
-/* Begin PBXNativeTarget section */
-		6008C3651E4DB3C700B5C2D8 /* Mapper */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6008C36C1E4DB3C700B5C2D8 /* Build configuration list for PBXNativeTarget "Mapper" */;
-			buildPhases = (
-				6008C3621E4DB3C700B5C2D8 /* Sources */,
-				6008C3631E4DB3C700B5C2D8 /* Frameworks */,
-				6008C3641E4DB3C700B5C2D8 /* CopyFiles */,
+/* Begin PBXHeadersBuildPhase section */
+		F7AA56351E86DC9D00709C4C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7AA56491E86DC9E00709C4C /* JsonMapper.h in Headers */,
 			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Mapper;
-			productName = Mapper;
-			productReference = 6008C3661E4DB3C700B5C2D8 /* Mapper */;
-			productType = "com.apple.product-type.tool";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6008C3781E4DB56600B5C2D8 /* MapperTests */ = {
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		F7AA56371E86DC9D00709C4C /* JsonMapper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6008C37E1E4DB56600B5C2D8 /* Build configuration list for PBXNativeTarget "MapperTests" */;
+			buildConfigurationList = F7AA564C1E86DC9E00709C4C /* Build configuration list for PBXNativeTarget "JsonMapper" */;
 			buildPhases = (
-				6008C3751E4DB56600B5C2D8 /* Sources */,
-				6008C3761E4DB56600B5C2D8 /* Frameworks */,
-				6008C3771E4DB56600B5C2D8 /* Resources */,
+				F7AA56331E86DC9D00709C4C /* Sources */,
+				F7AA56341E86DC9D00709C4C /* Frameworks */,
+				F7AA56351E86DC9D00709C4C /* Headers */,
+				F7AA56361E86DC9D00709C4C /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = MapperTests;
-			productName = MapperTests;
-			productReference = 6008C3791E4DB56600B5C2D8 /* MapperTests.xctest */;
+			name = JsonMapper;
+			productName = JsonMapper;
+			productReference = F7AA56381E86DC9D00709C4C /* JsonMapper.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F7AA56401E86DC9D00709C4C /* JsonMapperTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F7AA564F1E86DC9E00709C4C /* Build configuration list for PBXNativeTarget "JsonMapperTests" */;
+			buildPhases = (
+				F7AA563D1E86DC9D00709C4C /* Sources */,
+				F7AA563E1E86DC9D00709C4C /* Frameworks */,
+				F7AA563F1E86DC9D00709C4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F7AA56441E86DC9E00709C4C /* PBXTargetDependency */,
+			);
+			name = JsonMapperTests;
+			productName = JsonMapperTests;
+			productReference = F7AA56411E86DC9D00709C4C /* JsonMapperTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F7AA565C1E86DCFE00709C4C /* MapperBuildable */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F7AA56611E86DCFE00709C4C /* Build configuration list for PBXNativeTarget "MapperBuildable" */;
+			buildPhases = (
+				F7AA56591E86DCFE00709C4C /* Sources */,
+				F7AA565A1E86DCFE00709C4C /* Frameworks */,
+				F7AA565B1E86DCFE00709C4C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MapperBuildable;
+			productName = MapperBuildable;
+			productReference = F7AA565D1E86DCFE00709C4C /* MapperBuildable */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		6060769C1DF2D6DB003B19B7 /* Project object */ = {
+		F7AA562F1E86DC9D00709C4C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Gleb Radchenko";
 				TargetAttributes = {
-					6008C3651E4DB3C700B5C2D8 = {
+					F7AA56371E86DC9D00709C4C = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = XN4R59V3UY;
+						DevelopmentTeam = 76RXYZCS9Y;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
-					6008C3781E4DB56600B5C2D8 = {
+					F7AA56401E86DC9D00709C4C = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = XN4R59V3UY;
+						DevelopmentTeam = 76RXYZCS9Y;
+						ProvisioningStyle = Automatic;
+					};
+					F7AA565C1E86DCFE00709C4C = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 76RXYZCS9Y;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 6060769F1DF2D6DC003B19B7 /* Build configuration list for PBXProject "JsonMapper" */;
+			buildConfigurationList = F7AA56321E86DC9D00709C4C /* Build configuration list for PBXProject "JsonMapper" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 			);
-			mainGroup = 6060769B1DF2D6DB003B19B7;
-			productRefGroup = 606076A51DF2D6DC003B19B7 /* Products */;
+			mainGroup = F7AA562E1E86DC9D00709C4C;
+			productRefGroup = F7AA56391E86DC9D00709C4C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6008C3651E4DB3C700B5C2D8 /* Mapper */,
-				6008C3781E4DB56600B5C2D8 /* MapperTests */,
+				F7AA56371E86DC9D00709C4C /* JsonMapper */,
+				F7AA56401E86DC9D00709C4C /* JsonMapperTests */,
+				F7AA565C1E86DCFE00709C4C /* MapperBuildable */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		6008C3771E4DB56600B5C2D8 /* Resources */ = {
+		F7AA56361E86DC9D00709C4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7AA563F1E86DC9D00709C4C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -205,94 +270,47 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6008C3621E4DB3C700B5C2D8 /* Sources */ = {
+		F7AA56331E86DC9D00709C4C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6008C36D1E4DB3D000B5C2D8 /* MapperProtocols.swift in Sources */,
-				6008C36F1E4DB3D400B5C2D8 /* Wrapping.swift in Sources */,
-				6008C3721E4DB43100B5C2D8 /* TestClasses.swift in Sources */,
-				6008C36E1E4DB3D200B5C2D8 /* Mapper.swift in Sources */,
-				6008C3691E4DB3C700B5C2D8 /* main.swift in Sources */,
+				F7AA56571E86DCCE00709C4C /* MapperProtocols.swift in Sources */,
+				F7AA56581E86DCCE00709C4C /* Wrapping.swift in Sources */,
+				F7AA56561E86DCCE00709C4C /* Mapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6008C3751E4DB56600B5C2D8 /* Sources */ = {
+		F7AA563D1E86DC9D00709C4C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6008C3811E4DB59600B5C2D8 /* MapperProtocols.swift in Sources */,
-				6008C3831E4DB59A00B5C2D8 /* Wrapping.swift in Sources */,
-				6008C3841E4DB59D00B5C2D8 /* TestClasses.swift in Sources */,
-				6008C3821E4DB59800B5C2D8 /* Mapper.swift in Sources */,
-				6008C37C1E4DB56600B5C2D8 /* MapperTests.swift in Sources */,
+				F7AA56471E86DC9E00709C4C /* JsonMapperTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7AA56591E86DCFE00709C4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7AA56651E86DD8000709C4C /* MapperProtocols.swift in Sources */,
+				F7AA56661E86DD8000709C4C /* Wrapping.swift in Sources */,
+				F7AA56641E86DD8000709C4C /* Mapper.swift in Sources */,
+				F7AA56601E86DCFE00709C4C /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		F7AA56441E86DC9E00709C4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F7AA56371E86DC9D00709C4C /* JsonMapper */;
+			targetProxy = F7AA56431E86DC9E00709C4C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		6008C36A1E4DB3C700B5C2D8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CODE_SIGN_IDENTITY = "-";
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		6008C36B1E4DB3C700B5C2D8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CODE_SIGN_IDENTITY = "-";
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
-		6008C37F1E4DB56600B5C2D8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				INFOPLIST_FILE = MapperTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Applikator.MapperTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		6008C3801E4DB56600B5C2D8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = XN4R59V3UY;
-				INFOPLIST_FILE = MapperTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Applikator.MapperTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
-		606076BF1DF2D6DD003B19B7 /* Debug */ = {
+		F7AA564A1E86DC9E00709C4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -310,11 +328,12 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -332,16 +351,19 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		606076C01DF2D6DD003B19B7 /* Release */ = {
+		F7AA564B1E86DC9E00709C4C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -359,11 +381,12 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -375,43 +398,145 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F7AA564D1E86DC9E00709C4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = JsonMapper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gleb.radchenko.JsonMapper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		F7AA564E1E86DC9E00709C4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = JsonMapper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gleb.radchenko.JsonMapper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		F7AA56501E86DC9E00709C4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				INFOPLIST_FILE = JsonMapperTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gleb.radchenko.JsonMapperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		F7AA56511E86DC9E00709C4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				INFOPLIST_FILE = JsonMapperTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gleb.radchenko.JsonMapperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		F7AA56621E86DCFE00709C4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		F7AA56631E86DCFE00709C4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DEVELOPMENT_TEAM = 76RXYZCS9Y;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6008C36C1E4DB3C700B5C2D8 /* Build configuration list for PBXNativeTarget "Mapper" */ = {
+		F7AA56321E86DC9D00709C4C /* Build configuration list for PBXProject "JsonMapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6008C36A1E4DB3C700B5C2D8 /* Debug */,
-				6008C36B1E4DB3C700B5C2D8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
-		6008C37E1E4DB56600B5C2D8 /* Build configuration list for PBXNativeTarget "MapperTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6008C37F1E4DB56600B5C2D8 /* Debug */,
-				6008C3801E4DB56600B5C2D8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
-		6060769F1DF2D6DC003B19B7 /* Build configuration list for PBXProject "JsonMapper" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				606076BF1DF2D6DD003B19B7 /* Debug */,
-				606076C01DF2D6DD003B19B7 /* Release */,
+				F7AA564A1E86DC9E00709C4C /* Debug */,
+				F7AA564B1E86DC9E00709C4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F7AA564C1E86DC9E00709C4C /* Build configuration list for PBXNativeTarget "JsonMapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F7AA564D1E86DC9E00709C4C /* Debug */,
+				F7AA564E1E86DC9E00709C4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F7AA564F1E86DC9E00709C4C /* Build configuration list for PBXNativeTarget "JsonMapperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F7AA56501E86DC9E00709C4C /* Debug */,
+				F7AA56511E86DC9E00709C4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F7AA56611E86DCFE00709C4C /* Build configuration list for PBXNativeTarget "MapperBuildable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F7AA56621E86DCFE00709C4C /* Debug */,
+				F7AA56631E86DCFE00709C4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 6060769C1DF2D6DB003B19B7 /* Project object */;
+	rootObject = F7AA562F1E86DC9D00709C4C /* Project object */;
 }

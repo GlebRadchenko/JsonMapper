@@ -1,9 +1,11 @@
 //
 //  main.swift
-//  Mapper
+//  MapperBuildable
 //
-//  Created by GlebRadchenko on 2/10/17.
+//  Created by Gleb Radchenko on 3/25/17.
 //  Copyright © 2017 Gleb Radchenko. All rights reserved.
 //
 
 import Foundation
+
+

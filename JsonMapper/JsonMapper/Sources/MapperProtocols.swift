@@ -95,6 +95,7 @@ public protocol Mapable {
     static var relations: [String: MappingProperty] {get}
     init(_ wrapping: Wrapping) throws
 }
+
 extension Mapable {
     static var helpingPath: [MapPathable] { return [.none] }
 }
@@ -160,10 +161,12 @@ public enum MapPathable {
     case target(nodeType: JsonNodeType)
     case destination(nodeType: JsonNodeType)
 }
+
 public enum JsonNodeType {
     case array(key: String?, index: Int?)
     case dictionary(key: String?, index: Int?)
 }
+
 enum MapperSearchType {
     case recursive
     case recursiveWithDestination
