@@ -15,28 +15,28 @@ public class Wrapping {
         self.content = content
     }
     
-    func get<T: Mapable>(_ propertyName: String) throws -> [T] {
+    public func get<T: Mapable>(_ propertyName: String) throws -> [T] {
         guard let value = content[propertyName] as? [T] else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
         return value
     }
     
-    func get<T: Mapable>(_ propertyName: String) throws -> T {
+    public func get<T: Mapable>(_ propertyName: String) throws -> T {
         guard let value = content[propertyName] as? T else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
         return value
     }
     
-    func get<T: AtomaryMapable>(_ propertyName: String) throws -> T {
+    public func get<T: AtomaryMapable>(_ propertyName: String) throws -> T {
         guard let value = content[propertyName] else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
         return try convert(value)
     }
     
-    func get<T: AtomaryMapable>(_ propertyName: String) throws -> [T] {
+    public func get<T: AtomaryMapable>(_ propertyName: String) throws -> [T] {
         guard let value = content[propertyName] else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
@@ -44,6 +44,7 @@ public class Wrapping {
         guard let arrayOfValues = value as? [AnyObject] else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
+        
         return try arrayOfValues.map { try convert($0) }
     }
     
