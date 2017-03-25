@@ -52,6 +52,7 @@ public class Wrapping {
         return try T.concrete(from: value) as! T
     }
 }
+
 public enum WrappingError: Error, CustomStringConvertible {
     case wrongProperty(name: String)
     public var description: String {

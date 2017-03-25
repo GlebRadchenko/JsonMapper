@@ -155,7 +155,7 @@ public enum MappingProperty {
     }
 }
 
-// enum for speeding object Mapping
+// Enum for speeding object Mapping
 public enum MapPathable {
     case none
     case target(nodeType: JsonNodeType)
