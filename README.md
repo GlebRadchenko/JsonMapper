@@ -123,6 +123,7 @@ class User: Mapable {
     let users: [User] = try Mapper.map([data or json])
     let stringValue: String = try Mapper.map([data or json], for: "[your key for needed String value]")
     let doubles: [Double] = try Mapper.map([data or json], for: "[your key for needed array of Double values]")
+    
     //raw value for Date is String
     let date: Date = try Mapper.map(data, for: "Data", formatting: { (rawValue: String) -> Data in
       guard let date = DateFormatter().date(from: unformattedString) else {
@@ -130,6 +131,11 @@ class User: Mapable {
       }
     
       return date
+    })
+    
+    //raw value for CustomStruct is String(it can be any, just conform your struct, class etc to AtomaryMapable protocol)
+    let custom: CustomStruct = try Mapper.map(data, for: "Data", formatting: { (rawValue: String) -> CustomStruct in
+      return CustomStruct(stringValue: rawValue)
     })
   ```
   
