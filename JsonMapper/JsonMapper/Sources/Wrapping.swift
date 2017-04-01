@@ -49,7 +49,11 @@ public class Wrapping {
     }
     
     private func convert<T: AtomaryMapable>(_ value: AnyObject) throws -> T {
-        return try T.concrete(from: value)
+        #if swift(>=3.1)
+            return try T.concrete(from: value)
+        #else
+            return try T.concrete(from: value) as! T
+        #endif
     }
 }
 
