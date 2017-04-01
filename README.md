@@ -99,6 +99,7 @@ class User: Mapable {
   ```
   
   to force recursive search (DFS) of object that you need to be mapped.
+  
   MappingProperty supports properties like :
   
   
