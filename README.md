@@ -34,7 +34,7 @@
   ``` swift
   import JsonMapper
 ```
-  2. Create your Class or Struct and exted it for Mapable protocol: 
+  2. Create your Class or Struct and extend it for Mapable protocol: 
    ``` swift
 public protocol Mapable {
     static var helpingPath: [MapPathable] { get }
