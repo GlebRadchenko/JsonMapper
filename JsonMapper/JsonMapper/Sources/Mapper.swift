@@ -9,6 +9,7 @@
 import Foundation
 
 public class Mapper {
+    
     typealias DictionaryNode = Dictionary<String, AnyObject>
     typealias ArrayNode = Array<AnyObject>
     
@@ -24,9 +25,11 @@ public class Mapper {
         if let json = json as? T.ConcreteType {
             return json as! T
         }
+        
         guard let rawData = findRecursively(propertyKey: key, mappingType: .anyObject, json: json) else {
             throw MapperError.notFound
         }
+        
         return try T.concrete(from: rawData)
     }
     
@@ -34,11 +37,30 @@ public class Mapper {
         if let json = json as? [T.ConcreteType] {
             return json.map { $0 as! T }
         }
+        
         guard let rawData = findRecursively(arrayKey: key, valuesType: .anyObject, json: json) as? [AnyObject] else {
             throw MapperError.notFound
         }
+        
         return try rawData.map { try T.concrete(from: $0) }
     }
+    
+    public class func map<T: Mapable>(_ data: Data) throws -> T {
+        return try self.map(try data.json())
+    }
+    
+    public class func map<T: Mapable>(_ data: Data) throws -> [T] {
+        return try self.map(try data.json())
+    }
+    
+    public class func map<T: AtomaryMapable>(_ data: Data, for key: String) throws -> T {
+        return try self.map(try data.json(), key)
+    }
+    
+    public class func map<T: AtomaryMapable>(_ data: Data, for key: String) throws -> [T] {
+        return try self.map(try data.json(), key)
+    }
+    
 }
 
 //MARK: - Mapping

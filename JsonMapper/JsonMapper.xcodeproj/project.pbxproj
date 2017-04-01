@@ -17,6 +17,8 @@
 		F7AA56641E86DD8000709C4C /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56531E86DCCE00709C4C /* Mapper.swift */; };
 		F7AA56651E86DD8000709C4C /* MapperProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56541E86DCCE00709C4C /* MapperProtocols.swift */; };
 		F7AA56661E86DD8000709C4C /* Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AA56551E86DCCE00709C4C /* Wrapping.swift */; };
+		F7FFFBAD1E90158E003295FA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFFBAC1E90158E003295FA /* Extensions.swift */; };
+		F7FFFBAE1E9016C8003295FA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFFBAC1E90158E003295FA /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,7 @@
 		F7AA56551E86DCCE00709C4C /* Wrapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapping.swift; sourceTree = "<group>"; };
 		F7AA565D1E86DCFE00709C4C /* MapperBuildable */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MapperBuildable; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7AA565F1E86DCFE00709C4C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		F7FFFBAC1E90158E003295FA /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +126,7 @@
 		F7AA56521E86DCAE00709C4C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F7FFFBAC1E90158E003295FA /* Extensions.swift */,
 				F7AA56531E86DCCE00709C4C /* Mapper.swift */,
 				F7AA56541E86DCCE00709C4C /* MapperProtocols.swift */,
 				F7AA56551E86DCCE00709C4C /* Wrapping.swift */,
@@ -277,6 +281,7 @@
 				F7AA56571E86DCCE00709C4C /* MapperProtocols.swift in Sources */,
 				F7AA56581E86DCCE00709C4C /* Wrapping.swift in Sources */,
 				F7AA56561E86DCCE00709C4C /* Mapper.swift in Sources */,
+				F7FFFBAD1E90158E003295FA /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7FFFBAE1E9016C8003295FA /* Extensions.swift in Sources */,
 				F7AA56651E86DD8000709C4C /* MapperProtocols.swift in Sources */,
 				F7AA56661E86DD8000709C4C /* Wrapping.swift in Sources */,
 				F7AA56641E86DD8000709C4C /* Mapper.swift in Sources */,
@@ -519,6 +525,7 @@
 				F7AA564E1E86DC9E00709C4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F7AA564F1E86DC9E00709C4C /* Build configuration list for PBXNativeTarget "JsonMapperTests" */ = {
 			isa = XCConfigurationList;
@@ -527,6 +534,7 @@
 				F7AA56511E86DC9E00709C4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F7AA56611E86DCFE00709C4C /* Build configuration list for PBXNativeTarget "MapperBuildable" */ = {
 			isa = XCConfigurationList;
@@ -535,6 +543,7 @@
 				F7AA56631E86DCFE00709C4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
