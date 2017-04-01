@@ -134,7 +134,7 @@ class User: Mapable {
     })
     
     //raw value for CustomStruct is String(it can be any, just conform your struct, class etc to AtomaryMapable protocol)
-    let custom: CustomStruct = try Mapper.map(data, for: "key for needed CustomStruct value") { return CustomStruct(stringValue: $0) }
+    let custom: CustomStruct = try Mapper.map(data, for: "[key for needed CustomStruct value]") { return CustomStruct(stringValue: $0) }
   ```
   
   For mapping array of Mappable objects it's recommended not to use helpingPath value (just for now :D), to prevent unexpected behavior.
