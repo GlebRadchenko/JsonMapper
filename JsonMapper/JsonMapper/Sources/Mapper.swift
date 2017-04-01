@@ -21,30 +21,6 @@ public class Mapper {
         return try map(json, types: T.self) as! [T]
     }
     
-    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String) throws -> T {
-        if let json = json as? T.ConcreteType {
-            return json as! T
-        }
-        
-        guard let rawData = findRecursively(propertyKey: key, mappingType: .anyObject, json: json) else {
-            throw MapperError.notFound
-        }
-        
-        return try T.concrete(from: rawData)
-    }
-    
-    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String) throws -> [T] {
-        if let json = json as? [T.ConcreteType] {
-            return json.map { $0 as! T }
-        }
-        
-        guard let rawData = findRecursively(arrayKey: key, valuesType: .anyObject, json: json) as? [AnyObject] else {
-            throw MapperError.notFound
-        }
-        
-        return try rawData.map { try T.concrete(from: $0) }
-    }
-    
     public class func map<T: Mapable>(_ data: Data) throws -> T {
         return try self.map(try data.json())
     }
@@ -53,12 +29,36 @@ public class Mapper {
         return try self.map(try data.json())
     }
     
-    public class func map<T: AtomaryMapable>(_ data: Data, for key: String) throws -> T {
-        return try self.map(try data.json(), key)
+    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
+        if let json = json as? T.ConcreteType {
+            return json as! T
+        }
+        
+        guard let rawData = findRecursively(propertyKey: key, mappingType: .anyObject, json: json) else {
+            throw MapperError.notFound
+        }
+        
+        return try T.concrete(from: rawData, formatting: formatting)
     }
     
-    public class func map<T: AtomaryMapable>(_ data: Data, for key: String) throws -> [T] {
-        return try self.map(try data.json(), key)
+    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
+        if let json = json as? [T.ConcreteType] {
+            return json.map { $0 as! T }
+        }
+        
+        guard let rawData = findRecursively(arrayKey: key, valuesType: .anyObject, json: json) as? [AnyObject] else {
+            throw MapperError.notFound
+        }
+        
+        return try rawData.map { try T.concrete(from: $0, formatting: formatting) }
+    }
+    
+    public class func map<T: AtomaryMapable>(_ data: Data, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
+        return try self.map(try data.json(), key, formatting: formatting)
+    }
+    
+    public class func map<T: AtomaryMapable>(_ data: Data, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
+        return try self.map(try data.json(), key, formatting: formatting)
     }
     
 }

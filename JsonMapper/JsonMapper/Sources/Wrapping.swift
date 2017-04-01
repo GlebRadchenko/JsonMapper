@@ -29,14 +29,14 @@ public class Wrapping {
         return value
     }
     
-    public func get<T: AtomaryMapable>(_ propertyName: String) throws -> T {
+    public func get<T: AtomaryMapable>(_ propertyName: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
         guard let value = content[propertyName] else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
-        return try convert(value)
+        return try convert(value, formatting: formatting)
     }
     
-    public func get<T: AtomaryMapable>(_ propertyName: String) throws -> [T] {
+    public func get<T: AtomaryMapable>(_ propertyName: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
         guard let value = content[propertyName] else {
             throw WrappingError.wrongProperty(name: propertyName)
         }
@@ -45,14 +45,14 @@ public class Wrapping {
             throw WrappingError.wrongProperty(name: propertyName)
         }
         
-        return try arrayOfValues.map { try convert($0) }
+        return try arrayOfValues.map { try convert($0, formatting: formatting) }
     }
     
-    private func convert<T: AtomaryMapable>(_ value: AnyObject) throws -> T {
+    private func convert<T: AtomaryMapable>(_ value: AnyObject, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
         #if swift(>=3.1)
-            return try T.concrete(from: value)
+            return try T.concrete(from: value, formatting: formatting)
         #else
-            return try T.concrete(from: value) as! T
+            return try T.concrete(from: value, formatting: formatting) as! T
         #endif
     }
 }

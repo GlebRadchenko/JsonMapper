@@ -10,11 +10,12 @@ import Foundation
 
 public protocol AtomaryMapable {
     associatedtype ConcreteType = Self
-    static func concrete<T: AtomaryMapable>(from value: AnyObject) throws -> T
+    static func concrete<T: AtomaryMapable>(from value: AnyObject,
+                         formatting: ((_ value: ConcreteType) throws -> T)?) throws -> T
 }
 
 extension String: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
         if let concrete = value as? T.ConcreteType {
             return concrete as! T
         }
@@ -24,17 +25,21 @@ extension String: AtomaryMapable {
 
 extension Date: AtomaryMapable {
     public typealias ConcreteType = String
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
-        if value is ConcreteType {
-            //convert to date
-            return Date() as! T
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
+        guard let formatting = formatting else {
+            throw MapperError.noFormatter
         }
-        throw MapperError.wrongFormat
+        
+        guard let value = value as? ConcreteType else {
+            throw MapperError.wrongFormat
+        }
+        
+        return try formatting(value)
     }
 }
 
 extension Double: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
         if let concrete = value as? T.ConcreteType {
             return concrete as! T
         }
@@ -49,7 +54,7 @@ extension Double: AtomaryMapable {
 }
 
 extension Float: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
         if let concrete = value as? T.ConcreteType {
             return concrete as! T
         }
@@ -64,7 +69,7 @@ extension Float: AtomaryMapable {
 }
 
 extension Bool: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
         if let concrete = value as? T.ConcreteType {
             return concrete as! T
         }
@@ -79,7 +84,7 @@ extension Bool: AtomaryMapable {
 }
 
 extension Int: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject) throws -> T {
+    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
         if let concrete = value as? T.ConcreteType {
             return concrete as! T
         }
@@ -104,6 +109,7 @@ public enum MapperError: Error, CustomStringConvertible {
     case notFound
     case wrongSetting
     case wrongFormat
+    case noFormatter
     
     public var description: String {
         switch self {
