@@ -83,10 +83,8 @@ class User: Mapable {
   your helpingPath should be as follows: 
   
   ``` swift
-  
   public static var helpingPath: [MapPathable] = [.target(nodeType: .dictionary(key: "response", index: nil)),
-                                                    .destination(nodeType: .dictionary(key: "user", index: nil))]
-                                                    
+                                                    .destination(nodeType: .dictionary(key: "user", index: nil))]                                         
   ``` 
   
   this protperty determine a valid way for "user" object, and Mapper won't search object recursively.
@@ -102,19 +100,26 @@ class User: Mapable {
   
   MappingProperty supports properties like :
   
+  ``` swift
+  public enum MappingProperty {
+    case property(type: MappingType, key: String, optional: Bool)
+    case mappingObject(key: String, type: Mapable.Type, optional: Bool)
+    case mappingObjectsArray(key: String?, types: Mapable.Type, optional: Bool)
+    case array(key: String, valuesType: MappingType, optional: Bool)
+    case dictionary(key: String, optional: Bool)
+}                                                 
+  ```
   
   3. Then call with Data object:
   
 ``` swift
   let user: User = try Mapper.map(data)
-                                                    
   ```
   
   or json object (AnyObject):
   
   ``` swift
-  let user: User = try Mapper.map(json)
-                                                    
+  let user: User = try Mapper.map(json)                                        
   ```
   
   4. Also you can map arrays, nested types or primitive and custom types by call :
