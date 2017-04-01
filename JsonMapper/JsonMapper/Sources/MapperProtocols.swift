@@ -14,7 +14,7 @@ public protocol AtomaryMapable {
                          formatting: ((_ value: ConcreteType) throws -> T)?) throws -> T
 }
 
-extension String: AtomaryMapable {
+extension AtomaryMapable {
     public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
         if let concrete = value as? T.ConcreteType {
             return concrete as! T
@@ -23,6 +23,7 @@ extension String: AtomaryMapable {
     }
 }
 
+extension String: AtomaryMapable {}
 extension Date: AtomaryMapable {
     public typealias ConcreteType = String
     public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
