@@ -125,7 +125,7 @@ class User: Mapable {
     let doubles: [Double] = try Mapper.map([data or json], for: "[your key for needed array of Double values]")
     
     //raw value for Date is String
-    let date: Date = try Mapper.map(data, for: "Data", formatting: { (rawValue: String) -> Data in
+    let date: Date = try Mapper.map(data, for: "[your key for needed Date value]", formatting: { (rawValue: String) -> Data in
       guard let date = DateFormatter().date(from: unformattedString) else {
           throw SomeError
       }
@@ -134,9 +134,7 @@ class User: Mapable {
     })
     
     //raw value for CustomStruct is String(it can be any, just conform your struct, class etc to AtomaryMapable protocol)
-    let custom: CustomStruct = try Mapper.map(data, for: "Data", formatting: { (rawValue: String) -> CustomStruct in
-      return CustomStruct(stringValue: rawValue)
-    })
+    let custom: CustomStruct = try Mapper.map(data, for: "key for needed CustomStruct value") { return CustomStruct(stringValue: $0) }
   ```
   
   For mapping array of Mappable objects it's recommended not to use helpingPath value (just for now :D), to prevent unexpected behavior.
