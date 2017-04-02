@@ -143,5 +143,5 @@ class User: Mapable {
     let custom: CustomStruct = try Mapper.map(data, for: "[key for needed CustomStruct value]") { return CustomStruct(stringValue: $0) }
   ```
   
-  For mapping array of Mappable objects it's recommended not to use helpingPath value (just for now :D), to prevent unexpected behavior.
+  For mapping array of Mapable objects it's recommended not to use helpingPath value (just for now :D), to prevent unexpected behavior.
   
