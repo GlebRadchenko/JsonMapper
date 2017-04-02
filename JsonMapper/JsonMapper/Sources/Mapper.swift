@@ -29,7 +29,7 @@ public class Mapper {
         return try self.map(try data.json())
     }
     
-    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
+    public class func map<T: AtomaryMapable>(_ json: AnyObject, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
         if let json = json as? T.ConcreteType {
             return json as! T
         }
@@ -41,7 +41,7 @@ public class Mapper {
         return try T.concrete(from: rawData, formatting: formatting)
     }
     
-    public class func map<T: AtomaryMapable>(_ json: AnyObject, _ key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
+    public class func map<T: AtomaryMapable>(_ json: AnyObject, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
         if let json = json as? [T.ConcreteType] {
             return json.map { $0 as! T }
         }
@@ -54,11 +54,11 @@ public class Mapper {
     }
     
     public class func map<T: AtomaryMapable>(_ data: Data, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
-        return try self.map(try data.json(), key, formatting: formatting)
+        return try self.map(try data.json(), for: key, formatting: formatting)
     }
     
     public class func map<T: AtomaryMapable>(_ data: Data, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
-        return try self.map(try data.json(), key, formatting: formatting)
+        return try self.map(try data.json(), for: key, formatting: formatting)
     }
     
 }
