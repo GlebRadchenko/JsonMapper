@@ -10,88 +10,93 @@ import Foundation
 
 public protocol AtomaryMapable {
     associatedtype ConcreteType = Self
-    static func concrete<T: AtomaryMapable>(from value: AnyObject,
-                         formatting: ((_ value: ConcreteType) throws -> T)?) throws -> T
+    static func concrete(from value: AnyObject,
+                         formatting: ((_ value: ConcreteType) throws -> Self)?) throws -> Self
 }
 
 extension AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
-        if let concrete = value as? T.ConcreteType {
-            return concrete as! T
-        }
-        throw MapperError.wrongFormat
-    }
-}
-
-extension String: AtomaryMapable {}
-extension Date: AtomaryMapable {
-    public typealias ConcreteType = String
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
-        guard let formatting = formatting else {
-            throw MapperError.noFormatter
-        }
-        
-        guard let value = value as? ConcreteType else {
+    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Self)? = nil) throws -> Self {
+        guard let concrete = value as? Self.ConcreteType else {
             throw MapperError.wrongFormat
         }
         
-        return try formatting(value)
+        if let formatting = formatting {
+            return try formatting(concrete)
+        }
+        
+        return concrete as! Self
     }
 }
 
+extension String: AtomaryMapable { }
+extension Date: AtomaryMapable {
+    public typealias ConcreteType = String
+}
+
 extension Double: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
-        if let concrete = value as? T.ConcreteType {
-            return concrete as! T
+    public static func concrete(from value: AnyObject, formatting: ((_ value: Double) throws -> Double)? = nil) throws -> Double {
+        if let concrete = value as? Double.ConcreteType {
+            return concrete
         }
+        
         if let concrete = value.doubleValue {
-            return concrete as! T
+            return concrete
         }
+        
         if let stringValue: String = try? String.concrete(from: value), let concrete = Double(stringValue) {
-            return concrete as! T
+            return concrete
         }
+        
         throw MapperError.wrongFormat
     }
 }
 
 extension Float: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
-        if let concrete = value as? T.ConcreteType {
-            return concrete as! T
+    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Float)? = nil) throws -> Float {
+        if let concrete = value as? ConcreteType {
+            return concrete
         }
+        
         if let concrete = value.doubleValue {
-            return concrete as! T
+            return Float(concrete)
         }
+        
         if let stringValue: String = try? String.concrete(from: value), let concrete = Float(stringValue) {
-            return concrete as! T
+            return concrete
         }
+        
         throw MapperError.wrongFormat
     }
 }
 
 extension Bool: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
-        if let concrete = value as? T.ConcreteType {
-            return concrete as! T
+    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Bool)? = nil) throws -> Bool {
+        if let concrete = value as? ConcreteType {
+            return concrete
         }
-        if let concrete = value.doubleValue {
-            return concrete as! T
+        
+        if let concrete = value.boolValue {
+            return concrete
         }
+        
         if let stringValue: String = try? String.concrete(from: value), let concrete = Bool(stringValue) {
-            return concrete as! T
+            return concrete
         }
+        
         throw MapperError.wrongFormat
     }
 }
 
 extension Int: AtomaryMapable {
-    public static func concrete<T : AtomaryMapable>(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> T)? = nil) throws -> T {
-        if let concrete = value as? T.ConcreteType {
-            return concrete as! T
+    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Int)? = nil) throws -> Int {
+        if let concrete = value as? ConcreteType {
+            return concrete
         }
+        
         if let stringValue: String = try? String.concrete(from: value), let concrete = Int(stringValue) {
-            return concrete as! T
+            return concrete
         }
+        
         throw MapperError.wrongFormat
     }
 }
