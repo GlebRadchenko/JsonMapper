@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 public enum MapperError: Error {
     case wrongFormat(value: AnyObject?, description: String)
     case invalidPath(path: [TargetNode], desctiption: String)
