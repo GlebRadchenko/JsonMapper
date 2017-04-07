@@ -9,60 +9,74 @@
 import Foundation
 
 public class Wrapping {
-    var content: [String: AnyObject]
+    public var context: Dictionary<String, AnyObject>
     
-    init(_ content: [String: AnyObject]) {
-        self.content = content
+    public init(_ context: Dictionary<String, AnyObject>) {
+        self.context = context
     }
     
-    public func get<T: Mapable>(_ propertyName: String) throws -> [T] {
-        guard let value = content[propertyName] as? [T] else {
-            throw WrappingError.wrongProperty(name: propertyName)
+    public func get<T: Mapable>(_ key: String) throws -> T {
+        guard let object = context[key] as? T else {
+            fatalError()
+        }
+        return object
+    }
+    
+    public func get<T: Mapable>(_ key: String) throws -> T? {
+        return context[key] as? T
+    }
+    
+    public func get<T: Mapable>(_ key: String) throws -> [T] {
+        guard let objects = context[key] as? [T] else {
+            fatalError()
+        }
+        return objects
+    }
+    
+    public func get<T: Mapable>(_ key: String) throws -> [T]? {
+        return context[key] as? [T]
+    }
+    
+    public func get<T: AtomaryMapable>(_ key: String) throws -> T {
+        guard let value = context[key] as? T else {
+            fatalError()
         }
         return value
     }
     
-    public func get<T: Mapable>(_ propertyName: String) throws -> T {
-        guard let value = content[propertyName] as? T else {
-            throw WrappingError.wrongProperty(name: propertyName)
-        }
-        return value
+    public func get<T: AtomaryMapable>(_ key: String) throws -> T? {
+        return context[key] as? T
     }
     
-    public func get<T: AtomaryMapable>(_ propertyName: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
-        guard let value = content[propertyName] else {
-            throw WrappingError.wrongProperty(name: propertyName)
+    public func get<T: AtomaryMapable>(_ key: String) throws -> [T] {
+        guard let values = context[key] as? [T] else {
+            fatalError()
         }
-        return try convert(value, formatting: formatting)
+        return values
     }
     
-    public func get<T: AtomaryMapable>(_ propertyName: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
-        guard let value = content[propertyName] else {
-            throw WrappingError.wrongProperty(name: propertyName)
-        }
-        
-        guard let arrayOfValues = value as? [AnyObject] else {
-            throw WrappingError.wrongProperty(name: propertyName)
-        }
-        
-        return try arrayOfValues.map { try convert($0, formatting: formatting) }
+    public func get<T: AtomaryMapable>(_ key: String) throws -> [T]? {
+        return context[key] as? [T]
     }
     
-    private func convert<T: AtomaryMapable>(_ value: AnyObject, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
-        #if swift(>=3.1)
-            return try T.concrete(from: value, formatting: formatting)
-        #else
-            return try T.concrete(from: value, formatting: formatting) as! T
-        #endif
-    }
-}
-
-public enum WrappingError: Error, CustomStringConvertible {
-    case wrongProperty(name: String)
-    public var description: String {
-        switch self {
-        case let .wrongProperty(name):
-            return "Wrong property: " + name
+    public func get<T: AtomaryMapable, U>(_ key: String, _ formatting: (_ rawValue: T) throws -> U) throws -> [U] {
+        guard let rawValues = context[key] as? [T] else {
+            fatalError()
         }
+        return try rawValues.map { try formatting($0) }
+    }
+    
+    public func get<T: AtomaryMapable, U>(_ key: String, _ formatting: (_ rawValue: T) throws -> U) throws -> U {
+        guard let rawValue = context[key] as? T else {
+            fatalError()
+        }
+        return try formatting(rawValue)
+    }
+    
+    public func get<T: AtomaryMapable, U>(_ key: String, _ formatting: (_ rawValue: T) throws -> U?) throws -> U? {
+        guard let rawValue = context[key] as? T else {
+            fatalError()
+        }
+        return try formatting(rawValue)
     }
 }

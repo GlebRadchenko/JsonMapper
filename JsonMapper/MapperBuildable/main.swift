@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+let json = ["test": ["hello world"]] as AnyObject
+
+let string: [String] = try Mapper.map(for: "test", json)
+
+print(string)

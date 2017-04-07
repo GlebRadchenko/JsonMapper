@@ -8,34 +8,49 @@
 
 import Foundation
 
+import Foundation
+
 public protocol AtomaryMapable {
-    associatedtype ConcreteType = Self
-    static func concrete(from value: AnyObject,
-                         formatting: ((_ value: ConcreteType) throws -> Self)?) throws -> Self
+    static func concrete(from value: AnyObject) throws -> Self
 }
 
-extension AtomaryMapable {
-    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Self)? = nil) throws -> Self {
-        guard let concrete = value as? Self.ConcreteType else {
-            throw MapperError.wrongFormat
+public extension AtomaryMapable {
+    public static func concrete(from value: AnyObject) throws -> Self {
+        guard let concrete = value as? Self else {
+            throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Self.self)")
         }
-        
-        if let formatting = formatting {
-            return try formatting(concrete)
-        }
-        
-        return concrete as! Self
+        return concrete
     }
 }
 
-extension String: AtomaryMapable { }
-extension Date: AtomaryMapable {
-    public typealias ConcreteType = String
+extension String: AtomaryMapable {
+    public static func concrete(from value: AnyObject) throws -> String {
+        if let stringValue = value as? String {
+            return stringValue
+        }
+        
+        if let intValue = value as? Int {
+            return "\(intValue)"
+        }
+        
+        if let doubleValue = value.doubleValue {
+            return "\(doubleValue)"
+        }
+        
+        if let floatValue = value.floatValue  {
+            return "\(floatValue)"
+        }
+        
+        guard let concrete = value as? String else {
+            throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(String.self)")
+        }
+        return concrete
+    }
 }
-
+extension Int: AtomaryMapable {}
 extension Double: AtomaryMapable {
-    public static func concrete(from value: AnyObject, formatting: ((_ value: Double) throws -> Double)? = nil) throws -> Double {
-        if let concrete = value as? Double.ConcreteType {
+    public static func concrete(from value: AnyObject) throws -> Double {
+        if let concrete = value as? Double {
             return concrete
         }
         
@@ -43,35 +58,17 @@ extension Double: AtomaryMapable {
             return concrete
         }
         
-        if let stringValue: String = try? String.concrete(from: value), let concrete = Double(stringValue) {
+        if let stringValue = try? String.concrete(from: value), let concrete = Double(stringValue) {
             return concrete
         }
         
-        throw MapperError.wrongFormat
-    }
-}
-
-extension Float: AtomaryMapable {
-    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Float)? = nil) throws -> Float {
-        if let concrete = value as? ConcreteType {
-            return concrete
-        }
-        
-        if let concrete = value.doubleValue {
-            return Float(concrete)
-        }
-        
-        if let stringValue: String = try? String.concrete(from: value), let concrete = Float(stringValue) {
-            return concrete
-        }
-        
-        throw MapperError.wrongFormat
+        throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Double.self)")
     }
 }
 
 extension Bool: AtomaryMapable {
-    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Bool)? = nil) throws -> Bool {
-        if let concrete = value as? ConcreteType {
+    public static func concrete(from value: AnyObject) throws -> Bool {
+        if let concrete = value as? Bool {
             return concrete
         }
         
@@ -79,110 +76,82 @@ extension Bool: AtomaryMapable {
             return concrete
         }
         
-        if let stringValue: String = try? String.concrete(from: value), let concrete = Bool(stringValue) {
+        if let stringValue = try? String.concrete(from: value), let concrete = Bool(stringValue) {
             return concrete
         }
         
-        throw MapperError.wrongFormat
+        throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Bool.self)")
     }
 }
 
-extension Int: AtomaryMapable {
-    public static func concrete(from value: AnyObject, formatting: ((_ value: ConcreteType) throws -> Int)? = nil) throws -> Int {
-        if let concrete = value as? ConcreteType {
+extension Float: AtomaryMapable {
+    public static func concrete(from value: AnyObject) throws -> Float {
+        if let concrete = value as? Float {
             return concrete
         }
         
-        if let stringValue: String = try? String.concrete(from: value), let concrete = Int(stringValue) {
+        if let concrete = value.floatValue {
             return concrete
         }
         
-        throw MapperError.wrongFormat
+        if let stringValue = try? String.concrete(from: value), let concrete = Float(stringValue) {
+            return concrete
+        }
+        
+        throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Float.self)")
     }
 }
+
 
 public protocol Mapable {
-    static var helpingPath: [MapPathable] {get}
-    static var relations: [String: MappingProperty] {get}
     init(_ wrapping: Wrapping) throws
+    static var properties: [MapableProperty] { get }
+    static var mappingPath: [TargetNode] { get }
 }
 
-extension Mapable {
-    static var helpingPath: [MapPathable] { return [.none] }
+public extension Mapable {
+    public static var mappingPath: [TargetNode] { return [] }
 }
 
-public enum MapperError: Error, CustomStringConvertible {
-    case notFound
-    case wrongSetting
-    case wrongFormat
-    case noFormatter
+public enum MapableProperty {
     
-    public var description: String {
+    case value(type: AtomaryMapable.Type, key: String, optional: Bool)
+    case array(type: AtomaryMapable.Type, key: String, optional: Bool)
+    case dictionary(type: AtomaryMapable.Type, key: String, optional: Bool)
+    case object(type: Mapable.Type, key: String, optional: Bool)
+    case objectsArray(type: Mapable.Type, key: String, optional: Bool)
+    case objectsDictionary(type: Mapable.Type, key: String, optional: Bool)
+    
+    var keyValue: String {
         switch self {
-        default:
-            return "Mapper error"
+        case let .value(_, key, _): return key
+        case let .array(_, key, _): return key
+        case let .dictionary(_, key, _): return key
+        case let .object(_, key, _): return key
+        case let .objectsArray(_, key, _): return key
+        case let .objectsDictionary(_, key, _): return key
         }
     }
 }
 
-public enum MappingType {
-    case string
-    case date
-    case bool
-    case number
-    case anyObject
+public struct TargetNode {
+    var key: String?
+    var index: Int?
+    var isDestination: Bool
     
-    var validTypes: [Any.Type] {
-        switch self {
-        case .string, .date:
-            return [String.self]
-        case .number:
-            return [Int.self, Double.self, Float.self, NSNumber.self]
-        case .bool:
-            return [Bool.self]
-        case .anyObject:
-            return [AnyObject.self]
-        }
+    private init(_ key: String?, _ index: Int?, isDestination: Bool = false) {
+        self.key = key
+        self.index = index
+        self.isDestination = isDestination
     }
-}
-
-// enum for make relations between properties and mapping
-public enum MappingProperty {
-    case property(type: MappingType, key: String, optional: Bool)
     
-    case mappingObject(key: String, type: Mapable.Type, optional: Bool)
-    case mappingObjectsArray(key: String?, types: Mapable.Type, optional: Bool)
-    case array(key: String, valuesType: MappingType, optional: Bool)
-    case dictionary(key: String, optional: Bool)
-    
-    var isOptional: Bool {
-        switch self {
-        case let .property(_, _, optional),
-             let .array(_, _, optional),
-             let .dictionary(_, optional),
-             let .mappingObject(_, _, optional),
-             let .mappingObjectsArray(_, _, optional):
-            return optional
-        }
+    public static func dictionaryNode(key: String, isDestination: Bool = false) -> TargetNode {
+        return TargetNode(key, nil, isDestination: isDestination)
     }
-}
-
-// Enum for speeding object Mapping
-public enum MapPathable {
-    case none
-    case target(nodeType: JsonNodeType)
-    case destination(nodeType: JsonNodeType)
-}
-
-public enum JsonNodeType {
-    case array(key: String?, index: Int?)
-    case dictionary(key: String?, index: Int?)
-}
-
-enum MapperSearchType {
-    case recursive
-    case recursiveWithDestination
-    case determined
+    
+    public static func arrayNode(index: Int, isDestination: Bool = false) -> TargetNode {
+        return TargetNode(nil, index, isDestination: isDestination)
+    }
 }
 
 

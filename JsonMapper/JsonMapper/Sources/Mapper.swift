@@ -8,595 +8,485 @@
 
 import Foundation
 
+import Foundation
+
+public enum MapperError: Error {
+    case wrongFormat(value: AnyObject?, description: String)
+    case invalidPath(path: [TargetNode], desctiption: String)
+    case notFound(key: String?, description: String)
+}
+
 public class Mapper {
     
     typealias DictionaryNode = Dictionary<String, AnyObject>
     typealias ArrayNode = Array<AnyObject>
     
+}
+
+//MARK: - Public methods
+extension Mapper {
+    
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
-        return try map(json, type: T.self) as! T
+        return try map(type: T.self, json) as! T
     }
     
     public class func map<T: Mapable>(_ json: AnyObject) throws -> [T] {
-        return try map(json, types: T.self) as! [T]
+        return try objectsArray(type: T.self, json) as! [T]
+    }
+    
+    public class func map<T: Mapable>(_ json: AnyObject) throws -> [String: T] {
+        return try objectsDictionary(type: T.self, json) as! [String: T]
+    }
+    
+    public class func map<T: AtomaryMapable>(for key: String, _ json: AnyObject) throws -> T {
+        return try value(for: key, json: json, with: T.self) as! T
+    }
+    
+    public class func map<T: AtomaryMapable>(for key: String, _ json: AnyObject) throws -> [T] {
+        return try array(for: key, json: json, with: T.self) as! [T]
+    }
+    
+    public class func map<T: AtomaryMapable>(for key: String, _ json: AnyObject) throws -> [String: T] {
+        return try dictionary(for: key, json: json, with: T.self) as! [String: T]
     }
     
     public class func map<T: Mapable>(_ data: Data) throws -> T {
-        return try self.map(try data.json())
+        return try map(type: T.self, try data.json()) as! T
     }
     
     public class func map<T: Mapable>(_ data: Data) throws -> [T] {
-        return try self.map(try data.json())
+        return try objectsArray(type: T.self, try data.json()) as! [T]
     }
     
-    public class func map<T: AtomaryMapable>(_ json: AnyObject, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
-        if let json = json as? T.ConcreteType {
-            return json as! T
-        }
-        
-        guard let rawData = findRecursively(propertyKey: key, mappingType: .anyObject, json: json) else {
-            throw MapperError.notFound
-        }
-        
-        return try T.concrete(from: rawData, formatting: formatting)
+    public class func map<T: Mapable>(_ data: Data) throws -> [String: T] {
+        return try objectsDictionary(type: T.self, try data.json()) as! [String: T]
     }
     
-    public class func map<T: AtomaryMapable>(_ json: AnyObject, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
-        if let json = json as? [T.ConcreteType] {
-            return json.map { $0 as! T }
-        }
-        
-        guard let rawData = findRecursively(arrayKey: key, valuesType: .anyObject, json: json) as? [AnyObject] else {
-            throw MapperError.notFound
-        }
-        
-        return try rawData.map { try T.concrete(from: $0, formatting: formatting) }
+    public class func map<T: AtomaryMapable>(for key: String, _ data: Data) throws -> T {
+        return try value(for: key, json: try data.json(), with: T.self) as! T
     }
     
-    public class func map<T: AtomaryMapable>(_ data: Data, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> T {
-        return try self.map(try data.json(), for: key, formatting: formatting)
+    public class func map<T: AtomaryMapable>(for key: String, _ data: Data) throws -> [T] {
+        return try array(for: key, json: try data.json(), with: T.self) as! [T]
     }
     
-    public class func map<T: AtomaryMapable>(_ data: Data, for key: String, formatting: ((T.ConcreteType) throws -> T)? = nil) throws -> [T] {
-        return try self.map(try data.json(), for: key, formatting: formatting)
+    public class func map<T: AtomaryMapable>(for key: String, _ data: Data) throws -> [String: T] {
+        return try dictionary(for: key, json: try data.json(), with: T.self) as! [String: T]
+    }
+}
+
+extension Mapper {
+    
+    class func map(type: Mapable.Type, _ json: AnyObject) throws -> Mapable {
+        let searchType = try validate(type.mappingPath)
+        switch searchType {
+        case .recursive: return try object(for: nil, type: type, json)
+        case .determined:
+            if type.mappingPath.count == 1 {
+                return try object(for: type.mappingPath.first?.key, type: type, json)
+            }
+            
+            guard let objectNode = try extractNode(from: type.mappingPath, json: json) as? DictionaryNode else {
+                throw MapperError.invalidPath(path: type.mappingPath, desctiption: "Cannot extract node for given path")
+            }
+            
+            return try bind(type: type, objectDictionary: objectNode)
+        }
     }
     
 }
 
-//MARK: - Mapping
+//MARK: - Path processing
 extension Mapper {
-    internal class func map (_ json: AnyObject?, types: Mapable.Type) throws -> [Mapable] {
-        guard let json = json else { throw MapperError.wrongFormat }
-        if let arrayOfObjects = findRecursively(objectsKey: nil, type: types, json: json) {
-            return arrayOfObjects
-        }
-        throw MapperError.notFound
+    
+    enum SearchType {
+        case recursive
+        case determined
     }
     
-    internal class func map(_ json: AnyObject?, type: Mapable.Type) throws -> Mapable {
-        guard let json = json else {
-            throw MapperError.wrongFormat
-        }
-        let searchingType = try searchType(for: type.helpingPath)
-        switch searchingType {
-        case .determined:
-            return try map(type, json: json)
-        case .recursive:
-            return try mapRecursively(type, json: json)
-        case .recursiveWithDestination:
-            guard let destinationPath = type.helpingPath.first else {
-                throw MapperError.wrongSetting
-            }
-            switch destinationPath {
-            case let .destination(nodeType):
-                switch nodeType {
-                case let .dictionary(key, _):
-                    guard let key = key else {
-                        throw MapperError.wrongSetting
-                    }
-                    return try mapRecursively(type, destinationKey: key, json: json)
-                default:
-                    throw MapperError.wrongSetting
-                }
-            default:
-                throw MapperError.wrongSetting
-            }
-        }
-    }
-    
-    internal class func map(_ objectType: Mapable.Type, json: AnyObject) throws -> Mapable {
-        var paths = objectType.helpingPath
-        let initialPath = paths.removeFirst()
-        switch initialPath {
-        case let .target(nodeType):
-            try check(json, for: nodeType)
-            break
-        default:
-            throw MapperError.wrongSetting
-        }
-        var processingJson = json
-        for atomaryPath in objectType.helpingPath {
-            switch atomaryPath {
-            case let .target(nodeType), let .destination(nodeType):
-                guard let nextNode = try fall(through: processingJson, nextNode: nodeType) else {
-                    throw MapperError.wrongSetting
-                }
-                processingJson = nextNode
-                break
-            case .none:
-                throw MapperError.wrongSetting
-            }
-        }
-        //At this point we have final object wich we should bind to object
-        if let objectDictionary = processingJson as? DictionaryNode {
-            return try bind(objectDictionary, to: objectType)
-        } else {
-            throw MapperError.wrongSetting
-        }
-    }
-    
-    internal class func mapRecursively(_ objectType: Mapable.Type, json: AnyObject) throws -> Mapable {
-        var propertyDictionary = DictionaryNode()
-        try objectType.relations.forEach { (nameOfProperty, mappingProperty) in
-            guard let aProperty = try findRecursively(mappingProperty, json: json) else {
-                try handleForNilValue(isOptional: mappingProperty.isOptional)
-                propertyDictionary[nameOfProperty] = nil
-                return
-            }
-            propertyDictionary[nameOfProperty] = aProperty
-        }
-        return try objectType.init(Wrapping(propertyDictionary))
-    }
-    
-    internal class func mapRecursively(_ objectType: Mapable.Type, destinationKey: String, json: AnyObject) throws -> Mapable {
-        if isContainsOnlyAtomaryValues(json) {
-            throw MapperError.notFound
-        }
-        if let jsonDictionary = json as? DictionaryNode {
-            do {
-                return try bind(jsonDictionary, to: objectType)
-            } catch { }
-        }
-        return try mapRecursively(objectType, key: destinationKey, json: json)
-    }
-    
-    internal class func mapRecursively(_ objectType: Mapable.Type, key: String, json: AnyObject) throws -> Mapable {
-        if isContainsOnlyAtomaryValues(json) {
-            throw MapperError.notFound
-        }
-        var childNodes = ArrayNode()
-        var potentialFittingNodes = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode {
-            potentialFittingNodes = jsonDictionary.filter() {$0.key == key}.map() {$0.value}
-            for fittingNode in potentialFittingNodes where fittingNode is DictionaryNode {
-                if let potentialFittingNode = fittingNode as? DictionaryNode {
-                    do {
-                        return try bind(potentialFittingNode, to: objectType)
-                    } catch {}
-                }
-            }
-            childNodes = jsonDictionary.map() { $0.value }
-        }
-        if let jsonArray = json as? ArrayNode {
-            childNodes = jsonArray
-        }
-        for childNode in childNodes {
-            do {
-                return try mapRecursively(objectType, key: key, json: childNode)
-            } catch {}
-        }
-        throw MapperError.notFound
-    }
-}
-//MARK: - Binding
-extension Mapper {
-    internal class func bind(_ arrayOfNodes: ArrayNode, to objectType: Mapable.Type) throws -> [Mapable] {
-        var objects = [Mapable]()
-        for node in arrayOfNodes {
-            if let dictNode = node as? DictionaryNode {
-                do {
-                    let object = try bind(dictNode, to: objectType)
-                    objects.append(object)
-                } catch {
-                    debugPrint("Cannot bind ", dictNode, " to ", objectType)
-                }
-            }
-        }
-        if objects.count == 0 && arrayOfNodes.count != 0 {
-            throw MapperError.notFound
-        }
-        return objects
-    }
-    internal class func bind(_ dictionary: DictionaryNode, to objectType: Mapable.Type) throws -> Mapable {
-        var propertyDictionary = DictionaryNode()
-        for (propertyName, mappingProperty) in objectType.relations {
-            propertyDictionary[propertyName] = try validate(mappingProperty, dictionary: dictionary)
-        }
-        return try objectType.init(Wrapping(propertyDictionary))
-    }
-}
-//MARK: - Helpers
-extension Mapper {
-    internal class func check(_ json: AnyObject, for type: JsonNodeType) throws {
-        switch type {
-        case .array:
-            if !(json is ArrayNode) {
-                throw MapperError.wrongSetting
-            }
-            break
-        case .dictionary:
-            if !(json is DictionaryNode) {
-                throw MapperError.wrongSetting
-            }
-            break
-        }
-    }
-    
-    internal class func searchType(for path: [MapPathable]) throws -> MapperSearchType {
-        if path.isEmpty { return .recursive }
-        let isContainsTargetPaths = path.contains { (path) -> Bool in
-            switch path {
-            case .target:
-                return true
-            default:
-                return false
-            }
-        }
-        let isContainsDestination = path.contains { (path) -> Bool in
-            switch path {
-            case .destination:
-                return true
-            default:
-                return false
-            }
-        }
-        let isContainsNone  = path.contains { (path) -> Bool in
-            switch path {
-            case .none:
-                return true
-            default:
-                return false
-            }
-        }
-        if isContainsNone {
-            if isContainsTargetPaths || isContainsDestination {
-                throw MapperError.wrongFormat
-            }
+    class func validate(_ paths: [TargetNode]) throws -> SearchType {
+        if paths.isEmpty {
             return .recursive
         }
-        if isContainsTargetPaths {
-            if isContainsDestination {
-                return .determined
-            } else {
-                throw MapperError.wrongFormat
-            }
+        
+        let nodesCount = paths.count
+        guard let indexOfDestinationNode = paths.index(where: { $0.isDestination }) else {
+            throw MapperError.invalidPath(path: paths, desctiption: "No destination node")
         }
-        if isContainsDestination {
-            if !isContainsTargetPaths {
-                return .recursiveWithDestination
-            }
+        
+        if indexOfDestinationNode != nodesCount - 1 {
+            throw MapperError.invalidPath(path: [paths[indexOfDestinationNode]], desctiption: "Desctination node must be at last position")
         }
+        
         return .determined
     }
     
-    internal static func fall(through json: AnyObject, nextNode: JsonNodeType) throws -> AnyObject? {
-        switch nextNode {
-        case let .array(key, index):
-            if index == nil, key == nil { throw MapperError.wrongSetting }
-            if let key = key {
-                if let dictionaryNode = json as? DictionaryNode, let arrayNode = dictionaryNode[key] as? ArrayNode {
-                    return arrayNode as AnyObject
-                } else {
-                    throw MapperError.wrongSetting
-                }
+    class func extractNode(from path: [TargetNode], json: AnyObject) throws -> AnyObject {
+        var path = path
+        var currentNode = json
+        
+        while !path.isEmpty {
+            let target = path.removeFirst()
+            
+            if let index = target.index, let array = currentNode as? ArrayNode, index < array.count {
+                currentNode = array[index]
             }
-            if let index = index {
-                if let arrayNode = json as? ArrayNode, arrayNode.count > index, let desctinationNode = arrayNode[index] as? ArrayNode {
-                    return desctinationNode as AnyObject
-                } else {
-                    throw MapperError.wrongSetting
-                }
+            
+            if let key = target.key, let dictionary = currentNode as? DictionaryNode, let node = dictionary[key] {
+                currentNode = node
             }
-            break
-        case let .dictionary(key, index):
-            if index == nil, key == nil { throw MapperError.wrongSetting }
-            if let key = key {
-                if let dictionaryNode = json as? DictionaryNode, let dictNode = dictionaryNode[key] as? DictionaryNode {
-                    return dictNode as AnyObject
-                } else {
-                    throw MapperError.wrongSetting
-                }
-            }
-            if let index = index {
-                if let arrayNode = json as? ArrayNode, arrayNode.count > index, let desctinationNode = arrayNode[index] as? DictionaryNode {
-                    return desctinationNode as AnyObject
-                } else {
-                    throw MapperError.wrongSetting
-                }
-            }
-            break
+            
+            throw MapperError.invalidPath(path: [target], desctiption: "Cannot extract node with given path")
         }
-        return nil
+        
+        return currentNode
     }
 }
 
-//MARK: - Validation methods
+//MARK: - Recursive Search BFS
 extension Mapper {
-    internal class func validate(_ property: MappingProperty, dictionary: DictionaryNode) throws -> AnyObject? {
+    
+    class func objectsDictionary(for key: String? = nil, type: Mapable.Type, _ json: AnyObject) throws -> [String: Mapable] {
+        
+        if let key = key,
+            let node = json as? DictionaryNode,
+            let nodesDictionary = node[key] as? [String: DictionaryNode],
+            let objectsDictionary = try? bind(type: type, objectsDictionary: nodesDictionary) {
+            
+            return objectsDictionary
+        }
+        
+        if let nodesDictionary = json as? [String: DictionaryNode], let objectsDictionary = try? bind(type: type, objectsDictionary: nodesDictionary) {
+            return objectsDictionary
+        }
+        
+        if isLeaf(json) { throw MapperError.notFound(key: key, description: "Cannot find dictionary node") }
+        var queue = plainNodes(of: json)
+        while !queue.isEmpty {
+            let nodeToCheck = queue.removeFirst()
+            if let objects = try? objectsDictionary(for: key, type: type, nodeToCheck) {
+                return objects
+            }
+        }
+        
+        throw MapperError.notFound(key: key, description: "Cannot find dictionary node")
+    }
+    
+    class func objectsArray(for key: String? = nil, type: Mapable.Type, _ json: AnyObject) throws -> [Mapable] {
+        if let key = key,
+            let node = json as? DictionaryNode,
+            let objectsNode = node[key] as? Array<DictionaryNode>,
+            let objectsArray = try? bind(type: type, objectsArray: objectsNode) {
+            
+            return objectsArray
+        }
+        
+        if let nodesArray = json as? Array<DictionaryNode>, let objectsArray = try? bind(type: type, objectsArray: nodesArray) {
+            return objectsArray
+        }
+        
+        if isLeaf(json) { throw MapperError.notFound(key: key, description: "Cannot find array node") }
+        var queue = plainNodes(of: json)
+        while !queue.isEmpty {
+            let nodeToCheck = queue.removeFirst()
+            if let objects = try? objectsArray(for: key, type: type, nodeToCheck) {
+                return objects
+            }
+        }
+        
+        throw MapperError.notFound(key: key, description: "Cannot find array node")
+    }
+    
+    class func object(for key: String? = nil, type: Mapable.Type, _ json: AnyObject) throws -> Mapable {
+        if let key = key,
+            let node = json as? DictionaryNode,
+            let objectNode = node[key] as? DictionaryNode,
+            let object = try? bind(type: type, objectDictionary: objectNode) {
+            
+            return object
+        }
+        
+        
+        if let node = json as? DictionaryNode, let object = try? bind(type: type, objectDictionary: node) {
+            return object
+        }
+        
+        var queue = plainNodes(of: json)
+        while !queue.isEmpty {
+            let nodeToCheck = queue.removeFirst()
+            if let object = try? object(for: key, type: type, nodeToCheck) {
+                return object
+            }
+        }
+        
+        throw MapperError.notFound(key: key, description: "Cannot find object node")
+    }
+    
+    class func dictionary(for key: String? = nil, json: AnyObject, with type: AtomaryMapable.Type) throws -> [String: AtomaryMapable]? {
+        
+        if let key = key,
+            let dictionary = json as? Dictionary<String, AnyObject>,
+            let neededDictionary = dictionary[key] as? DictionaryNode {
+            
+            var mappedDictionary = Dictionary<String, AtomaryMapable>()
+            neededDictionary.forEach {
+                if let concrete = try? type.concrete(from: $0.value) {
+                    mappedDictionary[$0.key] = concrete
+                }
+            }
+            
+            return mappedDictionary
+        }
+        
+        guard !isLeaf(json) else {
+            guard let dictionary = json as? DictionaryNode else {
+                throw MapperError.notFound(key: key, description: "Cannot find dictionary node")
+            }
+            var mappedDictionary = Dictionary<String, AtomaryMapable>()
+            dictionary.forEach {
+                if let concrete = try? type.concrete(from: $0.value) {
+                    mappedDictionary[$0.key] = concrete
+                }
+            }
+            
+            return mappedDictionary
+        }
+        
+        var queue = plainNodes(of: json)
+        while !queue.isEmpty {
+            let nodeToCheck = queue.removeFirst()
+            if let dictionary = try? dictionary(for: key, json: nodeToCheck, with: type) {
+                return dictionary
+            }
+            queue.append(contentsOf: plainNodes(of: nodeToCheck))
+        }
+        
+        throw MapperError.notFound(key: key, description: "Cannot find dictionary node")
+    }
+    
+    class func array(for key: String? = nil, json: AnyObject, with type: AtomaryMapable.Type) throws -> [AtomaryMapable] {
+        if let key = key,
+            let dictionary = json as? Dictionary<String, AnyObject>,
+            let array = dictionary[key] as? ArrayNode {
+            
+            return array.flatMap { try? type.concrete(from: $0) }
+        }
+        
+        guard !isLeaf(json) else {
+            guard let array = json as? ArrayNode else {
+                throw MapperError.notFound(key: key, description: "Cannot find array node")
+            }
+            
+            return array.flatMap { try? type.concrete(from: $0) }
+        }
+        
+        var queue = plainNodes(of: json)
+        while !queue.isEmpty {
+            let nodeToCheck = queue.removeFirst()
+            if let array = try? array(for: key, json: nodeToCheck, with: type) {
+                return array
+            }
+            queue.append(contentsOf: plainNodes(of: nodeToCheck))
+        }
+        
+        throw MapperError.notFound(key: key, description: "Cannot find array node")
+    }
+    
+    class func value(for key: String, json: AnyObject, with type: AtomaryMapable.Type) throws -> AtomaryMapable {
+        guard !isLeaf(json) else {
+            guard let dictionaryNode = json as? DictionaryNode, let value = dictionaryNode[key] else {
+                throw MapperError.notFound(key: key, description: "Cannot find object node")
+            }
+            return try type.concrete(from: value)
+        }
+        
+        var queue = plainNodes(of: json)
+        while !queue.isEmpty {
+            let nodeToCheck = queue.removeFirst()
+            if let value = try? value(for: key, json: nodeToCheck, with: type) {
+                return value
+            }
+            queue.append(contentsOf: plainNodes(of: nodeToCheck))
+        }
+        
+        throw MapperError.notFound(key: key, description: "Cannot find object node")
+    }
+}
+
+//MARK: - Binding
+extension Mapper {
+    
+    class func bind(type: Mapable.Type, objectsDictionary: [String: DictionaryNode]) throws -> [String: Mapable] {
+        var resultDictionary = [String: Mapable]()
+        try objectsDictionary.forEach { resultDictionary[$0.key] = try bind(type: type, objectDictionary: $0.value)}
+        return resultDictionary
+    }
+    
+    class func bind(type: Mapable.Type, objectsArray: Array<DictionaryNode>) throws -> [Mapable] {
+        return try objectsArray.map { try bind(type: type, objectDictionary: $0) }
+    }
+    
+    class func bind(type: Mapable.Type, objectDictionary: DictionaryNode) throws -> Mapable {
+        var context = Dictionary<String, AnyObject>()
+        try type.properties.forEach { context[$0.keyValue] = try bind($0, with: objectDictionary) }
+        return try type.init(Wrapping(context))
+    }
+    
+    class func bind(_ property: MapableProperty, with dictionary: DictionaryNode) throws -> AnyObject? {
         switch property {
-        case let .property(type, key, optional):
-            return try validate(key, type: type, optional: optional, dictionary: dictionary)
-        case let .array(key, valuesType, optional):
-            return try validate(key, types: valuesType, optional: optional, dictionary: dictionary)
-        case let .dictionary(key, optional):
-            return try validate(key, optional: optional, dictionary: dictionary)
-        case let .mappingObject(key, childType, optional):
-            return try validate(key, type: childType, optional: optional, dictionary: dictionary)
-        case let .mappingObjectsArray(key, types, optional):
-            return try validate(key, type: types, optional: optional, dictionary: dictionary)
+        case let .value(type, key, optional): return try bindValue(type: type, key, optional, dictionary)
+        case let .array(type, key, optional): return try bindArray(type: type, key, optional, dictionary)
+        case let .dictionary(type, key, optional): return try bindDictionary(type: type, key, optional, dictionary)
+        case let .object(type, key, optional): return try bindObject(type: type, key, optional, dictionary)
+        case let .objectsArray(type, key, optional): return try bindArray(type: type, key, optional, dictionary)
+        case let .objectsDictionary(type, key, optional): return try bindDictionary(type: type, key, optional, dictionary)
         }
     }
     
-    internal class func validate(_ propertyKey: String, type: MappingType, optional: Bool, dictionary: DictionaryNode) throws -> AnyObject? {
-        guard let property = dictionary[propertyKey], isValid(property, for: type) else {
-            try handleForNilValue(isOptional: optional)
+    class func bindDictionary(type: Mapable.Type,
+                              _ key: String,
+                              _ optional: Bool,
+                              _ dictionary: DictionaryNode) throws -> AnyObject? {
+        
+        guard let objectsDictionary = dictionary[key] as? [String: DictionaryNode] else {
+            try validate(nil, isOptional: optional)
             return nil
         }
-        return property
+        
+        return try bind(type: type, objectsDictionary: objectsDictionary) as AnyObject
     }
     
-    internal class func validate(_ arrayKey: String, types: MappingType, optional: Bool, dictionary: DictionaryNode) throws -> AnyObject? {
-        guard let arrayProperty = dictionary[arrayKey] as? ArrayNode, isValid(array: arrayProperty, for: types) else {
-            try handleForNilValue(isOptional: optional)
+    class func bindArray(type: Mapable.Type,
+                         _ key: String,
+                         _ optional: Bool,
+                         _ dictionary: DictionaryNode) throws -> AnyObject? {
+        
+        guard let objectsArray = dictionary[key] as? Array<DictionaryNode> else {
+            try validate(nil, isOptional: optional)
             return nil
         }
-        return arrayProperty as AnyObject?
+        
+        return try bind(type: type, objectsArray: objectsArray) as AnyObject
     }
     
-    internal class func validate(_ dictionaryKey: String, optional: Bool, dictionary: DictionaryNode) throws -> AnyObject? {
-        guard let dictionaryProperty = dictionary[dictionaryKey] as? DictionaryNode else {
-            try handleForNilValue(isOptional: optional)
+    class func bindObject(type: Mapable.Type,
+                          _ key: String,
+                          _ optional: Bool,
+                          _ dictionary: DictionaryNode) throws -> AnyObject? {
+        
+        guard let objectDictionary = dictionary[key] as? DictionaryNode, let object = try? bind(type: type, objectDictionary: objectDictionary) else {
+            try validate(nil, isOptional: optional)
             return nil
         }
-        return dictionaryProperty as AnyObject?
+        
+        return object as AnyObject
     }
     
-    internal class func validate(_ objectKey: String, type: Mapable.Type, optional: Bool, dictionary: DictionaryNode) throws -> AnyObject? {
-        do {
-            let childObject = try map(dictionary[objectKey], type: type)
-            return childObject as AnyObject?
-        } catch {
-            try handleForNilValue(isOptional: optional)
+    class func bindDictionary(type: AtomaryMapable.Type,
+                              _ key: String,
+                              _ optional: Bool,
+                              _ dictionary: DictionaryNode) throws -> AnyObject? {
+        
+        guard let valuesDictionary = dictionary[key] as? DictionaryNode else {
+            try validate(nil, isOptional: optional)
             return nil
         }
+        
+        var resultDictionary = Dictionary<String, AtomaryMapable>()
+        try valuesDictionary.forEach { resultDictionary[$0.key] = try type.concrete(from: $0.value) }
+        return resultDictionary as AnyObject
     }
     
-    internal class func validate(_ objectsArrayKey: String?, type: Mapable.Type, optional: Bool, dictionary: DictionaryNode) throws -> AnyObject? {
-        guard let arrayKey = objectsArrayKey else {
-            try handleForNilValue(isOptional: optional)
+    /// Method for retreiving array of AtomaryMapable objects
+    ///
+    /// - Parameters:
+    ///   - type: type of objects in array
+    ///   - key: key for desired node
+    ///   - optional: value describing if output can be nullable
+    ///   - dictionary: json node to bind
+    /// - Returns: returns an array of AtomaryMapable objects
+    /// - Throws: error describing bind error
+    class func bindArray(type: AtomaryMapable.Type,
+                         _ key: String,
+                         _ optional: Bool,
+                         _ dictionary: DictionaryNode) throws -> AnyObject? {
+        
+        guard let valuesArray = dictionary[key] as? ArrayNode else {
+            try validate(nil, isOptional: optional)
             return nil
         }
-        do {
-            return try map(dictionary[arrayKey], types: type) as AnyObject?
-        } catch {
-            try handleForNilValue(isOptional: optional)
+        
+        return try valuesArray.map { try type.concrete(from: $0) } as AnyObject
+    }
+    
+    /// Method for retreiving AtomaryMapable from json node
+    ///
+    /// - Parameters:
+    ///   - type: AtomaryMapable type
+    ///   - key: key for desired value
+    ///   - optional: bool value indicating if value is nullable
+    ///   - dictionary: json node to bind
+    /// - Returns: concrete AtomaryMapable value
+    /// - Throws: Error describing validation error
+    class func bindValue(type: AtomaryMapable.Type,
+                         _ key: String,
+                         _ optional: Bool,
+                         _ dictionary: DictionaryNode) throws -> AnyObject? {
+        
+        guard let value = dictionary[key], let concreteValue = try? type.concrete(from: value) else {
+            try validate(nil, isOptional: optional)
             return nil
         }
+        return concreteValue as AnyObject
     }
     
-    internal class func isValid(_ property: AnyObject, for type: MappingType) -> Bool {
-        switch type {
-        case .string, .date:
-            if let _ = property as? String {
-                return true
-            }
-            if property.stringValue != nil {
-                return true
-            } else { return false }
-        case .bool:
-            if let _ = property.boolValue {
-                return true
-            } else { return false }
-        case .number:
-            if let _ = property.doubleValue {
-                return true
-            } else { return false }
-        default:
-            return true
-        }
-    }
-    
-    internal class func isValid(array: ArrayNode, for type: MappingType) -> Bool {
-        for value in array {
-            if !isValid(value, for: type) { return false }
-        }
-        return true
-    }
-    
-    internal class func handleForNilValue(isOptional: Bool) throws {
-        if !isOptional { throw MapperError.notFound }
+    /// Method for validating if nil response can be returned or not
+    ///
+    /// - Parameters:
+    ///   - value: value or nil
+    ///   - isOptional: value which describes if input value can be nil or not
+    /// - Throws: throws an error if value is nil, but it cannot be nullable
+    class func validate(_ value: AnyObject?, isOptional: Bool) throws {
+        if value != nil { return }
+        if !isOptional { throw MapperError.wrongFormat(value: value, description: "Value cannot be optional") }
     }
 }
 
-//MARK: - Search Methods
+//MARK: - Mapper helpers
 extension Mapper {
-    internal class func findRecursively(_ mappingProperty: MappingProperty, json: AnyObject) throws -> AnyObject? {
-        switch mappingProperty {
-        case let .property(type, key, _):
-            return findRecursively(propertyKey: key, mappingType: type, json: json)
-        case let .array(key, valuesType, _):
-            return findRecursively(arrayKey: key, valuesType: valuesType, json: json)
-        case let .dictionary(key, _):
-            return findRecursively(dictionaryKey: key, json: json)
-        case let .mappingObject(key, type, _):
-            return findRecursively(objectKey: key, type: type, json: json) as AnyObject
-        case let .mappingObjectsArray(key, types, _):
-            return findRecursively(objectsKey: key, type: types, json: json) as AnyObject
+    
+    /// Method for retrieving children of json node
+    ///
+    /// - Parameter jsonNode: Node representing Json value
+    /// - Returns: array of child nodes of given node
+    class func plainNodes(of jsonNode: AnyObject) -> ArrayNode {
+        if let array = jsonNode as? ArrayNode {
+            return array
         }
+        
+        if let dictionary = jsonNode as? DictionaryNode {
+            return dictionary.map { $0.value }
+        }
+        
+        return []
     }
     
-    //Search for an array of objects
-    internal class func findRecursively(objectsKey: String?, type: Mapable.Type, json: AnyObject) -> [Mapable]? {
-        if let jsonArray = json as? ArrayNode {
-            do {
-                return try bind(jsonArray, to: type)
-            } catch {}
-        }
-        if isContainsOnlyAtomaryValues(json) { return nil }
-        return objectsKey == nil ? findRecursively(arrayOf: type, json: json) : findRecursively(objectsKey: objectsKey!, type: type, json: json)
-    }
-    
-    internal class func findRecursively(arrayOf type: Mapable.Type, json: AnyObject) -> [Mapable]? {
-        if isContainsOnlyAtomaryValues(json) { return nil }
-        var childNodes = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode {
-            childNodes = jsonDictionary.map() { return $0.value }
-        }
-        if let jsonArray = json as? ArrayNode { childNodes = jsonArray }
-        for node in childNodes {
-            if let arrayValue = node as? ArrayNode, arrayValue.count > 0 {
-                do {
-                    return try bind(arrayValue, to: type)
-                } catch { }
-            }
-            if let foundValues = findRecursively(arrayOf: type, json: node) { return foundValues }
-        }
-        return nil
-    }
-    
-    internal class func findRecursively(objectsKey: String, type: Mapable.Type, json: AnyObject) -> [Mapable]? {
-        if isContainsOnlyAtomaryValues(json) { return nil }
-        var childNodes = ArrayNode()
-        var potentialFittingNodes = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode {
-            potentialFittingNodes = jsonDictionary.filter { $0.key == objectsKey }.map() { $0.value }
-            for potentialNode in potentialFittingNodes {
-                do {
-                    if let arrayNode = potentialNode as? ArrayNode {
-                        return try bind(arrayNode, to: type)
-                    }
-                } catch {}
-            }
-            childNodes = jsonDictionary.map() { $0.value }
-        }
-        if let jsonArray = json as? ArrayNode { childNodes.append(contentsOf: jsonArray) }
-        for childNode in childNodes {
-            if let foundValues = findRecursively(objectsKey: objectsKey, type: type, json: childNode) {
-                return foundValues
-            }
-        }
-        return nil
-    }
-    
-    //Search for an object
-    internal class func findRecursively(objectKey: String, type: Mapable.Type, json: AnyObject) -> Mapable? {
-        if isContainsOnlyAtomaryValues(json) { return nil }
-        var childNodes = ArrayNode()
-        var potentialFittingNodes = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode {
-            potentialFittingNodes = jsonDictionary.filter { $0.key == objectKey }.map() { $0.value }
-            for potentialNode in potentialFittingNodes {
-                if let dictionaryNode = potentialNode as? DictionaryNode {
-                    do {
-                        return try bind(dictionaryNode, to: type)
-                    } catch {}
-                }
-            }
-            childNodes = jsonDictionary.map() { $0.value }
-        }
-        if let jsonArray = json as? ArrayNode { childNodes.append(contentsOf: jsonArray) }
-        for childNode in childNodes {
-            if let foundValue = findRecursively(objectKey: objectKey, type: type, json: childNode) {
-                return foundValue
-            }
-        }
-        return nil
-    }
-    
-    //Search for a dictionary
-    internal class func findRecursively(dictionaryKey: String, json: AnyObject) -> AnyObject? {
-        if isContainsOnlyAtomaryValues(json) { return nil }
-        var childNodes = ArrayNode()
-        var potentialFittingNodes = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode {
-            potentialFittingNodes = jsonDictionary.filter() { $0.key == dictionaryKey && $0.value is DictionaryNode }.map() { $0.value }
-            if let fittingNode = potentialFittingNodes.first { return fittingNode }
-            childNodes = jsonDictionary.map() { $0.value }
-        }
-        if let jsonArray = json as? ArrayNode {
-            childNodes = jsonArray
-        }
-        for childNode in childNodes {
-            if let foundedValue = findRecursively(dictionaryKey: dictionaryKey, json: childNode) {
-                return foundedValue
-            }
-        }
-        return nil
-    }
-    
-    //Search for an array
-    internal class func findRecursively(arrayKey: String, valuesType: MappingType, json: AnyObject) -> AnyObject? {
-        if isContainsOnlyAtomaryValues(json) { return nil }
-        var childNodes = ArrayNode()
-        var potentialFittingNodes = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode {
-            potentialFittingNodes = jsonDictionary.filter() { $0.key == arrayKey && $0.value is ArrayNode }.map() { $0.value }
-            if let fittingNode = potentialFittingNodes.first { return fittingNode }
-            childNodes = jsonDictionary.map() { $0.value }
-        }
-        if let jsonArray = json as? ArrayNode {
-            childNodes = jsonArray
-        }
-        for childNode in childNodes {
-            if let foundedValue = findRecursively(arrayKey: arrayKey, valuesType: valuesType, json: childNode) {
-                return foundedValue
-            }
-        }
-        return nil
-    }
-    
-    //Search for a single property
-    internal class func findRecursively(propertyKey: String, mappingType: MappingType, json: AnyObject) -> AnyObject? {
-        //Base of recursion
-        if isContainsOnlyAtomaryValues(json), let jsonDictionary = json as? DictionaryNode {
-            //At this point we are reached last level of JSON tree
-            let fittingNodes = jsonDictionary
-                .filter() { $0.key == propertyKey && isValid($0.value, for: mappingType) }
-                .map{$0.value}
-            return fittingNodes.first
-        } else {
-            //Our JSON object contains values in wich we can fallthhrought
-            //if JSON object is Dictionary - check it
-            var childNodes = ArrayNode()
-            var potentialFittingNodes = ArrayNode()
-            if let jsonDictionary = json as? DictionaryNode {
-                potentialFittingNodes = jsonDictionary
-                    .filter() {$0.key == propertyKey && isValid($0.value, for: mappingType)}
-                    .map() {$0.value}
-                if let fittingNode = potentialFittingNodes.first { return fittingNode }
-                childNodes = jsonDictionary.map() { $0.value }
-            }
-            //if JSON object is Array - check it
-            if let jsonArray = json as? ArrayNode {
-                childNodes = jsonArray
-            }
-            for childNode in childNodes {
-                if let foundValue = findRecursively(propertyKey: propertyKey, mappingType: mappingType, json: childNode) {
-                    return foundValue
-                }
-            }
-            return nil
-        }
-    }
-    
-    //Detecting last level of JSON Tree
-    internal class func isContainsOnlyAtomaryValues(_ json: AnyObject) -> Bool {
+    /// Method for check if given node of Json is leaf
+    ///
+    /// - Parameter node: Node representing Json value
+    /// - Returns: true if given node is leaf of node tree
+    class func isLeaf(_ node: AnyObject) -> Bool {
         var nodesToCheck = ArrayNode()
-        if let jsonDictionary = json as? DictionaryNode { nodesToCheck = jsonDictionary.map { $0.value } }
-        if let jsonArray = json as? ArrayNode { nodesToCheck = jsonArray }
-        for node in nodesToCheck {
-            if node is DictionaryNode || node is ArrayNode { return false }
+        if let array = node as? ArrayNode {
+            nodesToCheck = array
         }
-        return true
+        
+        if let dictionary = node as? DictionaryNode {
+            nodesToCheck = dictionary.map { $0.value }
+        }
+        
+        return !nodesToCheck.contains(where: {$0 is ArrayNode || $0 is DictionaryNode })
     }
+    
 }
+
