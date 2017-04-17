@@ -94,11 +94,53 @@ extension Mapper {
     
     /// map function
     ///
+    /// - Parameters:
+    ///   - key: key for desired node
+    ///   - json: json node
+    ///   - formatting: formatting closure
+    /// - Returns: formatted AtomaryMapable value
+    /// - Throws: MapperError
+    public class func map<T: AtomaryMapable, U>(for key: String, _ json: AnyObject, _ formatting: (_ rawValue: T) throws -> U) throws -> U {
+        return try formatting(try map(for: key, json))
+    }
+    
+    /// map function
+    ///
+    /// - Parameters:
+    ///   - key: key for desired node
+    ///   - json: json node
+    ///   - formatting: formatting closure
+    /// - Returns: formatted array
+    /// - Throws: MapperError
+    public class func map<T: AtomaryMapable, U>(for key: String, _ json: AnyObject, _ formatting: (_ rawValue: T) throws -> U) throws -> [U] {
+        let values: [T] = try map(for: key, json)
+        return try values.map(formatting)
+    }
+    
+    /// map function
+    ///
+    /// - Parameters:
+    ///   - key: key for desired node
+    ///   - json: json node
+    ///   - formatting: formatting closure
+    /// - Returns: formatted dictionary
+    /// - Throws: MapperError
+    public class func map<T: AtomaryMapable, U>(for key: String, _ json: AnyObject, _ formatting: (_ rawValue: T) throws -> U) throws -> [String: U] {
+        let values: [String: T] = try map(for: key, json)
+        var formattedDictionary = [String: U]()
+        
+        try values.forEach { formattedDictionary[$0] = try formatting($1) }
+        
+        return formattedDictionary
+    }
+    
+    /// map function
+    ///
     /// - Parameter data: data representing json object
     /// - Returns: Mapable object
     /// - Throws: MapperError
     public class func map<T: Mapable>(_ data: Data) throws -> T {
-        return try map(type: T.self, try data.json()) as! T
+        return try map(type: T.self, data.json()) as! T
     }
     
     /// map function
@@ -107,7 +149,7 @@ extension Mapper {
     /// - Returns: array of Mapable objects
     /// - Throws: MapperError
     public class func map<T: Mapable>(_ data: Data) throws -> [T] {
-        return try objectsArray(type: T.self, try data.json()) as! [T]
+        return try objectsArray(type: T.self, data.json()) as! [T]
     }
     
     /// map function
@@ -116,7 +158,7 @@ extension Mapper {
     /// - Returns: dictionary of Mapable objects
     /// - Throws: MapperError
     public class func map<T: Mapable>(_ data: Data) throws -> [String: T] {
-        return try objectsDictionary(type: T.self, try data.json()) as! [String: T]
+        return try objectsDictionary(type: T.self, data.json()) as! [String: T]
     }
     
     /// map function
@@ -127,7 +169,7 @@ extension Mapper {
     /// - Returns: AtomaryMapable object
     /// - Throws: MapperError
     public class func map<T: AtomaryMapable>(for key: String, _ data: Data) throws -> T {
-        return try value(for: key, json: try data.json(), with: T.self) as! T
+        return try value(for: key, json: data.json(), with: T.self) as! T
     }
     
     /// map function
@@ -138,7 +180,7 @@ extension Mapper {
     /// - Returns: array of AtomaryMapable objects
     /// - Throws: MapperError
     public class func map<T: AtomaryMapable>(for key: String, _ data: Data) throws -> [T] {
-        return try array(for: key, json: try data.json(), with: T.self) as! [T]
+        return try array(for: key, json: data.json(), with: T.self) as! [T]
     }
     
     /// map function
@@ -150,6 +192,42 @@ extension Mapper {
     /// - Throws: MapperError
     public class func map<T: AtomaryMapable>(for key: String, _ data: Data) throws -> [String: T] {
         return try dictionary(for: key, json: try data.json(), with: T.self) as! [String: T]
+    }
+    
+    /// map function
+    ///
+    /// - Parameters:
+    ///   - key: key for desired node
+    ///   - data: data representing json object
+    ///   - formatting: formatting closure
+    /// - Returns: formatted AtomaryMapable value
+    /// - Throws: MapperError
+    public class func map<T: AtomaryMapable, U>(for key: String, _ data: Data, _ formatting: (_ rawValue: T) throws -> U) throws -> U {
+        return try map(for: key, data.json(), formatting)
+    }
+    
+    /// map function
+    ///
+    /// - Parameters:
+    ///   - key: key for desired node
+    ///   - data: data representing json object
+    ///   - formatting: formatting closure
+    /// - Returns: formatted array
+    /// - Throws: MapperError
+    public class func map<T: AtomaryMapable, U>(for key: String, _ data: Data, _ formatting: (_ rawValue: T) throws -> U) throws -> [U] {
+        return try map(for: key, data.json(), formatting)
+    }
+    
+    /// map function
+    ///
+    /// - Parameters:
+    ///   - key: key for desired node
+    ///   - data: data representing json object
+    ///   - formatting: formatting closure
+    /// - Returns: formatted dictionary
+    /// - Throws: MapperError
+    public class func map<T: AtomaryMapable, U>(for key: String, _ data: Data, _ formatting: (_ rawValue: T) throws -> U) throws -> [String: U] {
+        return try map(for: key, data.json(), formatting)
     }
 }
 
