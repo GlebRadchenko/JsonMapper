@@ -8,12 +8,19 @@
 
 import Foundation
 
+/// enum representing Mapper errors
+///
+/// - wrongFormat: value describing wrong format for mapping property
+/// - invalidPath: value describing wrong path for mapping property
+/// - notFound: value describing not found key
 public enum MapperError: Error {
     case wrongFormat(value: AnyObject?, description: String)
     case invalidPath(path: [TargetNode], desctiption: String)
     case notFound(key: String?, description: String)
 }
 
+
+/// Mapper class for map json to objects and structs
 public class Mapper {
     
     typealias DictionaryNode = Dictionary<String, AnyObject>
@@ -24,14 +31,29 @@ public class Mapper {
 //MARK: - Public methods
 extension Mapper {
     
+    /// map function
+    ///
+    /// - Parameter json: json node
+    /// - Returns: Mapable object
+    /// - Throws: MapperError
     public class func map<T: Mapable>(_ json: AnyObject) throws -> T {
         return try map(type: T.self, json) as! T
     }
     
+    /// map function
+    ///
+    /// - Parameter json: json node
+    /// - Returns: array of Mapable objects
+    /// - Throws: MapperError
     public class func map<T: Mapable>(_ json: AnyObject) throws -> [T] {
         return try objectsArray(type: T.self, json) as! [T]
     }
     
+    /// map function
+    ///
+    /// - Parameter json: json node
+    /// - Returns: dictionary with MapableValues
+    /// - Throws: MapperError
     public class func map<T: Mapable>(_ json: AnyObject) throws -> [String: T] {
         return try objectsDictionary(type: T.self, json) as! [String: T]
     }
@@ -314,22 +336,50 @@ extension Mapper {
 //MARK: - Binding
 extension Mapper {
     
+    /// Method for binding dictionary to Mapable objects dictionary without recursion
+    ///
+    /// - Parameters:
+    ///   - type: Mapable type of objects
+    ///   - objectsDictionary: json node, potentially representing dictionary of objects
+    /// - Returns: dictionary of Mapable objects
+    /// - Throws: throws error describing bind error
     class func bind(type: Mapable.Type, objectsDictionary: [String: DictionaryNode]) throws -> [String: Mapable] {
         var resultDictionary = [String: Mapable]()
         try objectsDictionary.forEach { resultDictionary[$0.key] = try bind(type: type, objectDictionary: $0.value)}
         return resultDictionary
     }
     
+    /// Method for binding array to Mapable objects array without recursion
+    ///
+    /// - Parameters:
+    ///   - type: Mapable type of objects
+    ///   - objectsArray: json node, potentially representing array of objects
+    /// - Returns: array of Mapable objects
+    /// - Throws: throws error describing bind error
     class func bind(type: Mapable.Type, objectsArray: Array<DictionaryNode>) throws -> [Mapable] {
         return try objectsArray.map { try bind(type: type, objectDictionary: $0) }
     }
     
+    /// Method for binding dictionary to Mapable object without recursion
+    ///
+    /// - Parameters:
+    ///   - type: Mapable type of object
+    ///   - objectDictionary: json node, potentially representing object
+    /// - Returns: Mapable object
+    /// - Throws: throws error describing bind error
     class func bind(type: Mapable.Type, objectDictionary: DictionaryNode) throws -> Mapable {
         var context = Dictionary<String, AnyObject>()
         try type.properties.forEach { context[$0.keyValue] = try bind($0, with: objectDictionary) }
         return try type.init(Wrapping(context))
     }
     
+    ///  Method for binding dictionary to MapableProperty
+    ///
+    /// - Parameters:
+    ///   - property: MapableProperty describing type of property
+    ///   - dictionary: initial json node
+    /// - Returns: returns Mapable or AtomaryMapable object or nil
+    /// - Throws: throws error describing bind error
     class func bind(_ property: MapableProperty, with dictionary: DictionaryNode) throws -> AnyObject? {
         switch property {
         case let .value(type, key, optional): return try bindValue(type: type, key, optional, dictionary)
@@ -341,6 +391,15 @@ extension Mapper {
         }
     }
     
+    /// Method for binding dictionary to dictionary with Mapable values
+    ///
+    /// - Parameters:
+    ///   - type: type of needed Mapable objects
+    ///   - key: key for desired json node
+    ///   - optional: value describing if output can be nullable
+    ///   - dictionary: initial json node
+    /// - Returns: returns dictionary of mapable objects or nil
+    /// - Throws: throws error describing bind error
     class func bindDictionary(type: Mapable.Type,
                               _ key: String,
                               _ optional: Bool,
@@ -354,6 +413,15 @@ extension Mapper {
         return try bind(type: type, objectsDictionary: objectsDictionary) as AnyObject
     }
     
+    /// Method for binding dictionary to array of Mapable objects
+    ///
+    /// - Parameters:
+    ///   - type: type of needed Mapable objects
+    ///   - key: key for desired json node
+    ///   - optional: value describing if output can be nullable
+    ///   - dictionary: initial json node
+    /// - Returns: returns array of mapable objects or nil
+    /// - Throws: throws error describing bind error
     class func bindArray(type: Mapable.Type,
                          _ key: String,
                          _ optional: Bool,
@@ -367,6 +435,15 @@ extension Mapper {
         return try bind(type: type, objectsArray: objectsArray) as AnyObject
     }
     
+    /// Method for binding dictionary to AtomaryMapable value
+    ///
+    /// - Parameters:
+    ///   - type: type of needed Mapable object
+    ///   - key: key for desired json node
+    ///   - optional: value describing if output can be nullable
+    ///   - dictionary: initial json node
+    /// - Returns: returns mapable object or nil
+    /// - Throws: throws error describing bind error
     class func bindObject(type: Mapable.Type,
                           _ key: String,
                           _ optional: Bool,
@@ -380,6 +457,16 @@ extension Mapper {
         return object as AnyObject
     }
     
+    
+    /// Method for binding dictionary to AtomaryMapable dictionary [String: AtomaryMapable]
+    ///
+    /// - Parameters:
+    ///   - type: type of needed value of dictionary
+    ///   - key: key for desired json node
+    ///   - optional: value describing if output can be nullable
+    ///   - dictionary: initial json node
+    /// - Returns: returns AtomaryMapable value or nil
+    /// - Throws: throws error describing bind error
     class func bindDictionary(type: AtomaryMapable.Type,
                               _ key: String,
                               _ optional: Bool,
