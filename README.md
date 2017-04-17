@@ -94,7 +94,7 @@ class User: Mapable {
   You can delete this property or stay it like :
   
    ``` swift
-  public static var helpingPath: [TargetNode] = []                                                    
+  public static var mappingPath: [TargetNode] = []                                                    
   ```
   
   to force recursive search (BFS) of object that you need to be mapped.
