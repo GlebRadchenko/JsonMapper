@@ -18,14 +18,13 @@
 - Supporting of arrays mapping;
 - Supporting of nested types mapping;
 - Supporting speeding up mapping of single object by declaring helpingPath property;
-- Untested feature of mapping custom types like Date.
+- Mapping custom types like Date.
 
 ### Future features and plans:
 
-- Map objects by declaring helpingPath directly;
 - Unit tests coverage(in process);
-- Simplify declaring of helpingPath property;
-- Extend all primitive types for AtomaryMapable protocol;
+- Simplify declaring of helpingPath property - done;
+- Extend all primitive types for AtomaryMapable protocol - done;
   
  ## Usage:
  
@@ -37,35 +36,37 @@
   2. Create your Class or Struct and extend it for Mapable protocol: 
    ``` swift
 public protocol Mapable {
-    static var helpingPath: [MapPathable] { get }
-    static var relations: [String: MappingProperty] { get }
     init(_ wrapping: Wrapping) throws
+    static var properties: [MapableProperty] { get }
+    static var mappingPath: [TargetNode] { get }
 }
 ```
 for example: 
   ``` swift
 class User: Mapable {
-    
-    var name: String?
+    var id: String
+    var name: String
     var login: String
-    var password: String
+    var age: Int
     
-    public static var helpingPath: [MapPathable] = [.none] //or remove it.
-    public static var relations: [String : MappingProperty] {
-        return ["name": .property(type: .string, key: "name", optional: true),
-                "login": .property(type: .string, key: "login", optional: false),
-                "password": .property(type: .string, key: "password", optional: false)]
-    }
+    static var mappingPath: [TargetNode] = []
+    static var properties: [MapableProperty] = [
+        .value(type: String.self, key: "_id", optional: false),
+        .value(type: String.self, key: "name", optional: false),
+        .value(type: String.self, key: "login", optional: false),
+        .value(type: Int.self, key: "age", optional: false)
+    ]
     
-    public required init(_ wrapping: Wrapping) throws {
+    public required init(_ wrapping: Wrapping) throws{
+        id = try wrapping.get("_id")
         name = try wrapping.get("name")
         login = try wrapping.get("login")
-        password = try wrapping.get("password")
+        age = try wrapping.get("age")
     }
 }
   ```
   
-  where helpingPath - array of values, which can help Mapper to find destination Object in JSON file.
+  where mappingPath - array of values, which can help Mapper to find destination Object in JSON file.
   For example, you have json file: 
   
   ``` json
@@ -83,65 +84,57 @@ class User: Mapable {
   your helpingPath should be as follows: 
   
   ``` swift
-  public static var helpingPath: [MapPathable] = [.target(nodeType: .dictionary(key: "response", index: nil)),
-                                                    .destination(nodeType: .dictionary(key: "user", index: nil))]                                         
-  ``` 
+  public static var mappingPath: [TargetNode] = [.dictionaryNode(key: "response"),
+                                                 .dictionaryNode(key: "user", isDestination: true)]                                         
+  ```     
   
   this protperty determine a valid way for "user" object, and Mapper won't search object recursively.
   You can delete this property or stay it like :
   
    ``` swift
-  
-  public static var helpingPath: [MapPathable] = [.none]
-                                                    
+  public static var helpingPath: [TargetNode] = []                                                    
   ```
   
-  to force recursive search (DFS) of object that you need to be mapped.
+  to force recursive search (BFS) of object that you need to be mapped.
   
-  MappingProperty supports properties like :
+  MapableProperty supports properties like :
   
   ``` swift
-  public enum MappingProperty {
-    case property(type: MappingType, key: String, optional: Bool)
-    case mappingObject(key: String, type: Mapable.Type, optional: Bool)
-    case mappingObjectsArray(key: String?, types: Mapable.Type, optional: Bool)
-    case array(key: String, valuesType: MappingType, optional: Bool)
-    case dictionary(key: String, optional: Bool)
+public enum MapableProperty {
+    
+    case value(type: AtomaryMapable.Type, key: String, optional: Bool)
+    case array(type: AtomaryMapable.Type, key: String, optional: Bool)
+    case dictionary(type: AtomaryMapable.Type, key: String, optional: Bool)
+    case object(type: Mapable.Type, key: String, optional: Bool)
+    case objectsArray(type: Mapable.Type, key: String, optional: Bool)
+    case objectsDictionary(type: Mapable.Type, key: String, optional: Bool)
+    
 }                                                 
   ```
   
-  3. Then call with Data object:
+  3. Then call with Data object or json:
   
 ``` swift
-  let user: User = try Mapper.map(data)
-  ```
-  
-  or json object (AnyObject):
-  
-  ``` swift
-  let user: User = try Mapper.map(json)                                        
+  let dataUser: User = try Mapper.map(data)
+  //or
+  let jsonUser: User = try Mapper.map(json)  
   ```
   
   4. Also you can map arrays, nested types or primitive and custom types by call :
   
   ``` swift
-    
     let users: [User] = try Mapper.map([data or json])
     let stringValue: String = try Mapper.map([data or json], for: "[your key for needed String value]")
-    let doubles: [Double] = try Mapper.map([data or json], for: "[your key for needed array of Double values]")
+    let doubles: [String: Double] = try Mapper.map([data or json], for: "[your key for needed array of Double values]")
     
-    //raw value for Date is String
-    let date: Date = try Mapper.map(data, for: "[your key for needed Date value]", formatting: { (rawValue: String) -> Data in
-      guard let date = DateFormatter().date(from: unformattedString) else {
-          throw SomeError
-      }
+    let date: Date = try Mapper.map(for: "data", json, { (rawValue: String) -> Date in
+        guard let date = DateFormatter().date(from: rawValue) else {
+            throw SomeError
+        }
     
-      return date
-    })
-    
-    //raw value for CustomStruct is String(it can be any, just conform your struct, class etc to AtomaryMapable protocol)
-    let custom: CustomStruct = try Mapper.map(data, for: "[key for needed CustomStruct value]") { return CustomStruct(stringValue: $0) }
+        return date
+})
   ```
   
-  For mapping array of Mapable objects it's recommended not to use helpingPath value (just for now :D), to prevent unexpected behavior.
+  For mapping array of Mapable objects it's recommended not to use mappingPath value (just for now :D), to prevent unexpected behavior.
   
