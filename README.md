@@ -3,7 +3,12 @@
  - Simple JsonMapper, which maps JSON data to your models automatically.
  - You don't need to parse your JSON manually.
  - Mapper don't use reflection at all, so it's fast enough.  
+ - All you need is: 
  
+   ``` swift
+   let object: Object = try Mapper.map(json)
+```
+
 ## Requirements: 
   - iOS 9.1+
   - XCode 8.0+ 
