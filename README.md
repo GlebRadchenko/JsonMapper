@@ -44,21 +44,18 @@ public protocol Mapable {
 for example: 
   ``` swift
 class User: Mapable {
-    var id: String
     var name: String
     var login: String
     var age: Int
     
     static var mappingPath: [TargetNode] = []
     static var properties: [MapableProperty] = [
-        .value(type: String.self, key: "_id", optional: false),
         .value(type: String.self, key: "name", optional: false),
         .value(type: String.self, key: "login", optional: false),
         .value(type: Int.self, key: "age", optional: false)
     ]
     
-    public required init(_ wrapping: Wrapping) throws{
-        id = try wrapping.get("_id")
+    public required init(_ wrapping: Wrapping) throws {
         name = try wrapping.get("name")
         login = try wrapping.get("login")
         age = try wrapping.get("age")
@@ -75,7 +72,7 @@ class User: Mapable {
       "user" : {
         "name" : "Test",
         "login" : "Login", 
-        "password" : "Password"
+        "age" : 33
       }
     }
   }
