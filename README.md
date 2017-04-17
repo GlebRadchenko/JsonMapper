@@ -7,7 +7,7 @@
  
    ``` swift
    let object: Object = try Mapper.map(json)
-```
+   ```
 
 ## Requirements: 
   - iOS 9.1+
