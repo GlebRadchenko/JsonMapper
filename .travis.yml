@@ -2,4 +2,3 @@ language: objective-c
 osx_image: xcode8.3
 xcode_project: JsonMapper.xcodeproj
 xcode_scheme: JsonMapper
-xcode_sdk: iphonesimulator10.1
