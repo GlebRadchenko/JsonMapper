@@ -1,5 +1,7 @@
 # JsonMapper
 
+[![Build Status](https://travis-ci.org/GlebRadchenko/JsonMapper.svg?branch=master)](https://travis-ci.org/GlebRadchenko/JsonMapper)
+
  - Simple JsonMapper, which maps JSON data to your models automatically.
  - You don't need to parse your JSON manually.
  - Mapper don't use reflection at all, so it's fast enough.  
