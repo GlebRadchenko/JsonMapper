@@ -1,0 +1,4 @@
+language: swift
+xcode_project: JsonMapper.xcodeproj
+xcode_scheme: MapperBuildable
+osx_image: xcode8.3
