@@ -386,8 +386,8 @@ extension Mapper {
             
             var mappedDictionary = Dictionary<String, AtomaryMapable>()
             neededDictionary.forEach {
-                if let concrete = try? type.concrete(from: $0.value) {
-                    mappedDictionary[$0.key] = concrete
+                if let specific = try? type.specific(from: $0.value) {
+                    mappedDictionary[$0.key] = specific
                 }
             }
             
@@ -400,8 +400,8 @@ extension Mapper {
             }
             var mappedDictionary = Dictionary<String, AtomaryMapable>()
             dictionary.forEach {
-                if let concrete = try? type.concrete(from: $0.value) {
-                    mappedDictionary[$0.key] = concrete
+                if let specific = try? type.specific(from: $0.value) {
+                    mappedDictionary[$0.key] = specific
                 }
             }
             
@@ -425,7 +425,7 @@ extension Mapper {
             let dictionary = json as? Dictionary<String, AnyObject>,
             let array = dictionary[key] as? ArrayNode {
             
-            return array.flatMap { try? type.concrete(from: $0) }
+            return array.flatMap { try? type.specific(from: $0) }
         }
         
         guard !isLeaf(json) else {
@@ -433,7 +433,7 @@ extension Mapper {
                 throw MapperError.notFound(key: key, description: "Cannot find array node")
             }
             
-            return array.flatMap { try? type.concrete(from: $0) }
+            return array.flatMap { try? type.specific(from: $0) }
         }
         
         var queue = plainNodes(of: json)
@@ -453,7 +453,7 @@ extension Mapper {
             guard let dictionaryNode = json as? DictionaryNode, let value = dictionaryNode[key] else {
                 throw MapperError.notFound(key: key, description: "Cannot find object node")
             }
-            return try type.concrete(from: value)
+            return try type.specific(from: value)
         }
         
         var queue = plainNodes(of: json)
@@ -614,7 +614,7 @@ extension Mapper {
         }
         
         var resultDictionary = Dictionary<String, AtomaryMapable>()
-        try valuesDictionary.forEach { resultDictionary[$0.key] = try type.concrete(from: $0.value) }
+        try valuesDictionary.forEach { resultDictionary[$0.key] = try type.specific(from: $0.value) }
         return resultDictionary as AnyObject
     }
     
@@ -637,7 +637,7 @@ extension Mapper {
             return nil
         }
         
-        return try valuesArray.map { try type.concrete(from: $0) } as AnyObject
+        return try valuesArray.map { try type.specific(from: $0) } as AnyObject
     }
     
     /// Method for retreiving AtomaryMapable from json node
@@ -647,18 +647,18 @@ extension Mapper {
     ///   - key: key for desired value
     ///   - optional: bool value indicating if value is nullable
     ///   - dictionary: json node to bind
-    /// - Returns: concrete AtomaryMapable value
+    /// - Returns: specific AtomaryMapable value
     /// - Throws: Error describing validation error
     class func bindValue(type: AtomaryMapable.Type,
                          _ key: String,
                          _ optional: Bool,
                          _ dictionary: DictionaryNode) throws -> AnyObject? {
         
-        guard let value = dictionary[key], let concreteValue = try? type.concrete(from: value) else {
+        guard let value = dictionary[key], let specificValue = try? type.specific(from: value) else {
             try validate(nil, isOptional: optional)
             return nil
         }
-        return concreteValue as AnyObject
+        return specificValue as AnyObject
     }
     
     /// Method for validating if nil response can be returned or not

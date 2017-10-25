@@ -11,20 +11,20 @@ import Foundation
 import Foundation
 
 public protocol AtomaryMapable {
-    static func concrete(from value: AnyObject) throws -> Self
+    static func specific(from value: AnyObject) throws -> Self
 }
 
 public extension AtomaryMapable {
-    public static func concrete(from value: AnyObject) throws -> Self {
-        guard let concrete = value as? Self else {
+    public static func specific(from value: AnyObject) throws -> Self {
+        guard let specific = value as? Self else {
             throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Self.self)")
         }
-        return concrete
+        return specific
     }
 }
 
 extension String: AtomaryMapable {
-    public static func concrete(from value: AnyObject) throws -> String {
+    public static func specific(from value: AnyObject) throws -> String {
         if let stringValue = value as? String {
             return stringValue
         }
@@ -41,25 +41,25 @@ extension String: AtomaryMapable {
             return "\(floatValue)"
         }
         
-        guard let concrete = value as? String else {
+        guard let specific = value as? String else {
             throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(String.self)")
         }
-        return concrete
+        return specific
     }
 }
 extension Int: AtomaryMapable {}
 extension Double: AtomaryMapable {
-    public static func concrete(from value: AnyObject) throws -> Double {
-        if let concrete = value as? Double {
-            return concrete
+    public static func specific(from value: AnyObject) throws -> Double {
+        if let specific = value as? Double {
+            return specific
         }
         
-        if let concrete = value.doubleValue {
-            return concrete
+        if let specific = value.doubleValue {
+            return specific
         }
         
-        if let stringValue = try? String.concrete(from: value), let concrete = Double(stringValue) {
-            return concrete
+        if let stringValue = try? String.specific(from: value), let specific = Double(stringValue) {
+            return specific
         }
         
         throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Double.self)")
@@ -67,17 +67,17 @@ extension Double: AtomaryMapable {
 }
 
 extension Bool: AtomaryMapable {
-    public static func concrete(from value: AnyObject) throws -> Bool {
-        if let concrete = value as? Bool {
-            return concrete
+    public static func specific(from value: AnyObject) throws -> Bool {
+        if let specific = value as? Bool {
+            return specific
         }
         
-        if let concrete = value.boolValue {
-            return concrete
+        if let specific = value.boolValue {
+            return specific
         }
         
-        if let stringValue = try? String.concrete(from: value), let concrete = Bool(stringValue) {
-            return concrete
+        if let stringValue = try? String.specific(from: value), let specific = Bool(stringValue) {
+            return specific
         }
         
         throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Bool.self)")
@@ -85,17 +85,17 @@ extension Bool: AtomaryMapable {
 }
 
 extension Float: AtomaryMapable {
-    public static func concrete(from value: AnyObject) throws -> Float {
-        if let concrete = value as? Float {
-            return concrete
+    public static func specific(from value: AnyObject) throws -> Float {
+        if let specific = value as? Float {
+            return specific
         }
         
-        if let concrete = value.floatValue {
-            return concrete
+        if let specific = value.floatValue {
+            return specific
         }
         
-        if let stringValue = try? String.concrete(from: value), let concrete = Float(stringValue) {
-            return concrete
+        if let stringValue = try? String.specific(from: value), let specific = Float(stringValue) {
+            return specific
         }
         
         throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Float.self)")
