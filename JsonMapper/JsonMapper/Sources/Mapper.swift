@@ -425,7 +425,7 @@ extension Mapper {
             let dictionary = json as? Dictionary<String, AnyObject>,
             let array = dictionary[key] as? ArrayNode {
             
-            return array.flatMap { try? type.specific(from: $0) }
+            return array.compactMap { try? type.specific(from: $0) }
         }
         
         guard !isLeaf(json) else {
@@ -433,7 +433,7 @@ extension Mapper {
                 throw MapperError.notFound(key: key, description: "Cannot find array node")
             }
             
-            return array.flatMap { try? type.specific(from: $0) }
+            return array.compactMap { try? type.specific(from: $0) }
         }
         
         var queue = plainNodes(of: json)
@@ -708,6 +708,4 @@ extension Mapper {
         
         return !nodesToCheck.contains(where: {$0 is ArrayNode || $0 is DictionaryNode })
     }
-    
 }
-
