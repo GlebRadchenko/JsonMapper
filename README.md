@@ -92,7 +92,7 @@ class User: Mapable {
                                                  .dictionaryNode(key: "user", isDestination: true)]                                         
   ```     
   
-  this protperty determine a valid way for "user" object, and Mapper won't search object recursively.
+  this property determines a valid way for "user" object, and Mapper won't search object recursively.
   You can delete this property or stay it like :
   
    ``` swift
