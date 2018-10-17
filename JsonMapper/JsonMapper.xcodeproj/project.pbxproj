@@ -222,7 +222,7 @@
 					F7AA56371E86DC9D00709C4C = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 76RXYZCS9Y;
-						LastSwiftMigration = 0910;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 					F7AA56401E86DC9D00709C4C = {
@@ -451,8 +451,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -472,8 +471,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = gleb.radchenko.JsonMapper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
