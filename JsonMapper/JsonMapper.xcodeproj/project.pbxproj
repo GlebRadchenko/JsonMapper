@@ -216,13 +216,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Gleb Radchenko";
 				TargetAttributes = {
 					F7AA56371E86DC9D00709C4C = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 76RXYZCS9Y;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 					F7AA56401E86DC9D00709C4C = {
@@ -240,10 +240,11 @@
 			};
 			buildConfigurationList = F7AA56321E86DC9D00709C4C /* Build configuration list for PBXProject "JsonMapper" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = F7AA562E1E86DC9D00709C4C;
 			productRefGroup = F7AA56391E86DC9D00709C4C /* Products */;
@@ -451,7 +452,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -471,7 +472,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = gleb.radchenko.JsonMapper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

@@ -15,7 +15,7 @@ public protocol AtomaryMapable {
 }
 
 public extension AtomaryMapable {
-    public static func specific(from value: AnyObject) throws -> Self {
+    static func specific(from value: AnyObject) throws -> Self {
         guard let specific = value as? Self else {
             throw MapperError.wrongFormat(value: value, description: "Cannot bind value to \(Self.self)")
         }
@@ -110,7 +110,7 @@ public protocol Mapable {
 }
 
 public extension Mapable {
-    public static var mappingPath: [TargetNode] { return [] }
+    static var mappingPath: [TargetNode] { return [] }
 }
 
 public enum MapableProperty {

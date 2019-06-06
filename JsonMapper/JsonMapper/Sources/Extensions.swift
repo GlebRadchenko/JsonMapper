@@ -9,7 +9,7 @@
 import Foundation
 
 public extension Data {
-    public func json() throws -> AnyObject {
+    func json() throws -> AnyObject {
         return try JSONSerialization.jsonObject(with: self, options: .mutableLeaves) as AnyObject
     }
 }

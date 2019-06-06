@@ -266,7 +266,7 @@ extension Mapper {
         }
         
         let nodesCount = paths.count
-        guard let indexOfDestinationNode = paths.index(where: { $0.isDestination }) else {
+        guard let indexOfDestinationNode = paths.firstIndex(where: { $0.isDestination }) else {
             throw MapperError.invalidPath(path: paths, desctiption: "No destination node")
         }
         
@@ -411,7 +411,7 @@ extension Mapper {
         var queue = plainNodes(of: json)
         while !queue.isEmpty {
             let nodeToCheck = queue.removeFirst()
-            if let dictionary = try? dictionary(for: key, json: nodeToCheck, with: type) {
+            if let dictionary = ((try? dictionary(for: key, json: nodeToCheck, with: type)) as [String : AtomaryMapable]??) {
                 return dictionary
             }
             queue.append(contentsOf: plainNodes(of: nodeToCheck))
